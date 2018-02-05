@@ -21,7 +21,8 @@ int main(int argc, char const *argv[])
 	// for(int i=0; i<5; ++i)
 	while(1)
 	{
-		printf("%d:%d\n", tkn_ptr->position, tkn_ptr->type);
+		// printf("lin:%d\tcol:%d\tpos:%d\ttyp:%d\n\n", tkn_ptr->line, tkn_ptr->column, tkn_ptr->position, tkn_ptr->type);
+		pretty_print_token(tkn_ptr);
 
 		if(tkn_ptr->type == TOKEN_EOT)	break;
 		if(tkn_ptr->type == TOKEN_ERROR)	break;

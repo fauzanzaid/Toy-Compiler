@@ -4,7 +4,9 @@ project( valangLexicalAnalyzer VERSION 0.1.1 )
 add_executable(valangLexicalAnalyzer ${PROJECT_SOURCE_DIR}/src/valangLexicalAnalyzer.c)
 
 target_include_directories( valangLexicalAnalyzer PUBLIC ${PROJECT_SOURCE_DIR}/include )
-#target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/valangLexicalAnalyzer )
+target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Token_Data )
+target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Lexer_init )
+target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Dfa_init )
 
 set_target_properties(valangLexicalAnalyzer
 	PROPERTIES

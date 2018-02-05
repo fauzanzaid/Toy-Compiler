@@ -67,15 +67,17 @@ typedef enum {
 	STATE_F_EQ,
 	STATE_N_A_NE,
 	STATE_F_NE,
+
+	STATE_F_EOT,
 }State_type;
 
-extern const int states[];
-extern const int len_states;
-extern const char symbols[];
-extern const int len_symbols;
-extern const int start_state;
-extern const int final_states[];
-extern const int len_start_states;
+extern int states[];
+extern int len_states;
+extern char symbols[];
+extern int len_symbols;
+extern int start_state;
+extern int final_states[];
+extern int len_final_states;
 
 
 ///////////////

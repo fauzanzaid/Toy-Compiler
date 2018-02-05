@@ -7,7 +7,7 @@
 ///////////////
 
 
-const int states[] = {
+int states[] = {
 	STATE_N_START,
 	STATE_F_COMMA,
 	STATE_F_SEMICOLON,
@@ -54,11 +54,12 @@ const int states[] = {
 	STATE_F_EQ,
 	STATE_N_A_NE,
 	STATE_F_NE,
+	STATE_F_EOT,
 };
 
-const int len_states = 46;
+int len_states = 47;
 
-const char symbols[] = {
+char symbols[] = {
 	'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
 	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -68,11 +69,11 @@ const char symbols[] = {
 	0x04
 };
 
-const int len_symbols = 82;
+int len_symbols = 82;
 
-const int start_state = STATE_N_START;
+int start_state = STATE_N_START;
 
-const int final_states[] = {
+int final_states[] = {
 	STATE_F_COMMA,
 	STATE_F_SEMICOLON,
 	STATE_F_OP,
@@ -102,9 +103,10 @@ const int final_states[] = {
 	STATE_F_ASSIGNOP,
 	STATE_F_EQ,
 	STATE_F_NE,
+	STATE_F_EOT,
 };
 
-const int len_start_states = 29;
+int len_final_states = 30;
 
 
 
@@ -187,4 +189,7 @@ void Dfa_init_add_transitions(Dfa *dfa_ptr){
 	Dfa_add_transition_single(dfa_ptr, STATE_F_ASSIGNOP, STATE_F_EQ, '=');
 	Dfa_add_transition_single(dfa_ptr, STATE_F_ASSIGNOP, STATE_N_A_NE, '/');
 	Dfa_add_transition_single(dfa_ptr, STATE_N_A_NE, STATE_F_NE, '=');
+
+
+	Dfa_add_transition_single(dfa_ptr, STATE_N_START, STATE_F_EOT, 0x04);
 }

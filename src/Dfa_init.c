@@ -132,7 +132,8 @@ void Dfa_init_add_transitions(Dfa *dfa_ptr){
 
 
 	Dfa_add_transition_single(dfa_ptr, STATE_N_START, STATE_N_A_COMMENT, '#');
-	Dfa_add_transition_single_invert(dfa_ptr, STATE_N_A_COMMENT, STATE_F_COMMENT, '\n');
+	Dfa_add_transition_single_invert(dfa_ptr, STATE_N_A_COMMENT, STATE_N_A_COMMENT, '\n');
+	Dfa_add_transition_single(dfa_ptr, STATE_N_A_COMMENT, STATE_F_COMMENT, '\n');
 
 
 	Dfa_add_transition_range(dfa_ptr, STATE_N_START, STATE_F_ID_OR_KW, 'a', 'z');

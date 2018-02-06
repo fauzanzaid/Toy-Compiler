@@ -2,6 +2,15 @@
 #define INCLUDE_GUARD_F1333A6825DF4E99A2C3FDF02EFE639F
 
 #include "Token.h"
+#include "HashTable.h"
+
+
+///////////////
+// Hashtable //
+///////////////
+
+extern HashTable *keyword_table;
+void keyword_table_init();
 
 
 ///////////////

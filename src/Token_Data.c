@@ -34,8 +34,8 @@ void pretty_print_token(Token *tkn_ptr){
 	else if (tkn_ptr->type == TOKEN_SIZE)			printf("(Size)       ");
 	else if (tkn_ptr->type == TOKEN_WHITESPACE)		printf("(Whitespace) ");
 	else if (tkn_ptr->type == TOKEN_COMMENT)		printf("(Comment)    ");
-	else if (tkn_ptr->type == TOKEN_ID)				printf("(Id)         ");
-	else if (tkn_ptr->type == TOKEN_FUNID)			printf("(Funid)      ");
+	else if (tkn_ptr->type == TOKEN_ID)				printf("(Id)         %s", tkn_ptr->data->string);
+	else if (tkn_ptr->type == TOKEN_FUNID)			printf("(Funid)      %s", tkn_ptr->data->string);
 	else if (tkn_ptr->type == TOKEN_KW_INT)			printf("(Kw_int)     ");
 	else if (tkn_ptr->type == TOKEN_KW_REAL)		printf("(Kw_real)    ");
 	else if (tkn_ptr->type == TOKEN_KW_STRING)		printf("(Kw_string)  ");
@@ -48,9 +48,9 @@ void pretty_print_token(Token *tkn_ptr){
 	else if (tkn_ptr->type == TOKEN_KW_READ)		printf("(Kw_read)    ");
 	else if (tkn_ptr->type == TOKEN_KW_PRINT)		printf("(Kw_print)   ");
 	else if (tkn_ptr->type == TOKEN_KW_MAIN)		printf("(Kw_main)    "); 
-	else if (tkn_ptr->type == TOKEN_NUM)			printf("(Num)        ");
-	else if (tkn_ptr->type == TOKEN_RNUM)			printf("(Rnum)       ");
-	else if (tkn_ptr->type == TOKEN_STR)			printf("(Str)        ");
+	else if (tkn_ptr->type == TOKEN_NUM)			printf("(Num)        %d", tkn_ptr->data->integer);
+	else if (tkn_ptr->type == TOKEN_RNUM)			printf("(Rnum)       %d.%d", tkn_ptr->data->integer, tkn_ptr->data->fraction);
+	else if (tkn_ptr->type == TOKEN_STR)			printf("(Str)        %s", tkn_ptr->data->string);
 	else if (tkn_ptr->type == TOKEN_AND)			printf("(And)        ");
 	else if (tkn_ptr->type == TOKEN_OR)				printf("(Or)         ");
 	else if (tkn_ptr->type == TOKEN_NOT)			printf("(Not)        ");

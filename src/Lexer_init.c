@@ -143,32 +143,38 @@ void success_evaluate_function(Token *tkn_ptr, int state, char *string, int len_
 
 	else if(state == STATE_F_ID_OR_KW){
 		tkn_ptr->data->len_string = len_string;
-		
+
 		tkn_ptr->data->string = malloc( sizeof(char) * (1 + len_string) );
 		memcpy(tkn_ptr->data->string, string, len_string);
 		tkn_ptr->data->string[len_string] = '\0';
 
 		Token_type *tkn_type_ptr = HashTable_get(keyword_table, tkn_ptr->data->string);
-		if(tkn_type_ptr == NULL)
-			tkn_ptr->type = TOKEN_ID;
-		else
+
+		if(tkn_type_ptr == NULL){
+			// Enforce ID length limit
+			if(len_string > 20)	tkn_ptr->type = TOKEN_ERROR;
+			else				tkn_ptr->type = TOKEN_ID;
+		}
+
+		else{
 			tkn_ptr->type = *tkn_type_ptr;
+		}
 	}
 
 	else if(state == STATE_F_ID){
-		tkn_ptr->type = TOKEN_ID;
-
 		tkn_ptr->data->len_string = len_string;
-		
+
 		tkn_ptr->data->string = malloc( sizeof(char) * (1 + len_string) );
 		memcpy(tkn_ptr->data->string, string, len_string);
 		tkn_ptr->data->string[len_string] = '\0';
 
+		if(len_string > 20)	tkn_ptr->type = TOKEN_ERROR;
+		else				tkn_ptr->type = TOKEN_ID;
 	}
 
 	else if(state == STATE_F_FUNID_OR_KW){
 		tkn_ptr->data->len_string = len_string;
-		
+
 		tkn_ptr->data->string = malloc( sizeof(char) * (1 + len_string) );
 		memcpy(tkn_ptr->data->string, string, len_string);
 		tkn_ptr->data->string[len_string] = '\0';
@@ -183,7 +189,7 @@ void success_evaluate_function(Token *tkn_ptr, int state, char *string, int len_
 
 	else if(state == STATE_F_NUM){
 		tkn_ptr->type = TOKEN_NUM;
-		
+
 		char tmp[1+len_string];
 		memcpy(tmp, string, len_string);
 		tmp[len_string] = '\0';
@@ -203,13 +209,15 @@ void success_evaluate_function(Token *tkn_ptr, int state, char *string, int len_
 	}
 
 	else if(state == STATE_F_STR){
-		tkn_ptr->type = TOKEN_STR;
-
 		int len_literal = len_string-2;	// Remove the two "
 
 		tkn_ptr->data->string = malloc( sizeof(char) * (1 + len_literal) );
 		memcpy(tkn_ptr->data->string, string+1, len_literal);
 		tkn_ptr->data->string[len_literal] = '\0';
+
+		// Enforce STR length limit
+		if(len_literal>20)	tkn_ptr->type = TOKEN_ERROR;
+		else				tkn_ptr->type = TOKEN_STR;
 	}
 
 	else if(state == STATE_F_AND){

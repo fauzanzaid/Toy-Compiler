@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 
+#include "HashTable.h"
 #include "Dfa.h"
 #include "Lexer.h"
 #include "Token.h"
@@ -12,26 +14,48 @@ int main(int argc, char const *argv[])
 {
 	Dfa *dfa_ptr = Dfa_new(states, len_states, symbols, len_symbols, start_state, final_states, len_final_states);
 	Dfa_init_add_transitions(dfa_ptr);
-	Lexer *lxr_ptr = Lexer_new(dfa_ptr, stdin, 1, success_evaluate_function, error_evaluate_function);
+
+	// Lexer *lxr_ptr = Lexer_new(dfa_ptr, stdin, 1, success_evaluate_function, error_evaluate_function);
+	FILE *file_ptr;
+	file_ptr = fopen("test_input.txt", "r");
+	if(file_ptr == NULL){
+		printf("Unable to open file\n");
+		return -1;
+	}
+	Lexer *lxr_ptr = Lexer_new(dfa_ptr, file_ptr, 1, success_evaluate_function, error_evaluate_function);
 
 
+	// Imitializes  hashtable
+	keyword_table_init();
 
-	Token *tkn_ptr = Lexer_get_next_token(lxr_ptr);
+	Token *tkn_ptr;
 
 	// for(int i=0; i<5; ++i)
 	while(1)
 	{
-		// printf("lin:%d\tcol:%d\tpos:%d\ttyp:%d\n\n", tkn_ptr->line, tkn_ptr->column, tkn_ptr->position, tkn_ptr->type);
+		tkn_ptr = Lexer_get_next_token(lxr_ptr);
+
+		if(tkn_ptr == NULL){
+			printf("NULL token received\n");
+			break;
+		}
+
 		pretty_print_token(tkn_ptr);
 
-		if(tkn_ptr->type == TOKEN_EOT)	break;
-		if(tkn_ptr->type == TOKEN_ERROR)	break;
+		if(tkn_ptr->type == TOKEN_EOT){
+			printf("EOT token received\n");
+			break;
+		}
 
-		tkn_ptr = Lexer_get_next_token(lxr_ptr);
-		if(tkn_ptr == NULL)	break;
+		else if(tkn_ptr->type == TOKEN_ERROR){
+			printf("ERROR token received\n");
+			break;
+		}
+
+		// Token_destroy(tkn_ptr);
 	}
 
-
+	// fclose(file_ptr);
 	Lexer_destroy(lxr_ptr);
 	Dfa_destroy(dfa_ptr);
 

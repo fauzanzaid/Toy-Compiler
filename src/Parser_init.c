@@ -1,7 +1,7 @@
 #include "Parser_init.h"
 #include "ParserLL1.h"
 
-int variable_symbols[] = {
+int terminal_symbols[] = {
 	SYMBOL_T_COMMA,
 	SYMBOL_T_SEMICOLON,
 	SYMBOL_T_OP,
@@ -43,9 +43,9 @@ int variable_symbols[] = {
 	SYMBOL_T_EQ,
 	SYMBOL_T_NE
 };
-int len_variable_symbols = 41;
+int len_terminal_symbols = 40;
 
-int terminal_symbols[] = {
+int variable_symbols[] = {
 	SYMBOL_V_EPSILON,
 	SYMBOL_V_BOOL_OP,
 	SYMBOL_V_CALL,
@@ -86,7 +86,7 @@ int terminal_symbols[] = {
 	SYMBOL_V_STMT_READ,
 	SYMBOL_V_TYPE,
 };
-int len_terminal_symbols = 38;
+int len_variable_symbols = 39;
 
 int start_symbol = SYMBOL_V_MAIN_FUNCTION;
 int empty_symbol = SYMBOL_V_EPSILON;

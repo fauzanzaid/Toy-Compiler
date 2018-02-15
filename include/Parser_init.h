@@ -2,13 +2,15 @@
 #define INCLUDE_GUARD_05C155452FCD41C4A40FCE69D00879F3
 
 
+#include "ParserLL1.h"
+
+
 ///////////
 // Types //
 ///////////
 
 typedef enum {
 	
-	SYMBOL_T_EPSILON,
 	SYMBOL_T_COMMA,
 	SYMBOL_T_SEMICOLON,
 	SYMBOL_T_OP,
@@ -50,6 +52,7 @@ typedef enum {
 	SYMBOL_T_EQ,
 	SYMBOL_T_NE,
 	
+	SYMBOL_V_EPSILON,
 	SYMBOL_V_BOOL_OP,
 	SYMBOL_V_CALL,
 	SYMBOL_V_DEF,
@@ -101,6 +104,14 @@ extern int len_variable_symbols;
 extern int terminal_symbols[];
 extern int len_terminal_symbols;
 extern int start_symbol;
+extern int empty_symbol;
+
+
+///////////////
+// Functions //
+///////////////
+
+void Parser_init_add_rules(ParserLL1 *psr_ptr);
 
 
 #endif

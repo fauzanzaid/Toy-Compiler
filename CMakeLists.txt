@@ -7,6 +7,7 @@ target_include_directories( valangLexicalAnalyzer PUBLIC ${PROJECT_SOURCE_DIR}/i
 target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Token_Data )
 target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Lexer_init )
 target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Dfa_init )
+target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Parser_init )
 
 set_target_properties(valangLexicalAnalyzer
 	PROPERTIES
@@ -34,3 +35,8 @@ if(NOT TARGET Token)
 	add_subdirectory(${CMAKE_SOURCE_DIR}/ext/Token ${CMAKE_SOURCE_DIR}/ext/Token/build/bin)
 endif(NOT TARGET Token)
 target_link_libraries(valangLexicalAnalyzer Token)
+
+if(NOT TARGET ParserLL1)
+	add_subdirectory(${CMAKE_SOURCE_DIR}/ext/ParserLL1 ${CMAKE_SOURCE_DIR}/ext/ParserLL1/build/bin)
+endif(NOT TARGET ParserLL1)
+target_link_libraries(valangLexicalAnalyzer ParserLL1)

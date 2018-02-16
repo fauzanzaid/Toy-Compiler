@@ -44,7 +44,7 @@ int terminal_symbols[] = {
 	SYMBOL_T_NE,
 	SYMBOL_T_ENDOFINPUT
 };
-int len_terminal_symbols = 40;
+int len_terminal_symbols = 41;
 
 int variable_symbols[] = {
 	SYMBOL_V_EPSILON,

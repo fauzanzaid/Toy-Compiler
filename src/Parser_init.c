@@ -41,7 +41,8 @@ int terminal_symbols[] = {
 	SYMBOL_T_GE,
 	SYMBOL_T_ASSIGNOP,
 	SYMBOL_T_EQ,
-	SYMBOL_T_NE
+	SYMBOL_T_NE,
+	SYMBOL_T_ENDOFINPUT
 };
 int len_terminal_symbols = 40;
 
@@ -90,6 +91,7 @@ int len_variable_symbols = 39;
 
 int start_symbol = SYMBOL_V_MAIN_FUNCTION;
 int empty_symbol = SYMBOL_V_EPSILON;
+int end_symbol = SYMBOL_T_ENDOFINPUT;
 
 
 ///////////////

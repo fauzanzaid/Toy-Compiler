@@ -51,6 +51,7 @@ typedef enum {
 	SYMBOL_T_ASSIGNOP,
 	SYMBOL_T_EQ,
 	SYMBOL_T_NE,
+	SYMBOL_T_ENDOFINPUT,
 	
 	SYMBOL_V_EPSILON,
 	SYMBOL_V_BOOL_OP,
@@ -105,6 +106,7 @@ extern int terminal_symbols[];
 extern int len_terminal_symbols;
 extern int start_symbol;
 extern int empty_symbol;
+extern int end_symbol;
 
 
 ///////////////

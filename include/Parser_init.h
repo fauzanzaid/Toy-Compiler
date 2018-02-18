@@ -3,6 +3,7 @@
 
 
 #include "ParserLL1.h"
+#include "Token.h"
 
 
 ///////////
@@ -10,7 +11,6 @@
 ///////////
 
 typedef enum {
-	
 	SYMBOL_T_COMMA,
 	SYMBOL_T_SEMICOLON,
 	SYMBOL_T_OP,
@@ -93,6 +93,7 @@ typedef enum {
 	SYMBOL_V_STMT_READ,
 	SYMBOL_V_TYPE,
 
+	SYMBOL_UNKNOWN = -1,
 }Symbol_type;
 
 
@@ -115,5 +116,6 @@ extern int end_symbol;
 
 void Parser_init_add_rules(ParserLL1 *psr_ptr);
 
+int token_to_symbol(Token *tkn_ptr);
 
 #endif

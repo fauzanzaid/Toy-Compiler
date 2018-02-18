@@ -1,5 +1,6 @@
 #include "Parser_init.h"
 #include "ParserLL1.h"
+#include "Token_Data.h"
 
 int terminal_symbols[] = {
 	SYMBOL_T_COMMA,
@@ -198,4 +199,131 @@ void Parser_init_add_rules(ParserLL1 *psr_ptr){
 	ParserLL1_add_rule(psr_ptr, SYMBOL_V_NUM_VAL_WOM,			(int[]) {SYMBOL_T_ID} , 1 );
 
 
+}
+
+int token_to_symbol(Token *tkn_ptr){
+	if(tkn_ptr->type == TOKEN_EOT)
+		return SYMBOL_T_ENDOFINPUT;
+
+	if(tkn_ptr->type == TOKEN_COMMA)
+		return SYMBOL_T_COMMA;
+
+	if(tkn_ptr->type == TOKEN_SEMICOLON)
+		return SYMBOL_T_SEMICOLON;
+
+	if(tkn_ptr->type == TOKEN_OP)
+		return SYMBOL_T_OP;
+
+	if(tkn_ptr->type == TOKEN_CL)
+		return SYMBOL_T_CL;
+
+	if(tkn_ptr->type == TOKEN_SQC)
+		return SYMBOL_T_SQC;
+
+	if(tkn_ptr->type == TOKEN_SQO)
+		return SYMBOL_T_SQO;
+
+	if(tkn_ptr->type == TOKEN_PLUS)
+		return SYMBOL_T_PLUS;
+
+	if(tkn_ptr->type == TOKEN_MINUS)
+		return SYMBOL_T_MINUS;
+
+	if(tkn_ptr->type == TOKEN_MUL)
+		return SYMBOL_T_MUL;
+
+	if(tkn_ptr->type == TOKEN_DIV)
+		return SYMBOL_T_DIV;
+
+	if(tkn_ptr->type == TOKEN_SIZE)
+		return SYMBOL_T_SIZE;
+
+	if(tkn_ptr->type == TOKEN_WHITESPACE)
+		return SYMBOL_T_WHITESPACE;
+
+	if(tkn_ptr->type == TOKEN_COMMENT)
+		return SYMBOL_T_COMMENT;
+
+	if(tkn_ptr->type == TOKEN_ID)
+		return SYMBOL_T_ID;
+
+	if(tkn_ptr->type == TOKEN_FUNID)
+		return SYMBOL_T_FUNID;
+
+	if(tkn_ptr->type == TOKEN_KW_INT)
+		return SYMBOL_T_KW_INT;
+
+	if(tkn_ptr->type == TOKEN_KW_REAL)
+		return SYMBOL_T_KW_REAL;
+
+	if(tkn_ptr->type == TOKEN_KW_STRING)
+		return SYMBOL_T_KW_STRING;
+
+	if(tkn_ptr->type == TOKEN_KW_MATRIX)
+		return SYMBOL_T_KW_MATRIX;
+
+	if(tkn_ptr->type == TOKEN_KW_FUNCTION)
+		return SYMBOL_T_KW_FUNCTION;
+
+	if(tkn_ptr->type == TOKEN_KW_END)
+		return SYMBOL_T_KW_END;
+
+	if(tkn_ptr->type == TOKEN_KW_IF)
+		return SYMBOL_T_KW_IF;
+
+	if(tkn_ptr->type == TOKEN_KW_ELSE)
+		return SYMBOL_T_KW_ELSE;
+
+	if(tkn_ptr->type == TOKEN_KW_ENDIF)
+		return SYMBOL_T_KW_ENDIF;
+
+	if(tkn_ptr->type == TOKEN_KW_READ)
+		return SYMBOL_T_KW_READ;
+
+	if(tkn_ptr->type == TOKEN_KW_PRINT)
+		return SYMBOL_T_KW_PRINT;
+
+	if(tkn_ptr->type == TOKEN_KW_MAIN)
+		return SYMBOL_T_KW_MAIN;
+
+	if(tkn_ptr->type == TOKEN_NUM)
+		return SYMBOL_T_NUM;
+
+	if(tkn_ptr->type == TOKEN_RNUM)
+		return SYMBOL_T_RNUM;
+
+	if(tkn_ptr->type == TOKEN_STR)
+		return SYMBOL_T_STR;
+
+	if(tkn_ptr->type == TOKEN_AND)
+		return SYMBOL_T_AND;
+
+	if(tkn_ptr->type == TOKEN_OR)
+		return SYMBOL_T_OR;
+
+	if(tkn_ptr->type == TOKEN_NOT)
+		return SYMBOL_T_NOT;
+
+	if(tkn_ptr->type == TOKEN_LT)
+		return SYMBOL_T_LT;
+
+	if(tkn_ptr->type == TOKEN_LE)
+		return SYMBOL_T_LE;
+
+	if(tkn_ptr->type == TOKEN_GT)
+		return SYMBOL_T_GT;
+
+	if(tkn_ptr->type == TOKEN_GE)
+		return SYMBOL_T_GE;
+
+	if(tkn_ptr->type == TOKEN_ASSIGNOP)
+		return SYMBOL_T_ASSIGNOP;
+
+	if(tkn_ptr->type == TOKEN_EQ)
+		return SYMBOL_T_EQ;
+
+	if(tkn_ptr->type == TOKEN_NE)
+		return SYMBOL_T_NE;
+
+	return SYMBOL_UNKNOWN;
 }

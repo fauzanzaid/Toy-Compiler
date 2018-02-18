@@ -64,5 +64,12 @@ void pretty_print_token(Token *tkn_ptr){
 	else if (tkn_ptr->type == TOKEN_UNKOWN)			printf("(Unkown)     ");
 	else if (tkn_ptr->type == TOKEN_ERROR)			printf("(Error)      ");
 	else if (tkn_ptr->type == TOKEN_EOT)			printf("(Eot)        ");
+	else	printf("(%d)", tkn_ptr->type);
 	printf("\n");
+}
+
+int token_ignore(Token *tkn_ptr){
+	if (tkn_ptr->type == TOKEN_WHITESPACE)	return 1;
+	if (tkn_ptr->type == TOKEN_COMMENT)	return 1;
+	return 0;
 }

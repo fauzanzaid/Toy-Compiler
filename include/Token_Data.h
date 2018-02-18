@@ -85,9 +85,12 @@ typedef struct Token_Data{
 ///////////////
 
 Token_Data *Token_Data_new();
+
 void Token_Data_destroy(Token_Data *tdt_ptr);
 
 void pretty_print_token(Token *tkn_ptr);
+
+int token_ignore(Token *tkn_ptr);
 
 
 #endif

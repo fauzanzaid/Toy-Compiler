@@ -57,7 +57,7 @@ int states[] = {
 	STATE_F_EOT,
 };
 
-int len_states = 47;
+int len_states = 48;
 
 char symbols[] = {
 	'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -65,7 +65,7 @@ char symbols[] = {
 	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 	'.', '_', '#', '\"',
 	',', ';', '(', ')', '[', ']', '+', '-', '*', '/', '@',
-	' ', '\n', '\t',
+	' ', '\n', '\r', '\t',
 	0x04
 };
 
@@ -128,7 +128,7 @@ void Dfa_init_add_transitions(Dfa *dfa_ptr){
 	Dfa_add_transition_single(dfa_ptr, STATE_N_START, STATE_F_DIV, '/');
 	Dfa_add_transition_single(dfa_ptr, STATE_N_START, STATE_F_SIZE, '@');
 	// Dfa_add_transition_many(dfa_ptr, STATE_N_START, STATE_F_WHITESPACE, {' ', '\n', '\t'}, 3);
-	Dfa_add_transition_many(dfa_ptr, STATE_N_START, STATE_F_WHITESPACE, " \n\t", 3);
+	Dfa_add_transition_many(dfa_ptr, STATE_N_START, STATE_F_WHITESPACE, " \n\r\t", 4);
 
 
 	Dfa_add_transition_single(dfa_ptr, STATE_N_START, STATE_N_A_COMMENT, '#');

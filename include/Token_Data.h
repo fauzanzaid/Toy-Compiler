@@ -92,5 +92,6 @@ void pretty_print_token(Token *tkn_ptr);
 
 int token_ignore(Token *tkn_ptr);
 
+char *token_to_name(Token *tkn_ptr);
 
 #endif

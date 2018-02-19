@@ -1,4 +1,4 @@
-#include <stddef.h>
+#include <stdio.h>
 
 #include "Parser_init.h"
 #include "ParserLL1.h"
@@ -471,4 +471,12 @@ char *symbol_to_string(int symbol){
 		return symbol_strings[symbol];
 	}
 	return symbol_strings[len_terminal_symbols];
+}
+
+void token_to_value(Token *tkn_ptr, char *buffer, int len_buffer){
+	if (tkn_ptr->type == TOKEN_ID)			snprintf(buffer, len_buffer, "%s", tkn_ptr->data->string);
+	else if (tkn_ptr->type == TOKEN_FUNID)	snprintf(buffer, len_buffer, "%s", tkn_ptr->data->string);
+	else if (tkn_ptr->type == TOKEN_NUM)	snprintf(buffer, len_buffer, "%d", tkn_ptr->data->integer);
+	else if (tkn_ptr->type == TOKEN_RNUM)	snprintf(buffer, len_buffer, "%d.%d", tkn_ptr->data->integer, tkn_ptr->data->fraction);
+	else if (tkn_ptr->type == TOKEN_STR)	snprintf(buffer, len_buffer, "%s", tkn_ptr->data->string);
 }

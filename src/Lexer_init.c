@@ -9,6 +9,66 @@
 #include "Dfa_init.h"
 
 
+////////////
+// Arrays //
+////////////
+
+char *error_evaluate_error_strings[] = {
+	/*STATE_N_START*/			"Unexpected character, not in language",
+	/*STATE_F_COMMA*/			"",
+	/*STATE_F_SEMICOLON*/		"",
+	/*STATE_F_OP*/				"",
+	/*STATE_F_CL*/				"",
+	/*STATE_F_SQO*/				"",
+	/*STATE_F_SQC*/				"",
+	/*STATE_F_PLUS*/			"",
+	/*STATE_F_MINUS*/			"",
+	/*STATE_F_MUL*/				"",
+	/*STATE_F_DIV*/				"",
+	/*STATE_F_SIZE*/			"",
+	/*STATE_F_WHITESPACE*/		"",
+	/*STATE_N_A_COMMENT*/		"",
+	/*STATE_F_COMMENT*/			"",
+	/*STATE_F_ID_OR_KW*/		"Expected identifier or keyword",
+	/*STATE_F_ID*/				"Expected identifier",
+	/*STATE_N_A_FUNID_OR_KW*/	"Expected function identifier or keyword",
+	/*STATE_F_FUNID_OR_KW*/		"Expected function identifier or keyword",
+	/*STATE_F_NUM*/				"",
+	/*STATE_N_A_RNUM*/			"Expected real literal",
+	/*STATE_N_B_RNUM*/			"Expected real literal",
+	/*STATE_F_RNUM*/			"",
+	/*STATE_N_A_STR*/			"Expected string literal",
+	/*STATE_N_B_STR*/			"Expected string literal",
+	/*STATE_F_STR*/				"",
+	/*STATE_N_LOGICAL*/			"Expected logical operator",
+	/*STATE_N_A_AND*/			"Expected .and.",
+	/*STATE_N_B_AND*/			"Expected .and.",
+	/*STATE_N_C_AND*/			"Expected .and.",
+	/*STATE_F_AND*/				"",
+	/*STATE_N_A_OR*/			"Expected .or.",
+	/*STATE_N_B_OR*/			"Expected .or.",
+	/*STATE_F_OR*/				"",
+	/*STATE_N_A_NOT*/			"Expected .not.",
+	/*STATE_N_B_NOT*/			"Expected .not.",
+	/*STATE_N_C_NOT*/			"Expected .not.",
+	/*STATE_F_NOT*/				"",
+	/*STATE_F_LT*/				"",
+	/*STATE_F_LE*/				"",
+	/*STATE_F_GT*/				"",
+	/*STATE_F_GE*/				"",
+	/*STATE_F_ASSIGNOP*/		"",
+	/*STATE_F_EQ*/				"",
+	/*STATE_N_A_NE*/			"Expected =/=",
+	/*STATE_F_NE*/				"",
+	/*STATE_F_EOT*/				"",
+};
+
+char *success_evaluate_error_strings[] = {
+	"Identifier is longer than 20 characters",
+	"String literal is longer than 20 characters",
+};
+
+
 ///////////////
 // Constants //
 ///////////////
@@ -88,7 +148,7 @@ void keyword_table_init(){
 ///////////////
 
 
-void success_evaluate_function(Token *tkn_ptr, int state, char *string, int len_string){
+char *success_evaluate_function(Token *tkn_ptr, int state, char *string, int len_string){
 	if(state == STATE_F_COMMA){
 		tkn_ptr->type = TOKEN_COMMA;
 	}
@@ -152,8 +212,12 @@ void success_evaluate_function(Token *tkn_ptr, int state, char *string, int len_
 
 		if(tkn_type_ptr == NULL){
 			// Enforce ID length limit
-			if(len_string > 20)	tkn_ptr->type = TOKEN_ERROR;
-			else				tkn_ptr->type = TOKEN_ID;
+			if(len_string > 20){
+				tkn_ptr->type = TOKEN_ERROR;
+				return success_evaluate_error_strings[1];
+			}
+			else
+				tkn_ptr->type = TOKEN_ID;
 		}
 
 		else{
@@ -168,8 +232,12 @@ void success_evaluate_function(Token *tkn_ptr, int state, char *string, int len_
 		memcpy(tkn_ptr->data->string, string, len_string);
 		tkn_ptr->data->string[len_string] = '\0';
 
-		if(len_string > 20)	tkn_ptr->type = TOKEN_ERROR;
-		else				tkn_ptr->type = TOKEN_ID;
+		if(len_string > 20){
+			tkn_ptr->type = TOKEN_ERROR;
+			return success_evaluate_error_strings[0];
+		}
+		else
+			tkn_ptr->type = TOKEN_ID;
 	}
 
 	else if(state == STATE_F_FUNID_OR_KW){
@@ -216,8 +284,12 @@ void success_evaluate_function(Token *tkn_ptr, int state, char *string, int len_
 		tkn_ptr->data->string[len_literal] = '\0';
 
 		// Enforce STR length limit
-		if(len_literal>20)	tkn_ptr->type = TOKEN_ERROR;
-		else				tkn_ptr->type = TOKEN_STR;
+		if(len_literal>20){
+			tkn_ptr->type = TOKEN_ERROR;
+			return success_evaluate_error_strings[1];
+		}
+		else
+			tkn_ptr->type = TOKEN_STR;
 	}
 
 	else if(state == STATE_F_AND){
@@ -267,8 +339,18 @@ void success_evaluate_function(Token *tkn_ptr, int state, char *string, int len_
 	else{
 		tkn_ptr->type = TOKEN_UNKOWN;
 	}
+
+	return NULL;
 }
 
-void error_evaluate_function(Token *tkn_ptr){
+char *error_evaluate_function(Token *tkn_ptr, int state, char *string, int len_string){
 	tkn_ptr->type = TOKEN_ERROR;
+
+	tkn_ptr->data->len_string = len_string;
+
+	tkn_ptr->data->string = malloc( sizeof(char) * (1 + len_string) );
+	memcpy(tkn_ptr->data->string, string, len_string);
+	tkn_ptr->data->string[len_string] = '\0';
+
+	return error_evaluate_error_strings[state];
 }

@@ -17,7 +17,7 @@ void keyword_table_init();
 // Functions //
 ///////////////
 
-void success_evaluate_function(Token *tkn_ptr, int state, char *string, int len_string);
-void error_evaluate_function(Token *tkn_ptr);
+char *success_evaluate_function(Token *tkn_ptr, int state, char *string, int len_string);
+char *error_evaluate_function(Token *tkn_ptr, int state, char *string, int len_string);
 
 #endif

@@ -4,6 +4,58 @@
 #include "Token_Data.h"
 #include "Token.h"
 
+
+char *token_names[] = {
+	"COMMA",
+	"SEMICOLON",
+	"OP",
+	"CL",
+	"SQC",
+	"SQO",
+	"PLUS",
+	"MINUS",
+	"MUL",
+	"DIV",
+	"SIZE",
+	"WHITESPACE",
+	"COMMENT",
+	"ID",
+	"FUNID",
+	"KW_INT",
+	"KW_REAL",
+	"KW_STRING",
+	"KW_MATRIX",
+	"KW_FUNCTION",
+	"KW_END",
+	"KW_IF",
+	"KW_ELSE",
+	"KW_ENDIF",
+	"KW_READ",
+	"KW_PRINT",
+	"KW_MAIN",
+	"NUM",
+	"RNUM",
+	"STR",
+	"AND",
+	"OR",
+	"NOT",
+	"LT",
+	"LE",
+	"GT",
+	"GE",
+	"ASSIGNOP",
+	"EQ",
+	"NE",
+	"UNKOWN",
+	"ERROR",
+	"EOT"
+};
+
+
+///////////////
+// Functions //
+///////////////
+
 Token_Data *Token_Data_new(){
 	Token_Data *tdt_ptr = malloc( sizeof(Token_Data) );
 	tdt_ptr->string = NULL;
@@ -72,4 +124,8 @@ int token_ignore(Token *tkn_ptr){
 	if (tkn_ptr->type == TOKEN_WHITESPACE)	return 1;
 	if (tkn_ptr->type == TOKEN_COMMENT)	return 1;
 	return 0;
+}
+
+char *token_to_name(Token *tkn_ptr){
+	return token_names[tkn_ptr->type];
 }

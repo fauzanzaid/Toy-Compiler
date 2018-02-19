@@ -1,3 +1,5 @@
+#include <stddef.h>
+
 #include "Parser_init.h"
 #include "ParserLL1.h"
 #include "Token_Data.h"
@@ -94,6 +96,89 @@ int start_symbol = SYMBOL_V_MAIN_FUNCTION;
 int empty_symbol = SYMBOL_V_EPSILON;
 int end_symbol = SYMBOL_T_ENDOFINPUT;
 
+char *symbol_strings[] = {
+	"comma",
+	"semicolon",
+	"op",
+	"cl",
+	"sqc",
+	"sqo",
+	"plus",
+	"minus",
+	"mul",
+	"div",
+	"size",
+	"whitespace",
+	"comment",
+	"id",
+	"funid",
+	"kw_int",
+	"kw_real",
+	"kw_string",
+	"kw_matrix",
+	"kw_function",
+	"kw_end",
+	"kw_if",
+	"kw_else",
+	"kw_endif",
+	"kw_read",
+	"kw_print",
+	"kw_main",
+	"num",
+	"rnum",
+	"str",
+	"and",
+	"or",
+	"not",
+	"lt",
+	"le",
+	"gt",
+	"ge",
+	"assignop",
+	"eq",
+	"ne",
+	"endofinput",
+	"epsilon",
+	"bool_op",
+	"call",
+	"def",
+	"expr_addend",
+	"expr_arith",
+	"expr_bool",
+	"expr_factor",
+	"expr_log",
+	"expr_multiplier",
+	"expr_term",
+	"id_list",
+	"id_list_rem",
+	"log_op_bin",
+	"lval",
+	"main_function",
+	"matrix_literal",
+	"matrix_num_list",
+	"matrix_num_list_rem",
+	"matrix_row_list",
+	"matrix_row_list_rem",
+	"num_val_wm",
+	"num_val_wm_rem",
+	"num_val_wom",
+	"param_list",
+	"param_list_rem",
+	"stmt",
+	"stmt_assign",
+	"stmt_cond",
+	"stmt_cond_rem",
+	"stmt_decl",
+	"stmt_list",
+	"stmt_list_rem",
+	"stmt_or_def",
+	"stmt_or_def_list",
+	"stmt_or_def_list_rem",
+	"stmt_print",
+	"stmt_read",
+	"type",
+	"unknown"
+};
 
 ///////////////
 // Functions //
@@ -326,4 +411,11 @@ int token_to_symbol(Token *tkn_ptr){
 		return SYMBOL_T_NE;
 
 	return SYMBOL_UNKNOWN;
+}
+
+char *symbol_to_string(int symbol){
+	if(symbol >= 0 && symbol < (len_variable_symbols + len_terminal_symbols)){
+		return symbol_strings[symbol];
+	}
+	return symbol_strings[len_variable_symbols + len_terminal_symbols];
 }

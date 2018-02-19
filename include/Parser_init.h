@@ -108,7 +108,7 @@ extern int len_terminal_symbols;
 extern int start_symbol;
 extern int empty_symbol;
 extern int end_symbol;
-
+extern char *symbol_strings[];
 
 ///////////////
 // Functions //
@@ -117,5 +117,7 @@ extern int end_symbol;
 void Parser_init_add_rules(ParserLL1 *psr_ptr);
 
 int token_to_symbol(Token *tkn_ptr);
+
+char *symbol_to_string(int symbol);
 
 #endif

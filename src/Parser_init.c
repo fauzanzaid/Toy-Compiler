@@ -480,3 +480,95 @@ void token_to_value(Token *tkn_ptr, char *buffer, int len_buffer){
 	else if (tkn_ptr->type == TOKEN_RNUM)	snprintf(buffer, len_buffer, "%d.%d", tkn_ptr->data->integer, tkn_ptr->data->fraction);
 	else if (tkn_ptr->type == TOKEN_STR)	snprintf(buffer, len_buffer, "%s", tkn_ptr->data->string);
 }
+
+void print_parse_tree(ParseTree *tree){
+	ParseTree_Node *cur_node_ptr = tree;
+
+	int col[] = {5,11,4,11,20,20,4,20};
+
+	printf(" --");	printf("%-*.*s",	col[0],col[0],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[1],col[1],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[2],col[2],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[3],col[3],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[4],col[4],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[5],col[5],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[6],col[6],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[7],col[7],	"--------------------");
+	printf("--\n");
+
+	printf(" | ");	printf("%-*.*s",	col[0],col[0],	"S No");
+	printf(" | ");	printf("%-*.*s",	col[1],col[1],	"Lexeme");
+	printf(" | ");	printf("%-*.*s",	col[2],col[2],	"Line");
+	printf(" | ");	printf("%-*.*s",	col[3],col[3],	"Token");
+	printf(" | ");	printf("%-*.*s",	col[4],col[4],	"Value");
+	printf(" | ");	printf("%-*.*s",	col[5],col[5],	"Parent");
+	printf(" | ");	printf("%-*.*s",	col[6],col[6],	"Leaf");
+	printf(" | ");	printf("%-*.*s",	col[7],col[7],	"Current");
+	printf(" |\n");
+
+	printf(" --");	printf("%-*.*s",	col[0],col[0],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[1],col[1],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[2],col[2],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[3],col[3],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[4],col[4],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[5],col[5],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[6],col[6],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[7],col[7],	"--------------------");
+	printf("--\n");
+
+	int index = 1;
+
+	while(cur_node_ptr != NULL){
+
+		int symbol = cur_node_ptr->symbol;
+		Token *tkn_ptr = cur_node_ptr->tkn_ptr;
+
+		printf(" | ");	printf("%*d",		col[0], 		index++);
+
+		if(tkn_ptr != NULL){
+			// terminal
+			printf(" | ");	printf("%-*.*s",	col[1],col[1], token_to_name(tkn_ptr));
+			printf(" | ");	printf("%*d",		col[2],			tkn_ptr->line);
+			printf(" | ");	printf("%-*.*s",	col[3],col[3], token_to_name(tkn_ptr));
+
+			char buffer[21] = {0};
+			token_to_value(tkn_ptr, buffer, 20);
+
+			printf(" | ");	printf("%-*.*s",	col[4],col[4], buffer);
+
+			printf(" | ");	printf("%-*.*s",	col[5],col[5], symbol_to_name(cur_node_ptr->parent->symbol));
+			printf(" | ");	printf("%-*.*s",	col[6],col[6],	"Yes");
+			printf(" | ");	printf("%-*.*s",	col[7],col[7], symbol_to_name(symbol));
+		}
+		else{
+			printf(" | ");	printf("%-*.*s",	col[1],col[1],	"--------------------");
+			printf(" | ");	printf("%-*.*s",	col[2],col[2],	"                    ");
+			printf(" | ");	printf("%-*.*s",	col[3],col[3],	"--------------------");
+			printf(" | ");	printf("%-*.*s",	col[4],col[4],	"                    ");
+
+			if(cur_node_ptr->parent){
+				printf(" | ");	printf("%-*.*s",	col[5],col[5], symbol_to_name(cur_node_ptr->parent->symbol));
+			}
+			else{
+				printf(" | ");	printf("%-*.*s",	col[5],col[5],	"ROOT");
+			}
+
+			printf(" | ");	printf("%-*.*s",	col[6],col[6],	"No");
+			printf(" | ");	printf("%-*.*s",	col[7],col[7], symbol_to_name(symbol));
+		}
+
+		printf(" |\n");
+
+		cur_node_ptr = ParseTree_Node_move_inorder(cur_node_ptr);
+	}
+
+	printf(" --");	printf("%-*.*s",	col[0],col[0],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[1],col[1],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[2],col[2],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[3],col[3],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[4],col[4],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[5],col[5],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[6],col[6],	"--------------------");
+	printf("---");	printf("%-*.*s",	col[7],col[7],	"--------------------");
+	printf("--\n");
+}

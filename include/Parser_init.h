@@ -108,6 +108,7 @@ extern int len_terminal_symbols;
 extern int start_symbol;
 extern int empty_symbol;
 extern int end_symbol;
+extern char *symbol_names[];
 extern char *symbol_strings[];
 
 ///////////////

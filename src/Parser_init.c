@@ -96,7 +96,7 @@ int start_symbol = SYMBOL_V_MAIN_FUNCTION;
 int empty_symbol = SYMBOL_V_EPSILON;
 int end_symbol = SYMBOL_T_ENDOFINPUT;
 
-char *symbol_strings[] = {
+char *symbol_names[] = {
 	"comma",
 	"semicolon",
 	"op",
@@ -179,6 +179,52 @@ char *symbol_strings[] = {
 	"type",
 	"unknown"
 };
+
+char *symbol_strings[] = {
+	",",
+	";",
+	"(",
+	")",
+	"[",
+	"]",
+	"+",
+	"-",
+	"*",
+	"/",
+	"@",
+	"whitespace",
+	"comment",
+	"id",
+	"funid",
+	"int",
+	"real",
+	"string",
+	"matrix",
+	"function",
+	"end",
+	"if",
+	"else",
+	"endif",
+	"read",
+	"print",
+	"_main",
+	"int literal",
+	"real literal",
+	"string literal",
+	".and.",
+	".or.",
+	".not.",
+	"<",
+	"<=",
+	">",
+	">=",
+	"=",
+	"==",
+	"=/=",
+	"end of input",
+	"unknown"
+};
+
 
 ///////////////
 // Functions //
@@ -413,9 +459,16 @@ int token_to_symbol(Token *tkn_ptr){
 	return SYMBOL_UNKNOWN;
 }
 
-char *symbol_to_string(int symbol){
+char *symbol_to_name(int symbol){
 	if(symbol >= 0 && symbol < (len_variable_symbols + len_terminal_symbols)){
+		return symbol_names[symbol];
+	}
+	return symbol_names[len_variable_symbols + len_terminal_symbols];
+}
+
+char *symbol_to_string(int symbol){
+	if(symbol >= 0 && symbol < len_terminal_symbols){
 		return symbol_strings[symbol];
 	}
-	return symbol_strings[len_variable_symbols + len_terminal_symbols];
+	return symbol_strings[len_terminal_symbols];
 }

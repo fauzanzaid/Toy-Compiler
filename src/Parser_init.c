@@ -527,7 +527,7 @@ void print_parse_tree(ParseTree *tree){
 		printf(" | ");	printf("%*d",		col[0], 		index++);
 
 		if(tkn_ptr != NULL){
-			// terminal
+			// terminal leaf
 			char buffer_value[21] = {0};
 			char buffer_token[21] = {0};
 
@@ -549,6 +549,7 @@ void print_parse_tree(ParseTree *tree){
 			printf(" | ");	printf("%-*.*s",	col[7],col[7], symbol_to_name(symbol));
 		}
 		else{
+			// Non leaf or uninitialized leaf
 			printf(" | ");	printf("%-*.*s",	col[1],col[1],	"--------------------");
 			printf(" | ");	printf("%-*.*s",	col[2],col[2],	"--------------------");
 			printf(" | ");	printf("%-*.*s",	col[3],col[3],	"--------------------");
@@ -561,7 +562,13 @@ void print_parse_tree(ParseTree *tree){
 				printf(" | ");	printf("%-*.*s",	col[5],col[5],	"ROOT");
 			}
 
-			printf(" | ");	printf("%-*.*s",	col[6],col[6],	"No");
+			if(cur_node_ptr->child == NULL){
+				printf(" | ");	printf("%-*.*s",	col[6],col[6],	"Yes");
+			}
+			else{
+				printf(" | ");	printf("%-*.*s",	col[6],col[6],	"No");
+			}
+
 			printf(" | ");	printf("%-*.*s",	col[7],col[7], symbol_to_name(symbol));
 		}
 

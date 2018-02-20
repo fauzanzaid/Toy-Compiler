@@ -485,7 +485,7 @@ char *symbol_to_string(int symbol){
 void print_parse_tree(ParseTree *tree){
 	ParseTree_Node *cur_node_ptr = tree;
 
-	int col[] = {5,11,4,11,20,20,4,20};
+	int col[] = {5,11,4,20,11,20,4,20};
 
 	printf(" --");	printf("%-*.*s",	col[0],col[0],	"--------------------");
 	printf("---");	printf("%-*.*s",	col[1],col[1],	"--------------------");
@@ -528,24 +528,31 @@ void print_parse_tree(ParseTree *tree){
 
 		if(tkn_ptr != NULL){
 			// terminal
+			char buffer_value[21] = {0};
+			char buffer_token[21] = {0};
+
+			if(tkn_ptr->type == TOKEN_NUM || tkn_ptr->type == TOKEN_RNUM){
+				snprintf(buffer_token, 21, "%s", "--------------------");
+				token_to_value(tkn_ptr, buffer_value, 20);
+			}
+			else{
+				token_to_string(tkn_ptr, buffer_token, 20);
+				snprintf(buffer_value, 21, "%s", "--------------------");
+			}
+
 			printf(" | ");	printf("%-*.*s",	col[1],col[1], token_to_name(tkn_ptr));
 			printf(" | ");	printf("%*d",		col[2],			tkn_ptr->line);
-			printf(" | ");	printf("%-*.*s",	col[3],col[3], token_to_name(tkn_ptr));
-
-			char buffer[21] = {0};
-			token_to_value(tkn_ptr, buffer, 20);
-
-			printf(" | ");	printf("%-*.*s",	col[4],col[4], buffer);
-
+			printf(" | ");	printf("%-*.*s",	col[3],col[3], buffer_token);
+			printf(" | ");	printf("%-*.*s",	col[4],col[4], buffer_value);
 			printf(" | ");	printf("%-*.*s",	col[5],col[5], symbol_to_name(cur_node_ptr->parent->symbol));
 			printf(" | ");	printf("%-*.*s",	col[6],col[6],	"Yes");
 			printf(" | ");	printf("%-*.*s",	col[7],col[7], symbol_to_name(symbol));
 		}
 		else{
 			printf(" | ");	printf("%-*.*s",	col[1],col[1],	"--------------------");
-			printf(" | ");	printf("%-*.*s",	col[2],col[2],	"                    ");
+			printf(" | ");	printf("%-*.*s",	col[2],col[2],	"--------------------");
 			printf(" | ");	printf("%-*.*s",	col[3],col[3],	"--------------------");
-			printf(" | ");	printf("%-*.*s",	col[4],col[4],	"                    ");
+			printf(" | ");	printf("%-*.*s",	col[4],col[4],	"--------------------");
 
 			if(cur_node_ptr->parent){
 				printf(" | ");	printf("%-*.*s",	col[5],col[5], symbol_to_name(cur_node_ptr->parent->symbol));

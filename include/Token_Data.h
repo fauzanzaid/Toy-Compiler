@@ -96,4 +96,6 @@ char *token_to_name(Token *tkn_ptr);
 
 void token_to_value(Token *tkn_ptr, char *buffer, int len_buffer);
 
+void token_to_string(Token *tkn_ptr, char *buffer, int len_buffer);
+
 #endif

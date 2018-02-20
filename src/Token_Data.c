@@ -60,6 +60,51 @@ char *token_names[] = {
 	"EOT"
 };
 
+char *token_strings[] = {
+	",",
+	";",
+	"(",
+	")",
+	"]",
+	"[",
+	"+",
+	"-",
+	"*",
+	"/",
+	"@",
+	"",
+	"",
+	"",
+	"",
+	"int",
+	"real",
+	"string",
+	"matrix",
+	"function",
+	"end",
+	"if",
+	"else",
+	"endif",
+	"read",
+	"print",
+	"_main",
+	"",
+	"",
+	"",
+	".and.",
+	".or.",
+	".not.",
+	"<",
+	"<=",
+	">",
+	">=",
+	"=",
+	"==",
+	"=/=",
+	"",
+	"",
+	""
+};
 
 ///////////////
 // Functions //
@@ -145,6 +190,19 @@ void token_to_value(Token *tkn_ptr, char *buffer, int len_buffer){
 	else if (tkn_ptr->type == TOKEN_NUM)	snprintf(buffer, len_buffer, "%d", tkn_ptr->data->integer);
 	else if (tkn_ptr->type == TOKEN_RNUM)	snprintf(buffer, len_buffer, "%d.%d", tkn_ptr->data->integer, tkn_ptr->data->fraction);
 	else if (tkn_ptr->type == TOKEN_STR)	snprintf(buffer, len_buffer, "%s", tkn_ptr->data->string);
+}
+
+void token_to_string(Token *tkn_ptr, char *buffer, int len_buffer){
+	if(	tkn_ptr->type == TOKEN_ID ||
+		tkn_ptr->type == TOKEN_FUNID ||
+		tkn_ptr->type == TOKEN_NUM ||
+		tkn_ptr->type == TOKEN_RNUM ||
+		tkn_ptr->type == TOKEN_STR){
+		token_to_value(tkn_ptr, buffer, len_buffer);
+	}
+	else{
+		snprintf(buffer, len_buffer, "%s", token_strings[tkn_ptr->type]);
+	}
 }
 
 void pretty_print_token(Token *tkn_ptr){

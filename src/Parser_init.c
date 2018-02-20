@@ -4,6 +4,15 @@
 #include "ParserLL1.h"
 #include "Token_Data.h"
 
+
+// ANSI escape codes to print to console
+#define TEXT_RED	"\x1B[31m"
+#define TEXT_GRN	"\x1B[32m"
+#define TEXT_YLW	"\x1B[33m"
+#define TEXT_BLD	"\x1B[1m"
+#define TEXT_RST	"\x1B[0m"
+
+
 int terminal_symbols[] = {
 	SYMBOL_T_COMMA,
 	SYMBOL_T_SEMICOLON,
@@ -471,14 +480,6 @@ char *symbol_to_string(int symbol){
 		return symbol_strings[symbol];
 	}
 	return symbol_strings[len_terminal_symbols];
-}
-
-void token_to_value(Token *tkn_ptr, char *buffer, int len_buffer){
-	if (tkn_ptr->type == TOKEN_ID)			snprintf(buffer, len_buffer, "%s", tkn_ptr->data->string);
-	else if (tkn_ptr->type == TOKEN_FUNID)	snprintf(buffer, len_buffer, "%s", tkn_ptr->data->string);
-	else if (tkn_ptr->type == TOKEN_NUM)	snprintf(buffer, len_buffer, "%d", tkn_ptr->data->integer);
-	else if (tkn_ptr->type == TOKEN_RNUM)	snprintf(buffer, len_buffer, "%d.%d", tkn_ptr->data->integer, tkn_ptr->data->fraction);
-	else if (tkn_ptr->type == TOKEN_STR)	snprintf(buffer, len_buffer, "%s", tkn_ptr->data->string);
 }
 
 void print_parse_tree(ParseTree *tree){

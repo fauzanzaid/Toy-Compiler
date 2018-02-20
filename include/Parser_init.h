@@ -122,8 +122,6 @@ int token_to_symbol(Token *tkn_ptr);
 
 char *symbol_to_string(int symbol);
 
-void token_to_value(Token *tkn_ptr, char *buffer, int len_buffer);
-
 void print_parse_tree(ParseTree *tree);
 
 #endif

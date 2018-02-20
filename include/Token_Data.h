@@ -94,4 +94,6 @@ int token_ignore(Token *tkn_ptr);
 
 char *token_to_name(Token *tkn_ptr);
 
+void token_to_value(Token *tkn_ptr, char *buffer, int len_buffer);
+
 #endif

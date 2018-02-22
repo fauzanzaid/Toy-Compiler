@@ -217,7 +217,7 @@ void pretty_print_token(Token *tkn_ptr){
 	int len_buffer = TOKEN_VALUE_MAX_CHAR + 2;
 	char buffer[len_buffer];
 	memset(buffer, '\0', len_buffer);
-	token_to_value(tkn_ptr, buffer, len_buffer);
+	token_to_string(tkn_ptr, buffer, len_buffer);
 
 	if(buffer[len_buffer-2] != '\0'){
 		// value string truncate

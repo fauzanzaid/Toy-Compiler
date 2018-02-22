@@ -261,22 +261,17 @@ char *success_evaluate_function(Token *tkn_ptr, int state, char *string, int len
 	else if(state == STATE_F_NUM){
 		tkn_ptr->type = TOKEN_NUM;
 
-		char tmp[1+len_string];
-		memcpy(tmp, string, len_string);
-		tmp[len_string] = '\0';
-
-		tkn_ptr->data->integer = atoi(tmp);
+		tkn_ptr->data->string = malloc( sizeof(char) * (1 + len_string) );
+		memcpy(tkn_ptr->data->string, string, len_string);
+		tkn_ptr->data->string[len_string] = '\0';
 	}
 
 	else if(state == STATE_F_RNUM){
 		tkn_ptr->type = TOKEN_RNUM;
 
-		char tmp[1+len_string];
-		memcpy(tmp, string, len_string);
-		tmp[len_string] = '\0';
-
-		tkn_ptr->data->integer = atoi(tmp);
-		tkn_ptr->data->fraction = atoi(&tmp[len_string - 2]);
+		tkn_ptr->data->string = malloc( sizeof(char) * (1 + len_string) );
+		memcpy(tkn_ptr->data->string, string, len_string);
+		tkn_ptr->data->string[len_string] = '\0';
 	}
 
 	else if(state == STATE_F_STR){

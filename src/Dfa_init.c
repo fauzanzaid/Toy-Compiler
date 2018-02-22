@@ -159,7 +159,9 @@ void Dfa_init_add_transitions(Dfa *dfa_ptr){
 
 	Dfa_add_transition_single(dfa_ptr, STATE_N_START, STATE_N_A_STR, '\"');
 	Dfa_add_transition_range(dfa_ptr, STATE_N_A_STR, STATE_N_B_STR, 'a', 'z');
+	Dfa_add_transition_single(dfa_ptr, STATE_N_A_STR, STATE_N_B_STR, ' ');
 	Dfa_add_transition_range(dfa_ptr, STATE_N_B_STR, STATE_N_B_STR, 'a', 'z');
+	Dfa_add_transition_single(dfa_ptr, STATE_N_B_STR, STATE_N_B_STR, ' ');
 	Dfa_add_transition_single(dfa_ptr, STATE_N_B_STR, STATE_F_STR, '\"');
 
 

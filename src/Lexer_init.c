@@ -287,7 +287,7 @@ char *success_evaluate_function(Token *tkn_ptr, int state, char *string, int len
 		tkn_ptr->data->string[len_literal] = '\0';
 
 		// Enforce STR length limit
-		if(len_literal>20){
+		if(len_literal>18){
 			tkn_ptr->type = TOKEN_ERROR;
 			return success_evaluate_error_strings[1];
 		}

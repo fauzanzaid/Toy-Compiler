@@ -114,8 +114,6 @@ Token_Data *Token_Data_new(){
 	Token_Data *tdt_ptr = malloc( sizeof(Token_Data) );
 	tdt_ptr->string = NULL;
 	tdt_ptr->len_string = 0;
-	tdt_ptr->integer = 0;
-	tdt_ptr->fraction = 0;
 }
 
 void Token_Data_destroy(Token_Data *tdt_ptr){
@@ -185,11 +183,12 @@ char *token_to_name(Token *tkn_ptr){
 }
 
 void token_to_value(Token *tkn_ptr, char *buffer, int len_buffer){
-	if (tkn_ptr->type == TOKEN_ID)			snprintf(buffer, len_buffer, "%s", tkn_ptr->data->string);
-	else if (tkn_ptr->type == TOKEN_FUNID)	snprintf(buffer, len_buffer, "%s", tkn_ptr->data->string);
-	else if (tkn_ptr->type == TOKEN_NUM)	snprintf(buffer, len_buffer, "%d", tkn_ptr->data->integer);
-	else if (tkn_ptr->type == TOKEN_RNUM)	snprintf(buffer, len_buffer, "%d.%d", tkn_ptr->data->integer, tkn_ptr->data->fraction);
-	else if (tkn_ptr->type == TOKEN_STR)	snprintf(buffer, len_buffer, "%s", tkn_ptr->data->string);
+	if (tkn_ptr->type == TOKEN_ID ||
+		tkn_ptr->type == TOKEN_FUNID ||
+		tkn_ptr->type == TOKEN_NUM ||
+		tkn_ptr->type == TOKEN_RNUM ||
+		tkn_ptr->type == TOKEN_STR)
+		snprintf(buffer, len_buffer, "%s", tkn_ptr->data->string);
 }
 
 void token_to_string(Token *tkn_ptr, char *buffer, int len_buffer){

@@ -69,14 +69,11 @@ typedef enum {
 typedef struct Token_Data{
 	//TOKEN_ID
 	//TOKEN_FUNID		
-	char *string;
-	int len_string;
-		
 	//TOKEN_NUM
 	//TOKEN_RNUM
 	//TOKEN_STR
-	int integer;
-	int fraction;
+	char *string;
+	int len_string;
 } Token_Data;
 
 

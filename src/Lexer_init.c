@@ -140,6 +140,9 @@ void keyword_table_init(){
 	HashTable_add(keyword_table, (void *)&KEYWORD_MAIN_KEY, (void *)&KEYWORD_MAIN_VALUE);
 }
 
+void keyword_table_free(){
+	HashTable_destroy(keyword_table);
+}
 
 
 

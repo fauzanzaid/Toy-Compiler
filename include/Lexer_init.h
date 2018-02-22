@@ -11,7 +11,7 @@
 
 extern HashTable *keyword_table;
 void keyword_table_init();
-
+void keyword_table_free();
 
 ///////////////
 // Functions //

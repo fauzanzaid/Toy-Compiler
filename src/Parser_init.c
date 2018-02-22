@@ -1,10 +1,13 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "Parser_init.h"
 #include "ParserLL1.h"
 #include "Token_Data.h"
+#include "LinkedList.h"
 
 
+#define SYMBOL_MAX_LEN 25
 // ANSI escape codes to print to console
 #define TEXT_RED	"\x1B[31m"
 #define TEXT_GRN	"\x1B[32m"
@@ -104,6 +107,11 @@ int len_variable_symbols = 39;
 int start_symbol = SYMBOL_V_MAIN_FUNCTION;
 int empty_symbol = SYMBOL_V_EPSILON;
 int end_symbol = SYMBOL_T_ENDOFINPUT;
+
+int forget_terminal_symbols[] = {
+	SYMBOL_T_SEMICOLON
+};
+int len_forget_terminal_symbols = 1;
 
 char *symbol_names[] = {
 	"comma",
@@ -341,6 +349,95 @@ void Parser_init_add_rules(ParserLL1 *psr_ptr){
 
 }
 
+void Parser_init_add_rules_from_file(ParserLL1 *psr_ptr, const char *filename){
+	FILE *file_ptr = fopen(filename, "r");
+	if(file_ptr == NULL){
+		fprintf(stderr, "Unable to open file %s\n", filename);
+		return;
+	}
+
+	// Additional len for checking len limit and nu;=l
+	int len_buffer = SYMBOL_MAX_LEN + 2;
+	char buffer[len_buffer];
+
+	int state = 0;
+	// 0 > lhs > 1 > = > 2 > rhs > 2 > . > 0
+
+	int variable_symbol;
+	LinkedList *expansion_symbol_list = LinkedList_new();
+
+	while(1){
+		memset(buffer, 0, len_buffer);
+
+		int status = fscanf(file_ptr, " %25s", buffer);
+
+		// printf("%d\t%s\n", state, buffer);
+
+		if(status == EOF){
+			break;
+		}
+
+		if(buffer[len_buffer-1] != '\0'){
+			// Longer than max len
+			fprintf(stderr, "Symbol %s is longer than %d chars\n", buffer, SYMBOL_MAX_LEN);
+			break;
+		}
+
+
+		if(state == 0){
+			// Try to read lhs
+			variable_symbol = name_to_symbol(buffer);
+			if(variable_symbol == -1){
+				fprintf(stderr, "Unrecognised symbol %s\n", buffer);
+				break;
+			}
+			state = 1;
+		}
+		else if(state == 1){
+			// Try to read =
+			if(strcmp(buffer, "=") != 0){
+				fprintf(stderr, "Expected \"=\", got %s\n", buffer);
+				break;
+			}
+			state = 2;
+		}
+		else if(state == 2){
+			// Try to read rhs
+			int symbol = name_to_symbol(buffer);
+			if(symbol == -1){
+
+				if(strcmp(buffer, ".") == 0){
+					// Create and add rule
+
+					int len_expansion_symbols = LinkedList_get_size(expansion_symbol_list);
+					int expansion_symbols[len_expansion_symbols];
+
+					for (int i = 0; i < len_expansion_symbols; ++i){
+						expansion_symbols[i] = (long) LinkedList_pop(expansion_symbol_list);
+					}
+
+					ParserLL1_add_rule(psr_ptr, variable_symbol, expansion_symbols, len_expansion_symbols);
+
+					state = 0;
+				}
+
+				else{
+					fprintf(stderr, "Unrecognised symbol %s\n", buffer);
+					break;
+				}
+			}
+
+			else{
+				LinkedList_pushback(expansion_symbol_list, (void*)(long)symbol);
+			}
+		}
+	}
+
+	LinkedList_destroy(expansion_symbol_list);
+
+	fclose(file_ptr);
+}
+
 int token_to_symbol(Token *tkn_ptr){
 	if(tkn_ptr->type == TOKEN_EOT)
 		return SYMBOL_T_ENDOFINPUT;
@@ -480,6 +577,16 @@ char *symbol_to_string(int symbol){
 		return symbol_strings[symbol];
 	}
 	return symbol_strings[len_terminal_symbols];
+}
+
+int name_to_symbol(char *string){
+	for (int i = 0; i < 80; ++i){
+		if(strcmp(string, symbol_names[i]) == 0){
+			return i;
+		}
+	}
+
+	return -1;
 }
 
 void print_parse_tree(ParseTree *tree){

@@ -109,6 +109,8 @@ extern int len_terminal_symbols;
 extern int start_symbol;
 extern int empty_symbol;
 extern int end_symbol;
+extern int forget_terminal_symbols[];
+extern int len_forget_terminal_symbols;
 extern char *symbol_names[];
 extern char *symbol_strings[];
 
@@ -118,9 +120,15 @@ extern char *symbol_strings[];
 
 void Parser_init_add_rules(ParserLL1 *psr_ptr);
 
+void Parser_init_add_rules_from_file(ParserLL1 *psr_ptr, const char *filename);
+
 int token_to_symbol(Token *tkn_ptr);
 
 char *symbol_to_string(int symbol);
+
+char *symbol_to_name(int symbol);
+
+int name_to_symbol(char *string);
 
 void print_parse_tree(ParseTree *tree);
 

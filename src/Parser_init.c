@@ -590,10 +590,89 @@ int name_to_symbol(char *string){
 	return -1;
 }
 
-void print_parse_tree(ParseTree *tree){
-	ParseTree_Node *cur_node_ptr = tree;
+static void print_node(ParseTree_Node *node_ptr, int *index){
+	int symbol = node_ptr->symbol;
+	Token *tkn_ptr = node_ptr->tkn_ptr;
 
-	int col[] = {5,11,4,20,11,20,4,20};
+	int col[] = {5,11,4,20,20,20,4,20};
+
+	printf(" | ");	printf("%*d",		col[0], 		(*index)++);
+
+	if(tkn_ptr != NULL){
+		// terminal leaf
+		char buffer_token[col[3]+2];	memset(buffer_token, 0, col[3]+2);
+		char buffer_value[col[4]+2];	memset(buffer_value, 0, col[4]+2);
+
+		if(tkn_ptr->type == TOKEN_NUM || tkn_ptr->type == TOKEN_RNUM){
+			snprintf(buffer_token, col[3]+2, "%s", "-------------------------");
+			token_to_value(tkn_ptr, buffer_value, col[4]+2);
+			if(buffer_value[col[4]]!='\0'){
+				buffer_value[col[4]] = '\0';
+				buffer_value[col[4]-1] = buffer_value[col[4]-2] = buffer_value[col[4]-3] = '.';
+			}
+		}
+		else{
+			token_to_string(tkn_ptr, buffer_token, col[3]+2);
+			snprintf(buffer_value, col[4]+2, "%s", "-------------------------");
+			if(buffer_token[col[3]]!='\0'){
+				buffer_token[col[3]] = '\0';
+				buffer_token[col[3]-1] = buffer_token[col[3]-2] = buffer_token[col[3]-3] = '.';
+			}
+		}
+
+		printf(" | ");	printf("%-*.*s",	col[1],col[1], token_to_name(tkn_ptr));
+		printf(" | ");	printf("%*d",		col[2],			tkn_ptr->line);
+		printf(" | ");	printf("%-*.*s",	col[3],col[3], buffer_token);
+		printf(" | ");	printf("%-*.*s",	col[4],col[4], buffer_value);
+		printf(" | ");	printf("%-*.*s",	col[5],col[5], symbol_to_name(node_ptr->parent->symbol));
+		printf(" | ");	printf("%-*.*s",	col[6],col[6],	"Yes");
+		printf(" | ");	printf("%-*.*s",	col[7],col[7], symbol_to_name(symbol));
+	}
+	else{
+		// Non leaf or uninitialized leaf
+		printf(" | ");	printf("%-*.*s",	col[1],col[1],	"-------------------------");
+		printf(" | ");	printf("%-*.*s",	col[2],col[2],	"-------------------------");
+		printf(" | ");	printf("%-*.*s",	col[3],col[3],	"-------------------------");
+		printf(" | ");	printf("%-*.*s",	col[4],col[4],	"-------------------------");
+
+		if(node_ptr->parent){
+			printf(" | ");	printf("%-*.*s",	col[5],col[5], symbol_to_name(node_ptr->parent->symbol));
+		}
+		else{
+			printf(" | ");	printf("%-*.*s",	col[5],col[5],	"ROOT");
+		}
+
+		if(node_ptr->child == NULL){
+			printf(" | ");	printf("%-*.*s",	col[6],col[6],	"Yes");
+		}
+		else{
+			printf(" | ");	printf("%-*.*s",	col[6],col[6],	"No");
+		}
+
+		printf(" | ");	printf("%-*.*s",	col[7],col[7], symbol_to_name(symbol));
+	}
+
+	printf(" |\n");
+}
+
+static void traverse_inorder(ParseTree_Node *cur_node_ptr, int *index){
+	if(cur_node_ptr == NULL){
+		return;
+	}
+
+	ParseTree_Node *child_node_ptr = cur_node_ptr->child;
+	traverse_inorder(child_node_ptr, index);
+
+	print_node(cur_node_ptr, index);
+
+	while(child_node_ptr != NULL){
+		child_node_ptr = child_node_ptr->sibling;
+		traverse_inorder(child_node_ptr, index);
+	}
+}
+
+void print_parse_tree(ParseTree *tree){
+	int col[] = {5,11,4,20,20,20,4,20};
 
 	printf(" --");	printf("%-*.*s",	col[0],col[0],	"-------------------------");
 	printf("---");	printf("%-*.*s",	col[1],col[1],	"-------------------------");
@@ -627,71 +706,7 @@ void print_parse_tree(ParseTree *tree){
 
 	int index = 1;
 
-	while(cur_node_ptr != NULL){
-
-		int symbol = cur_node_ptr->symbol;
-		Token *tkn_ptr = cur_node_ptr->tkn_ptr;
-
-		printf(" | ");	printf("%*d",		col[0], 		index++);
-
-		if(tkn_ptr != NULL){
-			// terminal leaf
-			char buffer_token[col[3]+2];	memset(buffer_token, 0, col[3]+2);
-			char buffer_value[col[4]+2];	memset(buffer_value, 0, col[4]+2);
-
-			if(tkn_ptr->type == TOKEN_NUM || tkn_ptr->type == TOKEN_RNUM){
-				snprintf(buffer_token, col[3]+2, "%s", "-------------------------");
-				token_to_value(tkn_ptr, buffer_value, col[4]+2);
-				if(buffer_value[col[4]]!='\0'){
-					buffer_value[col[4]] = '\0';
-					buffer_value[col[4]-1] = buffer_value[col[4]-2] = buffer_value[col[4]-3] = '.';
-				}
-			}
-			else{
-				token_to_string(tkn_ptr, buffer_token, col[3]+2);
-				snprintf(buffer_value, col[4]+2, "%s", "-------------------------");
-				if(buffer_token[col[3]]!='\0'){
-					buffer_token[col[3]] = '\0';
-					buffer_token[col[3]-1] = buffer_token[col[3]-2] = buffer_token[col[3]-3] = '.';
-				}
-			}
-
-			printf(" | ");	printf("%-*.*s",	col[1],col[1], token_to_name(tkn_ptr));
-			printf(" | ");	printf("%*d",		col[2],			tkn_ptr->line);
-			printf(" | ");	printf("%-*.*s",	col[3],col[3], buffer_token);
-			printf(" | ");	printf("%-*.*s",	col[4],col[4], buffer_value);
-			printf(" | ");	printf("%-*.*s",	col[5],col[5], symbol_to_name(cur_node_ptr->parent->symbol));
-			printf(" | ");	printf("%-*.*s",	col[6],col[6],	"Yes");
-			printf(" | ");	printf("%-*.*s",	col[7],col[7], symbol_to_name(symbol));
-		}
-		else{
-			// Non leaf or uninitialized leaf
-			printf(" | ");	printf("%-*.*s",	col[1],col[1],	"-------------------------");
-			printf(" | ");	printf("%-*.*s",	col[2],col[2],	"-------------------------");
-			printf(" | ");	printf("%-*.*s",	col[3],col[3],	"-------------------------");
-			printf(" | ");	printf("%-*.*s",	col[4],col[4],	"-------------------------");
-
-			if(cur_node_ptr->parent){
-				printf(" | ");	printf("%-*.*s",	col[5],col[5], symbol_to_name(cur_node_ptr->parent->symbol));
-			}
-			else{
-				printf(" | ");	printf("%-*.*s",	col[5],col[5],	"ROOT");
-			}
-
-			if(cur_node_ptr->child == NULL){
-				printf(" | ");	printf("%-*.*s",	col[6],col[6],	"Yes");
-			}
-			else{
-				printf(" | ");	printf("%-*.*s",	col[6],col[6],	"No");
-			}
-
-			printf(" | ");	printf("%-*.*s",	col[7],col[7], symbol_to_name(symbol));
-		}
-
-		printf(" |\n");
-
-		cur_node_ptr = ParseTree_Node_move_inorder(cur_node_ptr);
-	}
+	traverse_inorder(tree, &index);
 
 	printf(" --");	printf("%-*.*s",	col[0],col[0],	"-------------------------");
 	printf("---");	printf("%-*.*s",	col[1],col[1],	"-------------------------");

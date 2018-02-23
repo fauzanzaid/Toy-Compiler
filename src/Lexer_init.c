@@ -65,7 +65,7 @@ char *error_evaluate_error_strings[] = {
 
 char *success_evaluate_error_strings[] = {
 	"Identifier is longer than 20 characters",
-	"String literal is longer than 20 characters",
+	"String literal is longer than 18 characters",
 };
 
 

@@ -130,6 +130,6 @@ char *symbol_to_name(int symbol);
 
 int name_to_symbol(char *string);
 
-void print_parse_tree(ParseTree *tree);
+void print_parse_tree(ParseTree *tree, FILE *file_ptr);
 
 #endif

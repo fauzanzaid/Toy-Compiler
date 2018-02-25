@@ -590,13 +590,13 @@ int name_to_symbol(char *string){
 	return -1;
 }
 
-static void print_node(ParseTree_Node *node_ptr, int *index){
+static void print_node(ParseTree_Node *node_ptr, int *index, FILE* file_ptr){
 	int symbol = node_ptr->symbol;
 	Token *tkn_ptr = node_ptr->tkn_ptr;
 
 	int col[] = {5,11,4,20,20,20,4,20};
 
-	printf(" | ");	printf("%*d",		col[0], 		(*index)++);
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%*d",		col[0], 		(*index)++);
 
 	if(tkn_ptr != NULL){
 		// terminal leaf
@@ -620,101 +620,101 @@ static void print_node(ParseTree_Node *node_ptr, int *index){
 			}
 		}
 
-		printf(" | ");	printf("%-*.*s",	col[1],col[1], token_to_name(tkn_ptr));
-		printf(" | ");	printf("%*d",		col[2],			tkn_ptr->line);
-		printf(" | ");	printf("%-*.*s",	col[3],col[3], buffer_token);
-		printf(" | ");	printf("%-*.*s",	col[4],col[4], buffer_value);
-		printf(" | ");	printf("%-*.*s",	col[5],col[5], symbol_to_name(node_ptr->parent->symbol));
-		printf(" | ");	printf("%-*.*s",	col[6],col[6],	"Yes");
-		printf(" | ");	printf("%-*.*s",	col[7],col[7], symbol_to_name(symbol));
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[1],col[1], token_to_name(tkn_ptr));
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%*d",		col[2],			tkn_ptr->line);
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[3],col[3], buffer_token);
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[4],col[4], buffer_value);
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[5],col[5], symbol_to_name(node_ptr->parent->symbol));
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"Yes");
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[7],col[7], symbol_to_name(symbol));
 	}
 	else{
 		// Non leaf or uninitialized leaf
-		printf(" | ");	printf("%-*.*s",	col[1],col[1],	"-------------------------");
-		printf(" | ");	printf("%-*.*s",	col[2],col[2],	"-------------------------");
-		printf(" | ");	printf("%-*.*s",	col[3],col[3],	"-------------------------");
-		printf(" | ");	printf("%-*.*s",	col[4],col[4],	"-------------------------");
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[1],col[1],	"-------------------------");
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[2],col[2],	"-------------------------");
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[3],col[3],	"-------------------------");
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[4],col[4],	"-------------------------");
 
 		if(node_ptr->parent){
-			printf(" | ");	printf("%-*.*s",	col[5],col[5], symbol_to_name(node_ptr->parent->symbol));
+			fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[5],col[5], symbol_to_name(node_ptr->parent->symbol));
 		}
 		else{
-			printf(" | ");	printf("%-*.*s",	col[5],col[5],	"ROOT");
+			fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	"ROOT");
 		}
 
 		if(node_ptr->child == NULL){
-			printf(" | ");	printf("%-*.*s",	col[6],col[6],	"Yes");
+			fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"Yes");
 		}
 		else{
-			printf(" | ");	printf("%-*.*s",	col[6],col[6],	"No");
+			fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"No");
 		}
 
-		printf(" | ");	printf("%-*.*s",	col[7],col[7], symbol_to_name(symbol));
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[7],col[7], symbol_to_name(symbol));
 	}
 
-	printf(" |\n");
+	fprintf(file_ptr, " |\n");
 }
 
-static void traverse_inorder(ParseTree_Node *cur_node_ptr, int *index){
+static void traverse_inorder(ParseTree_Node *cur_node_ptr, int *index, FILE *file_ptr){
 	if(cur_node_ptr == NULL){
 		return;
 	}
 
 	ParseTree_Node *child_node_ptr = cur_node_ptr->child;
-	traverse_inorder(child_node_ptr, index);
+	traverse_inorder(child_node_ptr, index, file_ptr);
 
-	print_node(cur_node_ptr, index);
+	print_node(cur_node_ptr, index, file_ptr);
 
 	while(child_node_ptr != NULL){
 		child_node_ptr = child_node_ptr->sibling;
-		traverse_inorder(child_node_ptr, index);
+		traverse_inorder(child_node_ptr, index, file_ptr);
 	}
 }
 
-void print_parse_tree(ParseTree *tree){
+void print_parse_tree(ParseTree *tree, FILE *file_ptr){
 	int col[] = {5,11,4,20,20,20,4,20};
 
-	printf(" --");	printf("%-*.*s",	col[0],col[0],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[1],col[1],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[2],col[2],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[3],col[3],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[4],col[4],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[5],col[5],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[6],col[6],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[7],col[7],	"-------------------------");
-	printf("--\n");
+	fprintf(file_ptr, " --");	fprintf(file_ptr, "%-*.*s",	col[0],col[0],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[1],col[1],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[2],col[2],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[3],col[3],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[4],col[4],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[7],col[7],	"-------------------------");
+	fprintf(file_ptr, "--\n");
 
-	printf(" | ");	printf("%-*.*s",	col[0],col[0],	"S No");
-	printf(" | ");	printf("%-*.*s",	col[1],col[1],	"Lexeme");
-	printf(" | ");	printf("%-*.*s",	col[2],col[2],	"Line");
-	printf(" | ");	printf("%-*.*s",	col[3],col[3],	"Token");
-	printf(" | ");	printf("%-*.*s",	col[4],col[4],	"Value");
-	printf(" | ");	printf("%-*.*s",	col[5],col[5],	"Parent");
-	printf(" | ");	printf("%-*.*s",	col[6],col[6],	"Leaf");
-	printf(" | ");	printf("%-*.*s",	col[7],col[7],	"Current");
-	printf(" |\n");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[0],col[0],	"S No");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[1],col[1],	"Lexeme");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[2],col[2],	"Line");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[3],col[3],	"Token");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[4],col[4],	"Value");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	"Parent");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"Leaf");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[7],col[7],	"Current");
+	fprintf(file_ptr, " |\n");
 
-	printf(" --");	printf("%-*.*s",	col[0],col[0],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[1],col[1],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[2],col[2],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[3],col[3],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[4],col[4],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[5],col[5],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[6],col[6],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[7],col[7],	"-------------------------");
-	printf("--\n");
+	fprintf(file_ptr, " --");	fprintf(file_ptr, "%-*.*s",	col[0],col[0],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[1],col[1],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[2],col[2],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[3],col[3],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[4],col[4],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[7],col[7],	"-------------------------");
+	fprintf(file_ptr, "--\n");
 
 	int index = 1;
 
-	traverse_inorder(tree, &index);
+	traverse_inorder(tree, &index, file_ptr);
 
-	printf(" --");	printf("%-*.*s",	col[0],col[0],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[1],col[1],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[2],col[2],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[3],col[3],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[4],col[4],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[5],col[5],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[6],col[6],	"-------------------------");
-	printf("---");	printf("%-*.*s",	col[7],col[7],	"-------------------------");
-	printf("--\n");
+	fprintf(file_ptr, " --");	fprintf(file_ptr, "%-*.*s",	col[0],col[0],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[1],col[1],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[2],col[2],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[3],col[3],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[4],col[4],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[7],col[7],	"-------------------------");
+	fprintf(file_ptr, "--\n");
 }

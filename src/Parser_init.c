@@ -304,8 +304,8 @@ void Parser_init_add_rules(ParserLL1 *psr_ptr){
 
 
 	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_COND,				(int[]) {SYMBOL_T_KW_IF  ,  SYMBOL_T_OP  ,  SYMBOL_V_EXPR_LOG  ,  SYMBOL_T_CL  ,  SYMBOL_V_STMT_LIST  ,  SYMBOL_V_STMT_COND_REM} , 6 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_COND_REM,			(int[]) {SYMBOL_T_KW_ENDIF} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_COND_REM,			(int[]) {SYMBOL_T_KW_ELSE  ,  SYMBOL_V_STMT_LIST  ,  SYMBOL_T_KW_ENDIF} , 3 );
+	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_COND_REM,			(int[]) {SYMBOL_T_KW_ENDIF, SYMBOL_T_SEMICOLON} , 2 );
+	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_COND_REM,			(int[]) {SYMBOL_T_KW_ELSE  ,  SYMBOL_V_STMT_LIST  ,  SYMBOL_T_KW_ENDIF, SYMBOL_T_SEMICOLON} , 4 );
 	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_LIST,				(int[]) {SYMBOL_V_STMT  ,  SYMBOL_V_STMT_LIST_REM} , 2 );
 	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_LIST_REM,			(int[]) {SYMBOL_V_STMT  ,  SYMBOL_V_STMT_LIST_REM} , 2 );
 	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_LIST_REM,			(int[]) {SYMBOL_V_EPSILON} , 1 );
@@ -322,7 +322,7 @@ void Parser_init_add_rules(ParserLL1 *psr_ptr){
 	ParserLL1_add_rule(psr_ptr, SYMBOL_V_LOG_OP_BIN,			(int[]) {SYMBOL_T_OR} , 1 );
 
 
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_BOOL,				(int[]) {SYMBOL_V_NUM_VAL_WM  ,  SYMBOL_V_BOOL_OP  ,  SYMBOL_V_NUM_VAL_WM} , 3 );
+	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_BOOL,				(int[]) {SYMBOL_V_NUM_VAL_WOM  ,  SYMBOL_V_BOOL_OP  ,  SYMBOL_V_NUM_VAL_WOM} , 3 );
 	ParserLL1_add_rule(psr_ptr, SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_LT} , 1 );
 	ParserLL1_add_rule(psr_ptr, SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_LE} , 1 );
 	ParserLL1_add_rule(psr_ptr, SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_GT} , 1 );
@@ -331,7 +331,7 @@ void Parser_init_add_rules(ParserLL1 *psr_ptr){
 	ParserLL1_add_rule(psr_ptr, SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_NE} , 1 );
 
 
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_DEF,					(int[]) {SYMBOL_T_KW_FUNCTION  ,  SYMBOL_T_SQO  ,  SYMBOL_V_PARAM_LIST  ,  SYMBOL_T_SQC  ,  SYMBOL_T_ASSIGNOP  ,  SYMBOL_T_FUNID  ,  SYMBOL_T_SQO  ,  SYMBOL_V_PARAM_LIST  ,  SYMBOL_T_SQC  ,  SYMBOL_V_STMT_OR_DEF_LIST  ,  SYMBOL_T_KW_END} , 11 );
+	ParserLL1_add_rule(psr_ptr, SYMBOL_V_DEF,					(int[]) {SYMBOL_T_KW_FUNCTION  ,  SYMBOL_T_SQO  ,  SYMBOL_V_PARAM_LIST  ,  SYMBOL_T_SQC  ,  SYMBOL_T_ASSIGNOP  ,  SYMBOL_T_FUNID  ,  SYMBOL_T_SQO  ,  SYMBOL_V_PARAM_LIST  ,  SYMBOL_T_SQC  ,  SYMBOL_V_STMT_OR_DEF_LIST  ,  SYMBOL_T_KW_END  ,  SYMBOL_T_SEMICOLON} , 12 );
 	ParserLL1_add_rule(psr_ptr, SYMBOL_V_PARAM_LIST,			(int[]) {SYMBOL_V_TYPE  ,  SYMBOL_T_ID  ,  SYMBOL_V_PARAM_LIST_REM} , 3 );
 	ParserLL1_add_rule(psr_ptr, SYMBOL_V_PARAM_LIST,			(int[]) {SYMBOL_V_EPSILON} , 1 );
 	ParserLL1_add_rule(psr_ptr, SYMBOL_V_PARAM_LIST_REM,		(int[]) {SYMBOL_T_COMMA  ,  SYMBOL_V_TYPE  ,  SYMBOL_T_ID  ,  SYMBOL_V_PARAM_LIST_REM} , 4 );

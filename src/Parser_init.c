@@ -333,7 +333,6 @@ void Parser_init_add_rules(ParserLL1 *psr_ptr){
 
 	ParserLL1_add_rule(psr_ptr, SYMBOL_V_DEF,					(int[]) {SYMBOL_T_KW_FUNCTION  ,  SYMBOL_T_SQO  ,  SYMBOL_V_PARAM_LIST  ,  SYMBOL_T_SQC  ,  SYMBOL_T_ASSIGNOP  ,  SYMBOL_T_FUNID  ,  SYMBOL_T_SQO  ,  SYMBOL_V_PARAM_LIST  ,  SYMBOL_T_SQC  ,  SYMBOL_V_STMT_OR_DEF_LIST  ,  SYMBOL_T_KW_END  ,  SYMBOL_T_SEMICOLON} , 12 );
 	ParserLL1_add_rule(psr_ptr, SYMBOL_V_PARAM_LIST,			(int[]) {SYMBOL_V_TYPE  ,  SYMBOL_T_ID  ,  SYMBOL_V_PARAM_LIST_REM} , 3 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_PARAM_LIST,			(int[]) {SYMBOL_V_EPSILON} , 1 );
 	ParserLL1_add_rule(psr_ptr, SYMBOL_V_PARAM_LIST_REM,		(int[]) {SYMBOL_T_COMMA  ,  SYMBOL_V_TYPE  ,  SYMBOL_T_ID  ,  SYMBOL_V_PARAM_LIST_REM} , 4 );
 	ParserLL1_add_rule(psr_ptr, SYMBOL_V_PARAM_LIST_REM,		(int[]) {SYMBOL_V_EPSILON} , 1 );
 

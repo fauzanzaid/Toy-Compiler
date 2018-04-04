@@ -249,102 +249,102 @@ char *symbol_strings[] = {
 
 void Parser_init_add_rules(ParserLL1 *psr_ptr){
 
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_MAIN_FUNCTION,			(int[]) {SYMBOL_T_KW_MAIN  ,  SYMBOL_T_SQO  ,  SYMBOL_T_SQC  ,  SYMBOL_V_STMT_OR_DEF_LIST  ,  SYMBOL_T_KW_END} , 5 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_OR_DEF_LIST,		(int[]) {SYMBOL_V_STMT_OR_DEF  ,  SYMBOL_V_STMT_OR_DEF_LIST_REM} , 2 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_OR_DEF_LIST_REM,	(int[]) {SYMBOL_V_STMT_OR_DEF  ,  SYMBOL_V_STMT_OR_DEF_LIST_REM} , 2 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_OR_DEF_LIST_REM,	(int[]) {SYMBOL_V_EPSILON} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_OR_DEF,			(int[]) {SYMBOL_V_STMT} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_OR_DEF,			(int[]) {SYMBOL_V_DEF} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT,					(int[]) {SYMBOL_V_STMT_DECL} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT,					(int[]) {SYMBOL_V_STMT_ASSIGN} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT,					(int[]) {SYMBOL_V_STMT_COND} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT,					(int[]) {SYMBOL_V_STMT_READ} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT,					(int[]) {SYMBOL_V_STMT_PRINT} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT,					(int[]) {SYMBOL_V_CALL, SYMBOL_T_SEMICOLON} , 2 );
+	ParserLL1_add_rule(psr_ptr, 1,	SYMBOL_V_MAIN_FUNCTION,			(int[]) {SYMBOL_T_KW_MAIN  ,  SYMBOL_T_SQO  ,  SYMBOL_T_SQC  ,  SYMBOL_V_STMT_OR_DEF_LIST  ,  SYMBOL_T_KW_END} , 5 );
+	ParserLL1_add_rule(psr_ptr, 2,	SYMBOL_V_STMT_OR_DEF_LIST,		(int[]) {SYMBOL_V_STMT_OR_DEF  ,  SYMBOL_V_STMT_OR_DEF_LIST_REM} , 2 );
+	ParserLL1_add_rule(psr_ptr, 3,	SYMBOL_V_STMT_OR_DEF_LIST_REM,	(int[]) {SYMBOL_V_STMT_OR_DEF  ,  SYMBOL_V_STMT_OR_DEF_LIST_REM} , 2 );
+	ParserLL1_add_rule(psr_ptr, 4,	SYMBOL_V_STMT_OR_DEF_LIST_REM,	(int[]) {SYMBOL_V_EPSILON} , 1 );
+	ParserLL1_add_rule(psr_ptr, 5,	SYMBOL_V_STMT_OR_DEF,			(int[]) {SYMBOL_V_STMT} , 1 );
+	ParserLL1_add_rule(psr_ptr, 6,	SYMBOL_V_STMT_OR_DEF,			(int[]) {SYMBOL_V_DEF} , 1 );
+	ParserLL1_add_rule(psr_ptr, 7,	SYMBOL_V_STMT,					(int[]) {SYMBOL_V_STMT_DECL} , 1 );
+	ParserLL1_add_rule(psr_ptr, 8,	SYMBOL_V_STMT,					(int[]) {SYMBOL_V_STMT_ASSIGN} , 1 );
+	ParserLL1_add_rule(psr_ptr, 9,	SYMBOL_V_STMT,					(int[]) {SYMBOL_V_STMT_COND} , 1 );
+	ParserLL1_add_rule(psr_ptr, 10,	SYMBOL_V_STMT,					(int[]) {SYMBOL_V_STMT_READ} , 1 );
+	ParserLL1_add_rule(psr_ptr, 11,	SYMBOL_V_STMT,					(int[]) {SYMBOL_V_STMT_PRINT} , 1 );
+	ParserLL1_add_rule(psr_ptr, 12,	SYMBOL_V_STMT,					(int[]) {SYMBOL_V_CALL, SYMBOL_T_SEMICOLON} , 2 );
 
 
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_DECL,				(int[]) {SYMBOL_V_TYPE  ,  SYMBOL_T_ID  ,  SYMBOL_V_ID_LIST_REM  ,  SYMBOL_T_SEMICOLON} , 4 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_ID_LIST,				(int[]) {SYMBOL_T_ID  ,  SYMBOL_V_ID_LIST_REM} , 2 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_ID_LIST,				(int[]) {SYMBOL_V_EPSILON} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_ID_LIST_REM,			(int[]) {SYMBOL_T_COMMA  ,  SYMBOL_T_ID  ,  SYMBOL_V_ID_LIST_REM} , 3 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_ID_LIST_REM,			(int[]) {SYMBOL_V_EPSILON} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_TYPE,					(int[]) {SYMBOL_T_KW_INT} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_TYPE,					(int[]) {SYMBOL_T_KW_REAL} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_TYPE,					(int[]) {SYMBOL_T_KW_STRING} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_TYPE,					(int[]) {SYMBOL_T_KW_MATRIX} , 1 );
+	ParserLL1_add_rule(psr_ptr, 13,	SYMBOL_V_STMT_DECL,				(int[]) {SYMBOL_V_TYPE  ,  SYMBOL_T_ID  ,  SYMBOL_V_ID_LIST_REM  ,  SYMBOL_T_SEMICOLON} , 4 );
+	ParserLL1_add_rule(psr_ptr, 14,	SYMBOL_V_ID_LIST,				(int[]) {SYMBOL_T_ID  ,  SYMBOL_V_ID_LIST_REM} , 2 );
+	ParserLL1_add_rule(psr_ptr, 15,	SYMBOL_V_ID_LIST,				(int[]) {SYMBOL_V_EPSILON} , 1 );
+	ParserLL1_add_rule(psr_ptr, 16,	SYMBOL_V_ID_LIST_REM,			(int[]) {SYMBOL_T_COMMA  ,  SYMBOL_T_ID  ,  SYMBOL_V_ID_LIST_REM} , 3 );
+	ParserLL1_add_rule(psr_ptr, 17,	SYMBOL_V_ID_LIST_REM,			(int[]) {SYMBOL_V_EPSILON} , 1 );
+	ParserLL1_add_rule(psr_ptr, 18,	SYMBOL_V_TYPE,					(int[]) {SYMBOL_T_KW_INT} , 1 );
+	ParserLL1_add_rule(psr_ptr, 19,	SYMBOL_V_TYPE,					(int[]) {SYMBOL_T_KW_REAL} , 1 );
+	ParserLL1_add_rule(psr_ptr, 20,	SYMBOL_V_TYPE,					(int[]) {SYMBOL_T_KW_STRING} , 1 );
+	ParserLL1_add_rule(psr_ptr, 21,	SYMBOL_V_TYPE,					(int[]) {SYMBOL_T_KW_MATRIX} , 1 );
 
 
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_ASSIGN,			(int[]) {SYMBOL_V_LVAL  ,  SYMBOL_T_ASSIGNOP  ,  SYMBOL_V_EXPR_ARITH  ,  SYMBOL_T_SEMICOLON} , 4 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_LVAL,					(int[]) {SYMBOL_T_ID} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_LVAL,					(int[]) {SYMBOL_T_SQO  ,  SYMBOL_T_ID  ,  SYMBOL_V_ID_LIST_REM  ,  SYMBOL_T_SQC} , 4 );
+	ParserLL1_add_rule(psr_ptr, 22,	SYMBOL_V_STMT_ASSIGN,			(int[]) {SYMBOL_V_LVAL  ,  SYMBOL_T_ASSIGNOP  ,  SYMBOL_V_EXPR_ARITH  ,  SYMBOL_T_SEMICOLON} , 4 );
+	ParserLL1_add_rule(psr_ptr, 23,	SYMBOL_V_LVAL,					(int[]) {SYMBOL_T_ID} , 1 );
+	ParserLL1_add_rule(psr_ptr, 24,	SYMBOL_V_LVAL,					(int[]) {SYMBOL_T_SQO  ,  SYMBOL_T_ID  ,  SYMBOL_V_ID_LIST_REM  ,  SYMBOL_T_SQC} , 4 );
 
 
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_ARITH,			(int[]) {SYMBOL_V_EXPR_TERM  ,  SYMBOL_V_EXPR_ADDEND} ,2  );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_ADDEND,			(int[]) {SYMBOL_T_PLUS  ,  SYMBOL_V_EXPR_TERM  ,  SYMBOL_V_EXPR_ADDEND} , 3 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_ADDEND,			(int[]) {SYMBOL_T_MINUS  ,  SYMBOL_V_EXPR_TERM  ,  SYMBOL_V_EXPR_ADDEND} , 3 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_ADDEND,			(int[]) {SYMBOL_V_EPSILON} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_TERM,				(int[]) {SYMBOL_V_EXPR_FACTOR  ,  SYMBOL_V_EXPR_MULTIPLIER} , 2 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_MULTIPLIER,		(int[]) {SYMBOL_T_MUL  ,  SYMBOL_V_EXPR_FACTOR  ,  SYMBOL_V_EXPR_MULTIPLIER} , 3 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_MULTIPLIER,		(int[]) {SYMBOL_T_DIV  ,  SYMBOL_V_EXPR_FACTOR  ,  SYMBOL_V_EXPR_MULTIPLIER} , 3 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_MULTIPLIER,		(int[]) {SYMBOL_V_EPSILON} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_FACTOR,			(int[]) {SYMBOL_T_OP  ,  SYMBOL_V_EXPR_ARITH  ,  SYMBOL_T_CL} , 3 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_FACTOR,			(int[]) {SYMBOL_V_NUM_VAL_WM} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_FACTOR,			(int[]) {SYMBOL_T_STR} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_FACTOR,			(int[]) {SYMBOL_T_SIZE  ,  SYMBOL_T_ID} , 2 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_FACTOR,			(int[]) {SYMBOL_V_MATRIX_LITERAL} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_FACTOR,			(int[]) {SYMBOL_V_CALL} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_MATRIX_LITERAL,		(int[]) {SYMBOL_T_SQO  ,  SYMBOL_V_MATRIX_ROW_LIST  ,  SYMBOL_T_SQC} , 3 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_MATRIX_ROW_LIST,		(int[]) {SYMBOL_V_MATRIX_NUM_LIST  ,  SYMBOL_V_MATRIX_ROW_LIST_REM} , 2 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_MATRIX_ROW_LIST_REM,	(int[]) {SYMBOL_T_SEMICOLON  ,  SYMBOL_V_MATRIX_ROW_LIST} , 2 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_MATRIX_ROW_LIST_REM,	(int[]) {SYMBOL_V_EPSILON} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_MATRIX_NUM_LIST,		(int[]) {SYMBOL_T_NUM  ,  SYMBOL_V_MATRIX_NUM_LIST_REM} , 2 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_MATRIX_NUM_LIST_REM,	(int[]) {SYMBOL_T_COMMA  ,  SYMBOL_V_MATRIX_NUM_LIST} , 2 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_MATRIX_NUM_LIST_REM,	(int[]) {SYMBOL_V_EPSILON} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_CALL,					(int[]) {SYMBOL_T_FUNID  ,  SYMBOL_T_OP  ,  SYMBOL_T_ID,  SYMBOL_V_ID_LIST_REM  ,  SYMBOL_T_CL} , 5 );
+	ParserLL1_add_rule(psr_ptr, 25,	SYMBOL_V_EXPR_ARITH,			(int[]) {SYMBOL_V_EXPR_TERM  ,  SYMBOL_V_EXPR_ADDEND} ,2  );
+	ParserLL1_add_rule(psr_ptr, 26,	SYMBOL_V_EXPR_ADDEND,			(int[]) {SYMBOL_T_PLUS  ,  SYMBOL_V_EXPR_TERM  ,  SYMBOL_V_EXPR_ADDEND} , 3 );
+	ParserLL1_add_rule(psr_ptr, 27,	SYMBOL_V_EXPR_ADDEND,			(int[]) {SYMBOL_T_MINUS  ,  SYMBOL_V_EXPR_TERM  ,  SYMBOL_V_EXPR_ADDEND} , 3 );
+	ParserLL1_add_rule(psr_ptr, 28,	SYMBOL_V_EXPR_ADDEND,			(int[]) {SYMBOL_V_EPSILON} , 1 );
+	ParserLL1_add_rule(psr_ptr, 29,	SYMBOL_V_EXPR_TERM,				(int[]) {SYMBOL_V_EXPR_FACTOR  ,  SYMBOL_V_EXPR_MULTIPLIER} , 2 );
+	ParserLL1_add_rule(psr_ptr, 30,	SYMBOL_V_EXPR_MULTIPLIER,		(int[]) {SYMBOL_T_MUL  ,  SYMBOL_V_EXPR_FACTOR  ,  SYMBOL_V_EXPR_MULTIPLIER} , 3 );
+	ParserLL1_add_rule(psr_ptr, 31,	SYMBOL_V_EXPR_MULTIPLIER,		(int[]) {SYMBOL_T_DIV  ,  SYMBOL_V_EXPR_FACTOR  ,  SYMBOL_V_EXPR_MULTIPLIER} , 3 );
+	ParserLL1_add_rule(psr_ptr, 32,	SYMBOL_V_EXPR_MULTIPLIER,		(int[]) {SYMBOL_V_EPSILON} , 1 );
+	ParserLL1_add_rule(psr_ptr, 33,	SYMBOL_V_EXPR_FACTOR,			(int[]) {SYMBOL_T_OP  ,  SYMBOL_V_EXPR_ARITH  ,  SYMBOL_T_CL} , 3 );
+	ParserLL1_add_rule(psr_ptr, 34,	SYMBOL_V_EXPR_FACTOR,			(int[]) {SYMBOL_V_NUM_VAL_WM} , 1 );
+	ParserLL1_add_rule(psr_ptr, 35,	SYMBOL_V_EXPR_FACTOR,			(int[]) {SYMBOL_T_STR} , 1 );
+	ParserLL1_add_rule(psr_ptr, 36,	SYMBOL_V_EXPR_FACTOR,			(int[]) {SYMBOL_T_SIZE  ,  SYMBOL_T_ID} , 2 );
+	ParserLL1_add_rule(psr_ptr, 37,	SYMBOL_V_EXPR_FACTOR,			(int[]) {SYMBOL_V_MATRIX_LITERAL} , 1 );
+	ParserLL1_add_rule(psr_ptr, 38,	SYMBOL_V_EXPR_FACTOR,			(int[]) {SYMBOL_V_CALL} , 1 );
+	ParserLL1_add_rule(psr_ptr, 39,	SYMBOL_V_MATRIX_LITERAL,		(int[]) {SYMBOL_T_SQO  ,  SYMBOL_V_MATRIX_ROW_LIST  ,  SYMBOL_T_SQC} , 3 );
+	ParserLL1_add_rule(psr_ptr, 40,	SYMBOL_V_MATRIX_ROW_LIST,		(int[]) {SYMBOL_V_MATRIX_NUM_LIST  ,  SYMBOL_V_MATRIX_ROW_LIST_REM} , 2 );
+	ParserLL1_add_rule(psr_ptr, 41,	SYMBOL_V_MATRIX_ROW_LIST_REM,	(int[]) {SYMBOL_T_SEMICOLON  ,  SYMBOL_V_MATRIX_ROW_LIST} , 2 );
+	ParserLL1_add_rule(psr_ptr, 42,	SYMBOL_V_MATRIX_ROW_LIST_REM,	(int[]) {SYMBOL_V_EPSILON} , 1 );
+	ParserLL1_add_rule(psr_ptr, 43,	SYMBOL_V_MATRIX_NUM_LIST,		(int[]) {SYMBOL_T_NUM  ,  SYMBOL_V_MATRIX_NUM_LIST_REM} , 2 );
+	ParserLL1_add_rule(psr_ptr, 44,	SYMBOL_V_MATRIX_NUM_LIST_REM,	(int[]) {SYMBOL_T_COMMA  ,  SYMBOL_V_MATRIX_NUM_LIST} , 2 );
+	ParserLL1_add_rule(psr_ptr, 45,	SYMBOL_V_MATRIX_NUM_LIST_REM,	(int[]) {SYMBOL_V_EPSILON} , 1 );
+	ParserLL1_add_rule(psr_ptr, 46,	SYMBOL_V_CALL,					(int[]) {SYMBOL_T_FUNID  ,  SYMBOL_T_OP  ,  SYMBOL_T_ID,  SYMBOL_V_ID_LIST_REM  ,  SYMBOL_T_CL} , 5 );
 
 
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_COND,				(int[]) {SYMBOL_T_KW_IF  ,  SYMBOL_T_OP  ,  SYMBOL_V_EXPR_LOG  ,  SYMBOL_T_CL  ,  SYMBOL_V_STMT_LIST  ,  SYMBOL_V_STMT_COND_REM} , 6 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_COND_REM,			(int[]) {SYMBOL_T_KW_ENDIF, SYMBOL_T_SEMICOLON} , 2 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_COND_REM,			(int[]) {SYMBOL_T_KW_ELSE  ,  SYMBOL_V_STMT_LIST  ,  SYMBOL_T_KW_ENDIF, SYMBOL_T_SEMICOLON} , 4 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_LIST,				(int[]) {SYMBOL_V_STMT  ,  SYMBOL_V_STMT_LIST_REM} , 2 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_LIST_REM,			(int[]) {SYMBOL_V_STMT  ,  SYMBOL_V_STMT_LIST_REM} , 2 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_LIST_REM,			(int[]) {SYMBOL_V_EPSILON} , 1 );
+	ParserLL1_add_rule(psr_ptr, 47,	SYMBOL_V_STMT_COND,				(int[]) {SYMBOL_T_KW_IF  ,  SYMBOL_T_OP  ,  SYMBOL_V_EXPR_LOG  ,  SYMBOL_T_CL  ,  SYMBOL_V_STMT_LIST  ,  SYMBOL_V_STMT_COND_REM} , 6 );
+	ParserLL1_add_rule(psr_ptr, 48,	SYMBOL_V_STMT_COND_REM,			(int[]) {SYMBOL_T_KW_ENDIF, SYMBOL_T_SEMICOLON} , 2 );
+	ParserLL1_add_rule(psr_ptr, 49,	SYMBOL_V_STMT_COND_REM,			(int[]) {SYMBOL_T_KW_ELSE  ,  SYMBOL_V_STMT_LIST  ,  SYMBOL_T_KW_ENDIF, SYMBOL_T_SEMICOLON} , 4 );
+	ParserLL1_add_rule(psr_ptr, 50,	SYMBOL_V_STMT_LIST,				(int[]) {SYMBOL_V_STMT  ,  SYMBOL_V_STMT_LIST_REM} , 2 );
+	ParserLL1_add_rule(psr_ptr, 51,	SYMBOL_V_STMT_LIST_REM,			(int[]) {SYMBOL_V_STMT  ,  SYMBOL_V_STMT_LIST_REM} , 2 );
+	ParserLL1_add_rule(psr_ptr, 52,	SYMBOL_V_STMT_LIST_REM,			(int[]) {SYMBOL_V_EPSILON} , 1 );
 
 
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_READ,				(int[]) {SYMBOL_T_KW_READ  ,  SYMBOL_T_OP  ,  SYMBOL_V_NUM_VAL_WOM  ,  SYMBOL_T_CL  ,  SYMBOL_T_SEMICOLON} , 5 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_STMT_PRINT,			(int[]) {SYMBOL_T_KW_PRINT  ,  SYMBOL_T_OP  ,  SYMBOL_T_ID  ,  SYMBOL_T_CL  ,  SYMBOL_T_SEMICOLON} , 5 );
+	ParserLL1_add_rule(psr_ptr, 53,	SYMBOL_V_STMT_READ,				(int[]) {SYMBOL_T_KW_READ  ,  SYMBOL_T_OP  ,  SYMBOL_V_NUM_VAL_WOM  ,  SYMBOL_T_CL  ,  SYMBOL_T_SEMICOLON} , 5 );
+	ParserLL1_add_rule(psr_ptr, 54,	SYMBOL_V_STMT_PRINT,			(int[]) {SYMBOL_T_KW_PRINT  ,  SYMBOL_T_OP  ,  SYMBOL_T_ID  ,  SYMBOL_T_CL  ,  SYMBOL_T_SEMICOLON} , 5 );
 
 
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_LOG,				(int[]) {SYMBOL_V_EXPR_BOOL} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_LOG,				(int[]) {SYMBOL_T_OP  ,  SYMBOL_V_EXPR_LOG  ,  SYMBOL_T_CL  ,  SYMBOL_V_LOG_OP_BIN  ,  SYMBOL_T_OP  ,  SYMBOL_V_EXPR_LOG  ,  SYMBOL_T_CL} , 7 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_LOG,				(int[]) {SYMBOL_T_NOT  ,  SYMBOL_T_OP  ,  SYMBOL_V_EXPR_LOG  ,  SYMBOL_T_CL} , 4 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_LOG_OP_BIN,			(int[]) {SYMBOL_T_AND} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_LOG_OP_BIN,			(int[]) {SYMBOL_T_OR} , 1 );
+	ParserLL1_add_rule(psr_ptr, 55,	SYMBOL_V_EXPR_LOG,				(int[]) {SYMBOL_V_EXPR_BOOL} , 1 );
+	ParserLL1_add_rule(psr_ptr, 56,	SYMBOL_V_EXPR_LOG,				(int[]) {SYMBOL_T_OP  ,  SYMBOL_V_EXPR_LOG  ,  SYMBOL_T_CL  ,  SYMBOL_V_LOG_OP_BIN  ,  SYMBOL_T_OP  ,  SYMBOL_V_EXPR_LOG  ,  SYMBOL_T_CL} , 7 );
+	ParserLL1_add_rule(psr_ptr, 57,	SYMBOL_V_EXPR_LOG,				(int[]) {SYMBOL_T_NOT  ,  SYMBOL_T_OP  ,  SYMBOL_V_EXPR_LOG  ,  SYMBOL_T_CL} , 4 );
+	ParserLL1_add_rule(psr_ptr, 58,	SYMBOL_V_LOG_OP_BIN,			(int[]) {SYMBOL_T_AND} , 1 );
+	ParserLL1_add_rule(psr_ptr, 59,	SYMBOL_V_LOG_OP_BIN,			(int[]) {SYMBOL_T_OR} , 1 );
 
 
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_EXPR_BOOL,				(int[]) {SYMBOL_V_NUM_VAL_WOM  ,  SYMBOL_V_BOOL_OP  ,  SYMBOL_V_NUM_VAL_WOM} , 3 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_LT} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_LE} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_GT} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_GE} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_EQ} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_NE} , 1 );
+	ParserLL1_add_rule(psr_ptr, 60,	SYMBOL_V_EXPR_BOOL,				(int[]) {SYMBOL_V_NUM_VAL_WOM  ,  SYMBOL_V_BOOL_OP  ,  SYMBOL_V_NUM_VAL_WOM} , 3 );
+	ParserLL1_add_rule(psr_ptr, 61,	SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_LT} , 1 );
+	ParserLL1_add_rule(psr_ptr, 62,	SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_LE} , 1 );
+	ParserLL1_add_rule(psr_ptr, 63,	SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_GT} , 1 );
+	ParserLL1_add_rule(psr_ptr, 64,	SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_GE} , 1 );
+	ParserLL1_add_rule(psr_ptr, 65,	SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_EQ} , 1 );
+	ParserLL1_add_rule(psr_ptr, 66,	SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_NE} , 1 );
 
 
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_DEF,					(int[]) {SYMBOL_T_KW_FUNCTION  ,  SYMBOL_T_SQO  ,  SYMBOL_V_PARAM_LIST  ,  SYMBOL_T_SQC  ,  SYMBOL_T_ASSIGNOP  ,  SYMBOL_T_FUNID  ,  SYMBOL_T_SQO  ,  SYMBOL_V_PARAM_LIST  ,  SYMBOL_T_SQC  ,  SYMBOL_V_STMT_OR_DEF_LIST  ,  SYMBOL_T_KW_END  ,  SYMBOL_T_SEMICOLON} , 12 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_PARAM_LIST,			(int[]) {SYMBOL_V_TYPE  ,  SYMBOL_T_ID  ,  SYMBOL_V_PARAM_LIST_REM} , 3 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_PARAM_LIST_REM,		(int[]) {SYMBOL_T_COMMA  ,  SYMBOL_V_TYPE  ,  SYMBOL_T_ID  ,  SYMBOL_V_PARAM_LIST_REM} , 4 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_PARAM_LIST_REM,		(int[]) {SYMBOL_V_EPSILON} , 1 );
+	ParserLL1_add_rule(psr_ptr, 67,	SYMBOL_V_DEF,					(int[]) {SYMBOL_T_KW_FUNCTION  ,  SYMBOL_T_SQO  ,  SYMBOL_V_PARAM_LIST  ,  SYMBOL_T_SQC  ,  SYMBOL_T_ASSIGNOP  ,  SYMBOL_T_FUNID  ,  SYMBOL_T_SQO  ,  SYMBOL_V_PARAM_LIST  ,  SYMBOL_T_SQC  ,  SYMBOL_V_STMT_OR_DEF_LIST  ,  SYMBOL_T_KW_END  ,  SYMBOL_T_SEMICOLON} , 12 );
+	ParserLL1_add_rule(psr_ptr, 68,	SYMBOL_V_PARAM_LIST,			(int[]) {SYMBOL_V_TYPE  ,  SYMBOL_T_ID  ,  SYMBOL_V_PARAM_LIST_REM} , 3 );
+	ParserLL1_add_rule(psr_ptr, 69,	SYMBOL_V_PARAM_LIST_REM,		(int[]) {SYMBOL_T_COMMA  ,  SYMBOL_V_TYPE  ,  SYMBOL_T_ID  ,  SYMBOL_V_PARAM_LIST_REM} , 4 );
+	ParserLL1_add_rule(psr_ptr, 70,	SYMBOL_V_PARAM_LIST_REM,		(int[]) {SYMBOL_V_EPSILON} , 1 );
 
 
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_NUM_VAL_WM,			(int[]) {SYMBOL_T_NUM} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_NUM_VAL_WM,			(int[]) {SYMBOL_T_RNUM} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_NUM_VAL_WM,			(int[]) {SYMBOL_T_ID  ,  SYMBOL_V_NUM_VAL_WM_REM} , 2 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_NUM_VAL_WM_REM,		(int[]) {SYMBOL_T_SQO  ,  SYMBOL_T_NUM  ,  SYMBOL_T_COMMA  ,  SYMBOL_T_NUM  ,  SYMBOL_T_SQC} , 5 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_NUM_VAL_WM_REM,		(int[]) {SYMBOL_V_EPSILON} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_NUM_VAL_WOM,			(int[]) {SYMBOL_T_NUM} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_NUM_VAL_WOM,			(int[]) {SYMBOL_T_RNUM} , 1 );
-	ParserLL1_add_rule(psr_ptr, SYMBOL_V_NUM_VAL_WOM,			(int[]) {SYMBOL_T_ID} , 1 );
+	ParserLL1_add_rule(psr_ptr, 71,	SYMBOL_V_NUM_VAL_WM,			(int[]) {SYMBOL_T_NUM} , 1 );
+	ParserLL1_add_rule(psr_ptr, 72,	SYMBOL_V_NUM_VAL_WM,			(int[]) {SYMBOL_T_RNUM} , 1 );
+	ParserLL1_add_rule(psr_ptr, 73,	SYMBOL_V_NUM_VAL_WM,			(int[]) {SYMBOL_T_ID  ,  SYMBOL_V_NUM_VAL_WM_REM} , 2 );
+	ParserLL1_add_rule(psr_ptr, 74,	SYMBOL_V_NUM_VAL_WM_REM,		(int[]) {SYMBOL_T_SQO  ,  SYMBOL_T_NUM  ,  SYMBOL_T_COMMA  ,  SYMBOL_T_NUM  ,  SYMBOL_T_SQC} , 5 );
+	ParserLL1_add_rule(psr_ptr, 75,	SYMBOL_V_NUM_VAL_WM_REM,		(int[]) {SYMBOL_V_EPSILON} , 1 );
+	ParserLL1_add_rule(psr_ptr, 76,	SYMBOL_V_NUM_VAL_WOM,			(int[]) {SYMBOL_T_NUM} , 1 );
+	ParserLL1_add_rule(psr_ptr, 77,	SYMBOL_V_NUM_VAL_WOM,			(int[]) {SYMBOL_T_RNUM} , 1 );
+	ParserLL1_add_rule(psr_ptr, 78,	SYMBOL_V_NUM_VAL_WOM,			(int[]) {SYMBOL_T_ID} , 1 );
 
 
 }
@@ -365,6 +365,8 @@ void Parser_init_add_rules_from_file(ParserLL1 *psr_ptr, const char *filename){
 
 	int variable_symbol;
 	LinkedList *expansion_symbol_list = LinkedList_new();
+
+	int cur_rule_num = 1;
 
 	while(1){
 		memset(buffer, 0, len_buffer);
@@ -416,7 +418,8 @@ void Parser_init_add_rules_from_file(ParserLL1 *psr_ptr, const char *filename){
 						expansion_symbols[i] = (long) LinkedList_pop(expansion_symbol_list);
 					}
 
-					ParserLL1_add_rule(psr_ptr, variable_symbol, expansion_symbols, len_expansion_symbols);
+					ParserLL1_add_rule(psr_ptr, cur_rule_num, variable_symbol, expansion_symbols, len_expansion_symbols);
+					cur_rule_num++;
 
 					state = 0;
 				}

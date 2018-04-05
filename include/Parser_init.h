@@ -132,4 +132,6 @@ int name_to_symbol(char *string);
 
 void print_parse_tree(ParseTree *tree, FILE *file_ptr);
 
+void print_parse_tree_preorder(ParseTree *tree, FILE *file_ptr);
+
 #endif

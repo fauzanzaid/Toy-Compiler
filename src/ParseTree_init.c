@@ -248,7 +248,13 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 		// 21  (type) = KW_MATRIX
 		case 21:
 		{
-			node_ptr->atr_ptr->op = OPERATOR_TYPE;
+			ParseTree_Node *child_0 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 0);
+
+			ParseTree_Node_destroy(node_ptr);
+
+			child_0 = prune_parse_tree( child_0 );
+
+			node_ptr = child_0;
 
 			break;
 		}
@@ -990,7 +996,9 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 		}
 
 		default:
+		{
 			break;
+		}
 
 	}
 

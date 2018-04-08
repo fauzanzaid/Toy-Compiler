@@ -8,7 +8,7 @@
 // Private Prototypes //
 ////////////////////////
 
-int remove_children(ParseTree_Node *node_ptr, int *symbol_indices, int len_symbol_indices);
+static int remove_children(ParseTree_Node *node_ptr, int *symbol_indices, int len_symbol_indices);
 
 
 ////////////////
@@ -226,6 +226,21 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 
 		//  2  (stmt_or_def_list) = (stmt_or_def)  (stmt_or_def_list_rem)
 		case 2:
+		{
+			ParseTree_Node *child_0 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 0);
+			ParseTree_Node *child_1 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 1);
+
+			child_0 = prune_parse_tree( child_0 );
+			child_1 = prune_parse_tree( child_1 );
+
+			if(child_1 != NULL)
+				ParseTree_Node_attach_sibling(child_0, child_1);
+			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
+
+			node_ptr->atr_ptr->op = OPERATOR_STMT_OR_DEF_LIST;
+
+			break;
+		}
 
 		//  3  (stmt_or_def_list_rem_1) = (stmt_or_def)  (stmt_or_def_list_rem_2)
 		case 3:
@@ -236,11 +251,12 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			child_0 = prune_parse_tree( child_0 );
 			child_1 = prune_parse_tree( child_1 );
 
-			if(child_1 != NULL)
-				ParseTree_Node_attach_child_left_end(node_ptr, child_1);
-			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
+			ParseTree_Node_destroy(node_ptr);
 
-			node_ptr->atr_ptr->op = OPERATOR_STMT_OR_DEF_LIST;
+			node_ptr = child_0;
+
+			if(child_1 != NULL)
+				ParseTree_Node_attach_sibling(node_ptr, child_1);
 
 			break;
 		}
@@ -320,10 +336,20 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			child_1 = prune_parse_tree( child_1 );
 			child_2 = prune_parse_tree( child_2 );
 
+
+			ParseTree_Node *child_new = ParseTree_Node_new(SYMBOL_UNKNOWN, NULL);
+			child_new->atr_ptr->op = OPERATOR_ID_LIST;
+
 			if(child_2 != NULL)
-				ParseTree_Node_attach_child_left_end(node_ptr, child_2);
-			ParseTree_Node_attach_child_left_end(node_ptr, child_1);
+				ParseTree_Node_attach_sibling(child_1, child_2);
+			ParseTree_Node_attach_child_left_end(child_new, child_1);
+			ParseTree_Node_attach_child_left_end(node_ptr, child_new);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
+
+			// if(child_2 != NULL)
+				// ParseTree_Node_attach_child_left_end(node_ptr, child_2);
+			// ParseTree_Node_attach_child_left_end(node_ptr, child_1);
+			// ParseTree_Node_attach_child_left_end(node_ptr, child_0);
 
 			node_ptr->atr_ptr->op = OPERATOR_DECL;
 
@@ -340,7 +366,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			child_1 = prune_parse_tree( child_1 );
 
 			if(child_1 != NULL)
-				ParseTree_Node_attach_child_left_end(node_ptr, child_1);
+				ParseTree_Node_attach_sibling(child_0, child_1);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
 
 			node_ptr->atr_ptr->op = OPERATOR_ID_LIST;
@@ -371,11 +397,12 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			child_1 = prune_parse_tree( child_1 );
 			child_2 = prune_parse_tree( child_2 );
 
-			if(child_2 != NULL)
-				ParseTree_Node_attach_child_left_end(node_ptr, child_2);
-			ParseTree_Node_attach_child_left_end(node_ptr, child_1);
+			ParseTree_Node_destroy(node_ptr);
 
-			node_ptr->atr_ptr->op = OPERATOR_ID_LIST;
+			node_ptr = child_1;
+
+			if(child_2 != NULL)
+				ParseTree_Node_attach_sibling(node_ptr, child_2);
 
 			break;
 		}
@@ -464,7 +491,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			child_2 = prune_parse_tree( child_2 );
 
 			if(child_2 != NULL)
-				ParseTree_Node_attach_child_left_end(node_ptr, child_2);
+				ParseTree_Node_attach_sibling(child_1, child_2);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_1);
 
 			node_ptr->atr_ptr->op = OPERATOR_ID_LIST;
@@ -609,9 +636,13 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 
 			child_1 = prune_parse_tree( child_1 );
 
-			ParseTree_Node_destroy(node_ptr);
+			// ParseTree_Node_destroy(node_ptr);
 
-			node_ptr = child_1;
+			// node_ptr = child_1;
+
+			ParseTree_Node_attach_child_left_end(node_ptr, child_1);
+
+			node_ptr->atr_ptr->op = OPERATOR_MATRIX;
 
 			break;
 		}
@@ -625,11 +656,13 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			child_0 = prune_parse_tree( child_0 );
 			child_1 = prune_parse_tree( child_1 );
 
-			if(child_1 != NULL)
-				ParseTree_Node_attach_child_left_end(node_ptr, child_1);
-			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
 
-			node_ptr->atr_ptr->op = OPERATOR_MATRIX_ROW_LIST;
+			ParseTree_Node_destroy(node_ptr);
+
+			node_ptr = child_0;
+
+			if(child_1 != NULL)
+				ParseTree_Node_attach_sibling(node_ptr, child_1);
 
 			break;
 		}
@@ -671,11 +704,13 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			child_0 = prune_parse_tree( child_0 );
 			child_1 = prune_parse_tree( child_1 );
 
-			if(child_1 != NULL)
-				ParseTree_Node_attach_child_left_end(node_ptr, child_1);
-			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
 
-			node_ptr->atr_ptr->op = OPERATOR_MATRIX_NUM_LIST;
+			ParseTree_Node_destroy(node_ptr);
+
+			node_ptr = child_0;
+
+			if(child_1 != NULL)
+				ParseTree_Node_attach_sibling(node_ptr, child_1);
 
 			break;
 		}
@@ -708,19 +743,27 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			break;
 		}
 
-		// 46  (call) = FUNID  OP  (id_list)  CL
+		// 46  (call) = FUNID  OP  ID  (id_list_rem)  CL
 		case 46:
 		{
-			remove_children( node_ptr, (int[]) {1,3} , 2 );
+			remove_children( node_ptr, (int[]) {1,4} , 2 );
 
 			ParseTree_Node *child_0 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 0);
 			ParseTree_Node *child_2 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 2);
+			ParseTree_Node *child_3 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 3);
 
 			child_0 = prune_parse_tree( child_0 );
 			child_2 = prune_parse_tree( child_2 );
+			child_3 = prune_parse_tree( child_3 );
 
-			if(child_2 != NULL)
-				ParseTree_Node_attach_child_left_end(node_ptr, child_2);
+
+			ParseTree_Node *child_new = ParseTree_Node_new(SYMBOL_UNKNOWN, NULL);
+			child_new->atr_ptr->op = OPERATOR_ID_LIST;
+
+			if(child_3 != NULL)
+				ParseTree_Node_attach_sibling(child_2, child_3);
+			ParseTree_Node_attach_child_left_end(child_new, child_2);
+			ParseTree_Node_attach_child_left_end(node_ptr, child_new);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
 
 			node_ptr->atr_ptr->op = OPERATOR_CALL;
@@ -789,7 +832,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			child_1 = prune_parse_tree( child_1 );
 
 			if(child_1 != NULL)
-				ParseTree_Node_attach_child_left_end(node_ptr, child_1);
+				ParseTree_Node_attach_sibling(child_0, child_1);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
 
 			node_ptr->atr_ptr->op = OPERATOR_STMT_LIST;
@@ -806,11 +849,13 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			child_0 = prune_parse_tree( child_0 );
 			child_1 = prune_parse_tree( child_1 );
 
-			if(child_1 != NULL)
-				ParseTree_Node_attach_child_left_end(node_ptr, child_1);
-			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
 
-			node_ptr->atr_ptr->op = OPERATOR_STMT_LIST;
+			ParseTree_Node_destroy(node_ptr);
+
+			node_ptr = child_0;
+
+			if(child_1 != NULL)
+				ParseTree_Node_attach_sibling(node_ptr, child_1);
 
 			break;
 		}
@@ -884,7 +929,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 		// 56  (expr_log) = OP  (expr_log)  CL  (log_op_bin)  OP  (expr_log)  CL
 		case 56:
 		{
-			remove_children( node_ptr, (int[]) {0,2,4,6} , 1 );
+			remove_children( node_ptr, (int[]) {0,2,4,6} , 4 );
 
 			ParseTree_Node *child_1 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 1);
 			ParseTree_Node *child_3 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 3);
@@ -984,7 +1029,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 		// 67  (def) = KW_FUNCTION  SQO  (param_list_1)  SQC  ASSIGNOP  FUNID  SQO  (param_list_2)  SQC  (stmt_or_def_list)  END  SEMICOLON
 		case 67:
 		{
-			remove_children( node_ptr, (int[]) {0,1,3,4,6,8,10,11} , 1 );
+			remove_children( node_ptr, (int[]) {0,1,3,4,6,8,10,11} , 8 );
 
 			ParseTree_Node *child_2 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 2);
 			ParseTree_Node *child_5 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 5);
@@ -1159,7 +1204,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 	return node_ptr;
 }
 
-int remove_children(ParseTree_Node *node_ptr, int *symbol_indices, int len_symbol_indices){
+static int remove_children(ParseTree_Node *node_ptr, int *symbol_indices, int len_symbol_indices){
 	for (int i = 0; i < len_symbol_indices; ++i){
 		int status = ParseTree_Node_remove_child_by_symbol_index(node_ptr, symbol_indices[i]);
 		if (status == -1)

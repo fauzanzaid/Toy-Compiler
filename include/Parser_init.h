@@ -2,6 +2,9 @@
 #define INCLUDE_GUARD_05C155452FCD41C4A40FCE69D00879F3
 
 
+#include <stdio.h>
+
+
 #include "ParserLL1.h"
 #include "ParseTree.h"
 #include "Token.h"

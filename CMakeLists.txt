@@ -12,7 +12,7 @@ target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Token_Da
 target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Lexer_init )
 target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Dfa_init )
 target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Parser_init )
-target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/ParseTree_init )
+target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Ast_init )
 
 set_target_properties(valangLexicalAnalyzer
 	PROPERTIES

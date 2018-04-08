@@ -1,6 +1,7 @@
 #include <stdlib.h>
 
 #include "ParseTree_init.h"
+#include "Parser_init.h"
 
 
 ////////////////////////
@@ -38,16 +39,173 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 		// Terminal symbols
 		case 0:
 		{
+			switch(node_ptr->symbol){
+
+				case SYMBOL_T_PLUS:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_PLUS;
+					break;
+				}
+
+				case SYMBOL_T_MINUS:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_MINUS;
+					break;
+				}
+
+				case SYMBOL_T_MUL:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_MUL;
+					break;
+				}
+
+				case SYMBOL_T_DIV:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_DIV;
+					break;
+				}
+
+				case SYMBOL_T_SIZE:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_SIZE;
+					break;
+				}
+
+				case SYMBOL_T_ID:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_ID;
+					break;
+				}
+
+				case SYMBOL_T_FUNID:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_FUNID;
+					break;
+				}
+
+				case SYMBOL_T_KW_INT:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_KW_INT;
+					break;
+				}
+
+				case SYMBOL_T_KW_REAL:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_KW_REAL;
+					break;
+				}
+
+				case SYMBOL_T_KW_STRING:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_KW_STRING;
+					break;
+				}
+
+				case SYMBOL_T_KW_MATRIX:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_KW_MATRIX;
+					break;
+				}
+
+				case SYMBOL_T_KW_READ:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_KW_READ;
+					break;
+				}
+
+				case SYMBOL_T_KW_PRINT:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_KW_PRINT;
+					break;
+				}
+
+				case SYMBOL_T_NUM:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_NUM;
+					break;
+				}
+
+				case SYMBOL_T_RNUM:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_RNUM;
+					break;
+				}
+
+				case SYMBOL_T_STR:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_STR;
+					break;
+				}
+
+				case SYMBOL_T_AND:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_AND;
+					break;
+				}
+
+				case SYMBOL_T_OR:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_OR;
+					break;
+				}
+
+				case SYMBOL_T_NOT:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_NOT;
+					break;
+				}
+
+				case SYMBOL_T_LT:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_LT;
+					break;
+				}
+
+				case SYMBOL_T_LE:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_LE;
+					break;
+				}
+
+				case SYMBOL_T_GT:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_GT;
+					break;
+				}
+
+				case SYMBOL_T_GE:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_GE;
+					break;
+				}
+
+				case SYMBOL_T_ASSIGNOP:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_ASSIGN;
+					break;
+				}
+
+				case SYMBOL_T_EQ:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_EQ;
+					break;
+				}
+
+				case SYMBOL_T_NE:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_NE;
+					break;
+				}
+
+				default:
+				{
+					node_ptr->atr_ptr->op = OPERATOR_UNKNOWN;
+					printf("=%d=\n", node_ptr->symbol);
+					break;
+				}
+			}
+
 			break;
-			// STR
-			// SIZE
-			// KW_READ
-			// KW_PRINT
-			// AND
-			// OR
-			// NUM
-			// RNUM
-			// ID
 		}
 
 		//  1  (main_function) = KW_MAIN  SQO  SQC  (stmt_or_def_list)  END
@@ -210,8 +368,6 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			ParseTree_Node *child_1 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 1);
 			ParseTree_Node *child_2 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 2);
 
-			// ParseTree_Node_destroy(node_ptr);
-
 			child_1 = prune_parse_tree( child_1 );
 			child_2 = prune_parse_tree( child_2 );
 
@@ -278,8 +434,6 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 
 			ParseTree_Node_attach_child_left_end(node_ptr, child_2);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
-
-			node_ptr->atr_ptr->op = OPERATOR_ASSIGN;
 
 			break;
 		}
@@ -592,7 +746,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			ParseTree_Node_attach_child_left_end(node_ptr, child_4);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_2);
 
-			node_ptr->atr_ptr->op = OPERATOR_BRANCH;
+			node_ptr->atr_ptr->op = OPERATOR_COND;
 
 			break;
 		}

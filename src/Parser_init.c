@@ -626,7 +626,14 @@ static void print_node(ParseTree_Node *node_ptr, int *index, FILE* file_ptr){
 		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%*d",		col[2],			tkn_ptr->line);
 		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[3],col[3], buffer_token);
 		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[4],col[4], buffer_value);
-		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[5],col[5], symbol_to_name(node_ptr->parent->symbol));
+
+		if(node_ptr->parent){
+			fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[5],col[5], symbol_to_name(node_ptr->parent->symbol));
+		}
+		else{
+			fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],  "ROOT");
+		}
+
 		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"Yes");
 		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[7],col[7], symbol_to_name(symbol));
 	}

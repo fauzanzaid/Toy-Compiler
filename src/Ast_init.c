@@ -743,27 +743,18 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			break;
 		}
 
-		// 46  (call) = FUNID  OP  ID  (id_list_rem)  CL
+		// 46  (call) = FUNID  OP  (call_param_list)  CL
 		case 46:
 		{
-			remove_children( node_ptr, (int[]) {1,4} , 2 );
+			remove_children( node_ptr, (int[]) {1,3} , 2 );
 
 			ParseTree_Node *child_0 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 0);
 			ParseTree_Node *child_2 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 2);
-			ParseTree_Node *child_3 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 3);
 
 			child_0 = prune_parse_tree( child_0 );
 			child_2 = prune_parse_tree( child_2 );
-			child_3 = prune_parse_tree( child_3 );
 
-
-			ParseTree_Node *child_new = ParseTree_Node_new(SYMBOL_UNKNOWN, NULL);
-			child_new->atr_ptr->op = OPERATOR_ID_LIST;
-
-			if(child_3 != NULL)
-				ParseTree_Node_attach_sibling(child_2, child_3);
-			ParseTree_Node_attach_child_left_end(child_new, child_2);
-			ParseTree_Node_attach_child_left_end(node_ptr, child_new);
+			ParseTree_Node_attach_child_left_end(node_ptr, child_2);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
 
 			node_ptr->atr_ptr->op = OPERATOR_CALL;
@@ -872,7 +863,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			break;
 		}
 
-		// 53  (stmt_read) = KW_READ  OP  (num_val_wom)  CL  SEMICOLON
+		// 53  (stmt_read) = KW_READ  OP  ID  CL  SEMICOLON
 		case 53:
 		{
 			remove_children( node_ptr, (int[]) {1,3,4} , 3 );
@@ -892,7 +883,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			break;
 		}
 
-		// 54  (stmt_print) = KW_PRINT  OP  (num_val_wm)  CL  SEMICOLON
+		// 54  (stmt_print) = KW_PRINT  OP  ID  CL  SEMICOLON
 		case 54:
 		{
 			remove_children( node_ptr, (int[]) {1,3,4} , 3 );
@@ -1182,6 +1173,15 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 
 		// 78  (num_val_wom) = ID
 		case 78:
+
+		// 79  (val) = (num_val_wm)
+		case 79:
+
+		// 80  (val) = STR
+		case 80:
+
+		// 81  (val) = (matrix_literal)
+		case 81:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 0);
 
@@ -1190,6 +1190,58 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			child_0 = prune_parse_tree( child_0 );
 
 			node_ptr = child_0;
+
+			break;
+		}
+
+		// 82  (call_param_list) = (val)  (call_param_list_rem)
+		case 82:
+		{
+			ParseTree_Node *child_0 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 0);
+			ParseTree_Node *child_1 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 1);
+
+			child_0 = prune_parse_tree( child_0 );
+			child_1 = prune_parse_tree( child_1 );
+
+			ParseTree_Node_destroy(node_ptr);
+
+			node_ptr = child_0;
+
+			if(child_1 != NULL)
+				ParseTree_Node_attach_sibling(node_ptr, child_1);
+
+			break;
+		}
+
+		// 83  (call_param_list_rem) = COMMA  (val)  (call_param_list_rem)
+		case 83:
+		{
+			remove_children( node_ptr, (int[]) {0} , 1 );
+
+			ParseTree_Node *child_1 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 1);
+			ParseTree_Node *child_2 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 2);
+
+			child_1 = prune_parse_tree( child_1 );
+			child_2 = prune_parse_tree( child_2 );
+
+			ParseTree_Node_destroy(node_ptr);
+
+			node_ptr = child_1;
+
+			if(child_2 != NULL)
+				ParseTree_Node_attach_sibling(node_ptr, child_2);
+
+			break;
+		}
+
+		// 84  (call_param_list_rem) = EPSILON
+		case 84:
+		{
+			remove_children( node_ptr, (int[]) {0} , 1 );
+
+			ParseTree_Node_destroy(node_ptr);
+
+			node_ptr = NULL;
 
 			break;
 		}

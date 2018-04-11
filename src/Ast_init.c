@@ -1128,8 +1128,10 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 
 			node_ptr = child_0;
 
-			if(child_1 != NULL)
+			if(child_1 != NULL){
+				node_ptr->atr_ptr->op = OPERATOR_MATRIX_ELEMENT;
 				ParseTree_Node_attach_child_left_end(node_ptr, child_1);
+			}
 
 			break;
 		}
@@ -1145,10 +1147,11 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			child_1 = prune_parse_tree( child_1 );
 			child_3 = prune_parse_tree( child_3 );
 
-			ParseTree_Node_attach_child_left_end(node_ptr, child_3);
-			ParseTree_Node_attach_child_left_end(node_ptr, child_1);
+			ParseTree_Node_destroy(node_ptr);
 
-			node_ptr->atr_ptr->op = OPERATOR_INDEX;
+			node_ptr = child_1;
+
+			ParseTree_Node_attach_sibling(node_ptr, child_3);
 
 			break;
 		}

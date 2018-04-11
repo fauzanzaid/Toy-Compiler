@@ -264,8 +264,6 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 		//  4  (stmt_or_def_list_rem_1) = EPSILON
 		case 4:
 		{
-			remove_children( node_ptr, (int[]) {0} , 1 );
-
 			ParseTree_Node_destroy(node_ptr);
 
 			node_ptr = NULL;
@@ -377,8 +375,6 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 		// 15  (id_list) = EPSILON
 		case 15:
 		{
-			remove_children( node_ptr, (int[]) {0} , 1 );
-
 			ParseTree_Node_destroy(node_ptr);
 
 			node_ptr = NULL;
@@ -410,8 +406,6 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 		// 17  (id_list_rem) = EPSILON
 		case 17:
 		{
-			remove_children( node_ptr, (int[]) {0} , 1 );
-
 			ParseTree_Node_destroy(node_ptr);
 
 			node_ptr = NULL;
@@ -559,8 +553,6 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 		// 32  (expr_multiplier) = EPSILON
 		case 32:
 		{
-			remove_children( node_ptr, (int[]) {0} , 1 );
-
 			ParseTree_Node *inh = node_ptr->atr_ptr->inh;
 
 			ParseTree_Node_destroy(node_ptr);
@@ -686,8 +678,6 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 		// 42  (matrix_row_list_rem) = EPSILON
 		case 42:
 		{
-			remove_children( node_ptr, (int[]) {0} , 1 );
-
 			ParseTree_Node_destroy(node_ptr);
 
 			node_ptr = NULL;
@@ -734,8 +724,6 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 		// 45  (matrix_num_list_rem) = EPSILON
 		case 45:
 		{
-			remove_children( node_ptr, (int[]) {0} , 1 );
-
 			ParseTree_Node_destroy(node_ptr);
 
 			node_ptr = NULL;
@@ -854,8 +842,6 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 		// 52  (stmt_list_rem_1) = EPSILON
 		case 52:
 		{
-			remove_children( node_ptr, (int[]) {0} , 1 );
-
 			ParseTree_Node_destroy(node_ptr);
 
 			node_ptr = NULL;
@@ -1089,8 +1075,6 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 		// 70  (param_list_rem_1) = EPSILON
 		case 70:
 		{
-			remove_children( node_ptr, (int[]) {0} , 1 );
-
 			ParseTree_Node_destroy(node_ptr);
 
 			node_ptr = NULL;
@@ -1159,8 +1143,6 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 		// 75  (num_val_wm_rem) = EPSILON
 		case 75:
 		{
-			remove_children( node_ptr, (int[]) {0} , 1 );
-
 			ParseTree_Node_destroy(node_ptr);
 
 			node_ptr = NULL;
@@ -1240,8 +1222,6 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 		// 84  (call_param_list_rem) = EPSILON
 		case 84:
 		{
-			remove_children( node_ptr, (int[]) {0} , 1 );
-
 			ParseTree_Node_destroy(node_ptr);
 
 			node_ptr = NULL;

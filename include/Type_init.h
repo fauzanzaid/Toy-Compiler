@@ -107,12 +107,19 @@ void Type_add_function_param_out(Type *type_ptr, Type* type_param_out_ptr);
 int Type_get_size(Type *type_ptr);
 
 /**
+ * Checks if all matrix and string elements in the type have a non zero size
+ * @param  type_ptr Pointer to Type struct
+ * @return          0 if complete, -1 if not
+ */
+int Type_check_completeness(Type *type_ptr);
+
+/**
  * Check if two types are equal. If both types are string or are matrix, and one
  * of the them is not set (size = 0), they are equal
- * @param  type_1_ptr [description]
- * @param  type_2_ptr [description]
+ * @param  type_1_ptr Pointer to Type struct
+ * @param  type_2_ptr Pointer to Type struct
  * @return            0 if equal, -1 if not
  */
-int Type_check_equal(Type *type_1_ptr, Type *type_2_ptr);
+int Type_check_compatibility(Type *type_1_ptr, Type *type_2_ptr);
 
 #endif

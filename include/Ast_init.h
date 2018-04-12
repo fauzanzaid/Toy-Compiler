@@ -4,6 +4,9 @@
 #include "ParseTree.h"
 
 
+#include "Token_Data.h"
+
+
 ///////////
 // Types //
 ///////////
@@ -63,10 +66,26 @@ typedef struct ParseTree_Node_Attr
 
 
 ///////////////
+// Constants //
+///////////////
+
+extern char *operator_names[];
+
+
+///////////////
 // Functions //
 ///////////////
 
+char *operator_to_name(int op);
+
 ParseTree_Node *prune_parse_tree(ParseTree_Node *tree_ptr);
+
+
+///////////
+// Print //
+///////////
+
+void print_abstract_tree_preorder(ParseTree *tree, FILE *file_ptr);
 
 
 #endif

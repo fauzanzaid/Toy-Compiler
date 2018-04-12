@@ -1,9 +1,57 @@
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 
 #include "Ast_init.h"
 #include "Parser_init.h"
 #include "Type_init.h"
+
+
+///////////////
+// Constants //
+///////////////
+
+char *operator_names[] = {
+	"",
+	"plus",
+	"minus",
+	"mul",
+	"div",
+	"size",
+	"id",
+	"funid",
+	"kw_int",
+	"kw_real",
+	"kw_string",
+	"kw_matrix",
+	"kw_read",
+	"kw_print",
+	"num",
+	"rnum",
+	"str",
+	"and",
+	"or",
+	"not",
+	"lt",
+	"le",
+	"gt",
+	"ge",
+	"assign",
+	"eq",
+	"ne",
+	"call",
+	"cond",
+	"decl",
+	"def",
+	"id_list",
+	"matrix",
+	"matrix_element",
+	"param_list",
+	"stmt_list",
+	"stmt_or_def_list",
+	"unknown",
+};
 
 
 ////////////////////////
@@ -13,9 +61,17 @@
 static int remove_children(ParseTree_Node *node_ptr, int *symbol_indices, int len_symbol_indices);
 
 
-////////////////
-// Funcations //
-////////////////
+///////////////
+// Functions //
+///////////////
+
+char *operator_to_name(int op){
+	if(op>0)
+		return operator_names[op];
+
+	else
+		return operator_names[37];
+}
 
 ParseTree_Node_Attr *ParseTree_Node_Attr_new(){
 	ParseTree_Node_Attr *atr_ptr = malloc( sizeof(ParseTree_Node_Attr) );
@@ -1252,4 +1308,128 @@ static int remove_children(ParseTree_Node *node_ptr, int *symbol_indices, int le
 			return -1;
 	}
 	return 0;
+}
+
+
+///////////
+// Print //
+///////////
+
+static void print_node(ParseTree_Node *node_ptr, int *index, FILE* file_ptr){
+	int symbol = node_ptr->symbol;
+	Token *tkn_ptr = node_ptr->tkn_ptr;
+
+	int col[] = {5,16,4,20,20,20,10,20};
+
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%*d",		col[0], 		(*index)++);
+
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[1],col[1], operator_to_name(node_ptr->atr_ptr->op));
+
+
+	if(tkn_ptr != NULL){
+		char buffer_token[col[3]+2];	memset(buffer_token, 0, col[3]+2);
+		char buffer_value[col[4]+2];	memset(buffer_value, 0, col[4]+2);
+
+		if(tkn_ptr->type == TOKEN_NUM || tkn_ptr->type == TOKEN_RNUM){
+			snprintf(buffer_token, col[3]+2, "%s", "-------------------------");
+			token_to_value(tkn_ptr, buffer_value, col[4]+2);
+			if(buffer_value[col[4]]!='\0'){
+				buffer_value[col[4]] = '\0';
+				buffer_value[col[4]-1] = buffer_value[col[4]-2] = buffer_value[col[4]-3] = '.';
+			}
+		}
+		else{
+			token_to_string(tkn_ptr, buffer_token, col[3]+2);
+			snprintf(buffer_value, col[4]+2, "%s", "-------------------------");
+			if(buffer_token[col[3]]!='\0'){
+				buffer_token[col[3]] = '\0';
+				buffer_token[col[3]-1] = buffer_token[col[3]-2] = buffer_token[col[3]-3] = '.';
+			}
+		}
+
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%*d",	col[2],			tkn_ptr->line);
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[3],col[3],	buffer_token);
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[4],col[4],	buffer_value);
+	}
+	else{
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[2],col[2],	"-------------------------");
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[3],col[3],	"-------------------------");
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[4],col[4],	"-------------------------");
+	}
+
+
+	if(node_ptr->parent){
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[5],col[5], operator_to_name(node_ptr->parent->atr_ptr->op));
+	}
+	else{
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	"ROOT");
+	}
+
+	if(node_ptr->child == NULL){
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"Yes");
+	}
+	else{
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"No");
+	}
+
+	if(node_ptr->atr_ptr->type != NULL){
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[7],col[7], type_to_name(((Type *)node_ptr->atr_ptr->type)->type_enum));
+	}
+	else{
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[7],col[7], "-------------------------");
+	}
+
+	fprintf(file_ptr, " |\n");
+}
+
+void print_abstract_tree_preorder(ParseTree *tree, FILE *file_ptr){
+	int col[] = {5,16,4,20,20,20,10,20};
+
+	fprintf(file_ptr, " --");	fprintf(file_ptr, "%-*.*s",	col[0],col[0],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[1],col[1],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[2],col[2],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[3],col[3],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[4],col[4],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[7],col[7],	"-------------------------");
+	fprintf(file_ptr, "--\n");
+
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[0],col[0],	"S No");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[1],col[1],	"Operator");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[2],col[2],	"Line");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[3],col[3],	"Token");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[4],col[4],	"Value");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	"Parent");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"Leaf");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[7],col[7],	"Type");
+	fprintf(file_ptr, " |\n");
+
+	fprintf(file_ptr, " --");	fprintf(file_ptr, "%-*.*s",	col[0],col[0],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[1],col[1],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[2],col[2],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[3],col[3],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[4],col[4],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[7],col[7],	"-------------------------");
+	fprintf(file_ptr, "--\n");
+
+	int index = 1;
+
+	ParseTree_Node *cur_node_ptr = tree;
+	while(cur_node_ptr != NULL){
+		print_node(cur_node_ptr, &index, file_ptr);
+		cur_node_ptr = ParseTree_Node_move_preorder(cur_node_ptr);
+	}
+
+	fprintf(file_ptr, " --");	fprintf(file_ptr, "%-*.*s",	col[0],col[0],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[1],col[1],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[2],col[2],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[3],col[3],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[4],col[4],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"-------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[7],col[7],	"-------------------------");
+	fprintf(file_ptr, "--\n");
 }

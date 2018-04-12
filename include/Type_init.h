@@ -14,19 +14,27 @@
 
 typedef enum {
 	// Primitive
-	TYPE_ENUM_NUM,
+	TYPE_ENUM_NUM = 1,
 	TYPE_ENUM_RNUM,
 	TYPE_ENUM_CHAR,
 
 	// Constructed
 	TYPE_ENUM_STR,
 	TYPE_ENUM_MATRIX,
-	TYPE_ENUM_FUNCTION,
+	TYPE_ENUM_FUNCTION_DEF,
+	TYPE_ENUM_FUNCTION_CALL,
+
+	TYPE_UNKOWN = -1,
 } TypeEnum_type;
 
-typedef int type_num;
-typedef float type_rnum;
-typedef char type_char;
+
+///////////////
+// Constants //
+///////////////
+
+extern const int SIZE_NUM;
+extern const int SIZE_RNUM;
+extern const int SIZE_CHAR;
 
 
 /////////////////////
@@ -35,7 +43,7 @@ typedef char type_char;
 
 typedef struct SymbolEnv_Type
 {
-	TypeEnum_type type;
+	TypeEnum_type type_enum;
 	union{
 		// STR
 		struct{
@@ -63,9 +71,9 @@ typedef struct SymbolEnv_Type Type;
 // Constructors and Destructors //
 //////////////////////////////////
 
-Type *Type_new();
+Type *Type_new(TypeEnum_type type_enum);
 
-void Type_destroy();
+void Type_destroy(Type *type_ptr);
 
 Type *Type_clone(Type *type_ptr);
 

@@ -37,6 +37,8 @@ extern const int SIZE_NUM;
 extern const int SIZE_RNUM;
 extern const int SIZE_CHAR;
 
+extern char *type_names[];
+
 
 /////////////////////
 // Data structures //
@@ -121,5 +123,7 @@ int Type_check_completeness(Type *type_ptr);
  * @return            0 if equal, -1 if not
  */
 int Type_check_compatibility(Type *type_1_ptr, Type *type_2_ptr);
+
+char *type_to_name(int op);
 
 #endif

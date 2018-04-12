@@ -16,6 +16,19 @@ const int SIZE_NUM = 2;
 const int SIZE_RNUM = 4;
 const int SIZE_CHAR = 1;
 
+char *type_names[] = {
+	"",
+	"NUM",
+	"RNUM",
+	"CHAR",
+	"STR",
+	"MATRIX",
+	"LIST",
+	"FUNCTION_DEF",
+	"FUNCTION_CALL",
+	"UNKOWN",
+};
+
 
 //////////////////////////////////
 // Constructors and Destructors //
@@ -435,4 +448,11 @@ int Type_check_compatibility(Type *type_1_ptr, Type *type_2_ptr){
 	}
 
 	return -1;
+}
+
+char *type_to_name(int op){
+	if(op>0)
+		return type_names[op];
+	else
+		return type_names[9];
 }

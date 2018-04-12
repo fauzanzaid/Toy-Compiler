@@ -248,6 +248,191 @@ int Type_get_size(Type *type_ptr){
 	return size;
 }
 
-int Type_check_equal(Type *type_1_ptr, Type *type_2_ptr){
+int Type_check_completeness(Type *type_ptr){
+	switch(type_ptr->type_enum){
+		case TYPE_ENUM_NUM:
+		case TYPE_ENUM_RNUM:
+		case TYPE_ENUM_CHAR:
+		{
+			break;
+		}
 
+		case TYPE_ENUM_STR:
+		{
+			if(type_ptr->len_string == 0)
+				return -1;
+
+			break;
+		}
+
+		case TYPE_ENUM_MATRIX:
+		{
+			if(type_ptr->num_rows == 0 || type_ptr->num_columns == 0)
+				return -1;
+
+			break;
+		}
+
+		case TYPE_ENUM_LIST:
+		{
+			LinkedListIterator *itr_ptr = LinkedListIterator_new(type_ptr->lst_ptr);
+			LinkedListIterator_move_to_first(itr_ptr);
+			while(1){
+				Type *type_element_ptr = LinkedListIterator_get_item(itr_ptr);
+
+				if(type_element_ptr == NULL)
+					break;
+
+				if( Type_check_completeness(type_element_ptr) == -1 )
+					return -1;
+
+				LinkedListIterator_move_to_next(itr_ptr);
+			}
+			LinkedListIterator_destroy(itr_ptr);
+
+			break;
+		}
+
+		case TYPE_ENUM_FUNCTION_DEF:
+		case TYPE_ENUM_FUNCTION_CALL:
+		{
+			if( Type_check_completeness(type_ptr->type_param_in_lst_ptr) == -1 )
+				return -1;
+			if( Type_check_completeness(type_ptr->type_param_out_lst_ptr) == -1 )
+				return -1;
+
+			break;
+		}
+
+		default:
+		{
+			fprintf(stderr, "Type_check_completeness : Type object (%p) of unknown type %d\n", type_ptr, type_ptr->type_enum);
+			return -1;
+		}
+	}
+
+	return 0;
+}
+
+int Type_check_compatibility(Type *type_1_ptr, Type *type_2_ptr){
+	if( type_1_ptr->type_enum == type_2_ptr->type_enum ){
+
+		if( type_1_ptr->type_enum == TYPE_ENUM_NUM || type_1_ptr->type_enum == TYPE_ENUM_RNUM || type_1_ptr->type_enum == TYPE_ENUM_CHAR )
+			return 0;
+
+		else if( type_1_ptr->type_enum == TYPE_ENUM_STR ){
+
+			if( Type_check_completeness(type_1_ptr) == -1 || Type_check_completeness(type_2_ptr) == -1 )
+				return 0;
+
+			else if( type_1_ptr->len_string == type_2_ptr->len_string )
+				return 0;
+
+			else
+				return -1;
+		}
+
+		else if( type_1_ptr->type_enum == TYPE_ENUM_MATRIX ){
+
+			if( Type_check_completeness(type_1_ptr) == -1 || Type_check_completeness(type_2_ptr) == -1 )
+				return 0;
+
+			else if( type_1_ptr->num_rows == type_2_ptr->num_rows && type_1_ptr->num_columns == type_2_ptr->num_columns )
+				return 0;
+
+			else
+				return -1;
+		}
+
+		else if( type_1_ptr->type_enum == TYPE_ENUM_LIST ){
+
+			LinkedListIterator *itr_1_ptr = LinkedListIterator_new(type_1_ptr->lst_ptr);
+			LinkedListIterator *itr_2_ptr = LinkedListIterator_new(type_2_ptr->lst_ptr);
+
+			LinkedListIterator_move_to_first(itr_1_ptr);
+			LinkedListIterator_move_to_first(itr_2_ptr);
+
+			while(1){
+				Type *type_element_1_ptr = LinkedListIterator_get_item(itr_1_ptr);
+				Type *type_element_2_ptr = LinkedListIterator_get_item(itr_2_ptr);
+
+				if(type_element_1_ptr == NULL && type_element_2_ptr == NULL)
+					break;
+
+				else if(
+					(type_element_1_ptr == NULL && type_element_2_ptr != NULL) ||
+					(type_element_1_ptr != NULL && type_element_2_ptr == NULL)
+				)
+					return -1;
+
+				else if( Type_check_compatibility(type_1_ptr, type_2_ptr) == -1 )
+					return -1;
+
+				LinkedListIterator_move_to_next(itr_1_ptr);
+				LinkedListIterator_move_to_next(itr_2_ptr);
+			}
+
+			LinkedListIterator_destroy(itr_1_ptr);
+			LinkedListIterator_destroy(itr_2_ptr);
+
+			return 0;
+		}
+
+		else if( type_1_ptr->type_enum == TYPE_ENUM_FUNCTION_CALL || type_1_ptr->type_enum == TYPE_ENUM_FUNCTION_DEF ){
+
+			if( Type_check_compatibility(type_1_ptr->type_param_in_lst_ptr, type_2_ptr->type_param_in_lst_ptr) == -1)
+				return -1;
+
+			if( Type_check_compatibility(type_1_ptr->type_param_out_lst_ptr, type_2_ptr->type_param_out_lst_ptr) == -1)
+				return -1;
+
+			return 0;
+		}
+	}
+
+	else{
+
+		for (int i = 0; i < 2; ++i)
+		{
+			if(i == 1){
+				// switch type_ptr
+				Type *temp = type_1_ptr;
+				type_1_ptr = type_2_ptr;
+				type_2_ptr = type_1_ptr;
+			}
+
+			if(
+				( type_1_ptr->type_enum == TYPE_ENUM_FUNCTION_DEF && type_1_ptr->type_enum == TYPE_ENUM_FUNCTION_CALL )
+			){
+				if( Type_check_compatibility(type_1_ptr, type_2_ptr) == 0 )
+					return 0;
+			}
+
+			else if( type_1_ptr->type_enum == TYPE_ENUM_LIST ){
+				if(
+					type_2_ptr->type_enum == TYPE_ENUM_NUM ||
+					type_2_ptr->type_enum == TYPE_ENUM_RNUM ||
+					type_2_ptr->type_enum == TYPE_ENUM_CHAR ||
+					type_2_ptr->type_enum == TYPE_ENUM_STR ||
+					type_2_ptr->type_enum == TYPE_ENUM_MATRIX
+				){
+					if( LinkedList_get_size(type_1_ptr->lst_ptr) == 1 )
+						if( Type_check_compatibility( LinkedList_peek(type_1_ptr->lst_ptr), type_2_ptr) == 0 )
+							return 0;
+
+					else
+						return -1;
+				}
+
+				else if( type_2_ptr->type_enum == TYPE_ENUM_FUNCTION_DEF || type_2_ptr->type_enum == TYPE_ENUM_FUNCTION_CALL ){
+					if( Type_check_compatibility(type_1_ptr, type_2_ptr->type_param_out_lst_ptr) == 0 )
+						return 0;
+				}
+			}
+		}
+
+		return -1;
+	}
+
+	return -1;
 }

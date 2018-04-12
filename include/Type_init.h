@@ -66,8 +66,8 @@ typedef struct Type
 
 		// FUNCTION
 		struct{
-			Type *type_param_in_ptr;
-			Type *type_param_out_ptr;
+			Type *type_param_in_lst_ptr;
+			Type *type_param_out_lst_ptr;
 		};
 	};
 } Type;

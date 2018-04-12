@@ -55,10 +55,10 @@ typedef enum {
 typedef struct ParseTree_Node_Attr
 {
 	int op;
-	void *type;	int type_valid;
-	void *inh;	int inh_valid;
-	void *syn;	int syn_valid;
-	void *code;	int code_valid;
+	void *inh;
+	void *type;
+	void *entry;
+	void *code;
 } ParseTree_Node_Attr;
 
 

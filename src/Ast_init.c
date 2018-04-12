@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+
 #include "Ast_init.h"
 #include "Parser_init.h"
 #include "Type_init.h"
@@ -19,10 +20,10 @@ static int remove_children(ParseTree_Node *node_ptr, int *symbol_indices, int le
 ParseTree_Node_Attr *ParseTree_Node_Attr_new(){
 	ParseTree_Node_Attr *atr_ptr = malloc( sizeof(ParseTree_Node_Attr) );
 
-	atr_ptr->type = NULL;	atr_ptr->type_valid = 0;
-	atr_ptr->inh = NULL;	atr_ptr->inh_valid = 0;
-	atr_ptr->syn = NULL;	atr_ptr->syn_valid = 0;
-	atr_ptr->code = NULL;	atr_ptr->code_valid = 0;
+	atr_ptr->inh = NULL;
+	atr_ptr->type = NULL;
+	atr_ptr->entry = NULL;
+	atr_ptr->code = NULL;
 
 	return atr_ptr;
 }

@@ -70,7 +70,7 @@ void SymbolEnv_Type_destroy(void *type_ptr){
 }
 
 Type *Type_clone(Type *type_ptr){
-	Type *clone_ptr = Type_new(clone_ptr->type_enum);
+	Type *clone_ptr = Type_new(type_ptr->type_enum);
 
 	if(type_ptr->type_enum == TYPE_ENUM_STR){
 		clone_ptr->len_string = type_ptr->len_string;
@@ -101,7 +101,7 @@ Type *Type_clone(Type *type_ptr){
 		clone_ptr->type_param_out_lst_ptr = Type_clone(type_ptr->type_param_out_lst_ptr);
 	}
 
-	return type_ptr;
+	return clone_ptr;
 }
 
 

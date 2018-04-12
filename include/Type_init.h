@@ -21,6 +21,7 @@ typedef enum {
 	// Constructed
 	TYPE_ENUM_STR,
 	TYPE_ENUM_MATRIX,
+	TYPE_ENUM_LIST,
 	TYPE_ENUM_FUNCTION_DEF,
 	TYPE_ENUM_FUNCTION_CALL,
 
@@ -41,7 +42,9 @@ extern const int SIZE_CHAR;
 // Data structures //
 /////////////////////
 
-typedef struct SymbolEnv_Type
+typedef struct Type Type;
+
+typedef struct Type
 {
 	TypeEnum_type type_enum;
 	union{
@@ -56,15 +59,18 @@ typedef struct SymbolEnv_Type
 			int num_columns;
 		};
 
+		// LIST
+		struct{
+			LinkedList *lst_ptr;
+		};
+
 		// FUNCTION
 		struct{
-			LinkedList *type_param_in_lst_ptr;
-			LinkedList *type_param_out_lst_ptr;
+			Type *type_param_in_ptr;
+			Type *type_param_out_ptr;
 		};
 	};
-} SymbolEnv_Type;
-
-typedef struct SymbolEnv_Type Type;
+} Type;
 
 
 //////////////////////////////////
@@ -86,6 +92,8 @@ void Type_set_string_len(Type *type_ptr, int len_string);
 
 void Type_set_matrix_len(Type *type_ptr, int num_rows, int num_columns);
 
+void Type_add_list_element(Type *type_ptr, Type *type_element_ptr);
+
 void Type_add_function_param_in(Type *type_ptr, Type* type_param_in_ptr);
 
 void Type_add_function_param_out(Type *type_ptr, Type* type_param_out_ptr);
@@ -93,8 +101,8 @@ void Type_add_function_param_out(Type *type_ptr, Type* type_param_out_ptr);
 /**
  * Returns the memory required in bytes to store a symbol of given type
  * @param  type_ptr Pointer to Type struct
- * @return          Memory required in bytes. 0 if type is uninitialized matrix
- * or string
+ * @return          Memory required in bytes. 0 if type is function def or
+ * uninitialized matrix or string
  */
 int Type_get_size(Type *type_ptr);
 

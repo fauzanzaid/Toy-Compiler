@@ -2,6 +2,7 @@
 
 #include "Ast_init.h"
 #include "Parser_init.h"
+#include "Type_init.h"
 
 
 ////////////////////////
@@ -28,6 +29,10 @@ ParseTree_Node_Attr *ParseTree_Node_Attr_new(){
 
 
 void ParseTree_Node_Attr_destroy(ParseTree_Node_Attr *atr_ptr){
+	if(atr_ptr->type != NULL){
+		Type_destroy(atr_ptr->type);
+	}
+
 	free(atr_ptr);
 }
 

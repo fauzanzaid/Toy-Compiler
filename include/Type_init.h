@@ -96,9 +96,13 @@ void Type_set_matrix_len(Type *type_ptr, int num_rows, int num_columns);
 
 void Type_add_list_element(Type *type_ptr, Type *type_element_ptr);
 
-void Type_add_function_param_in(Type *type_ptr, Type* type_param_in_ptr);
+void Type_add_function_param_in_single(Type *type_ptr, Type* type_param_in_ptr);
 
-void Type_add_function_param_out(Type *type_ptr, Type* type_param_out_ptr);
+void Type_add_function_param_out_single(Type *type_ptr, Type* type_param_out_ptr);
+
+void Type_set_function_param_in_lst(Type *type_ptr, Type* type_param_in_lst_ptr);
+
+void Type_set_function_param_out_lst(Type *type_ptr, Type* type_param_out_lst_ptr);
 
 /**
  * Returns the memory required in bytes to store a symbol of given type

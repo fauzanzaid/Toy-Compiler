@@ -130,4 +130,12 @@ int Type_check_compatibility(Type *type_1_ptr, Type *type_2_ptr);
 
 char *type_to_name(int op);
 
+
+//////////////
+// Printing //
+//////////////
+
+void print_type(Type *type_ptr);
+
+
 #endif

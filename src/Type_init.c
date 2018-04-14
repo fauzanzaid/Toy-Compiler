@@ -483,3 +483,73 @@ char *type_to_name(int op){
 	else
 		return type_names[9];
 }
+
+
+//////////////
+// Printing //
+//////////////
+
+void print_type(Type *type_ptr){
+
+	printf("%s", type_to_name(type_ptr->type_enum));
+
+	switch(type_ptr->type_enum){
+		case TYPE_ENUM_NUM:
+		case TYPE_ENUM_RNUM:
+		case TYPE_ENUM_CHAR:
+		{
+			break;
+		}
+
+		case TYPE_ENUM_STR:
+		{
+			printf("(%d)", type_ptr->len_string);
+			break;
+		}
+
+		case TYPE_ENUM_MATRIX:
+		{
+			printf("(%d,%d)", type_ptr->num_rows, type_ptr->num_columns);
+			break;
+		}
+
+		case TYPE_ENUM_LIST:
+		{
+			printf("[ ");
+
+			LinkedListIterator *itr_ptr = LinkedListIterator_new(type_ptr->lst_ptr);
+			LinkedListIterator_move_to_first(itr_ptr);
+			while(1){
+				Type *type_element_ptr = LinkedListIterator_get_item(itr_ptr);
+				if(type_element_ptr == NULL)
+					break;
+
+				print_type(type_element_ptr);
+				printf(", ");
+
+				LinkedListIterator_move_to_next(itr_ptr);
+			}
+			LinkedListIterator_destroy(itr_ptr);
+
+			printf("]");
+			break;
+		}
+
+		case TYPE_ENUM_FUNCTION_DEF:
+		case TYPE_ENUM_FUNCTION_CALL:
+		{
+			printf("( ");
+			print_type(type_ptr->type_param_in_lst_ptr);
+			printf(", ");
+			print_type(type_ptr->type_param_out_lst_ptr);
+			printf(")");
+			break;
+		}
+
+		default:
+		{
+			printf("?");
+			break;
+		}
+	}
+}

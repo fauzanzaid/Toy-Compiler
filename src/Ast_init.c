@@ -1044,7 +1044,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			break;
 		}
 
-		// 60  (expr_bool) = (num_val_wm_1)  (bool_op)  (num_val_wm_2)
+		// 60  (expr_bool) = (num_val_wom_1)  (bool_op)  (num_val_wom_2)
 		case 60:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_detach_child_by_symbol_index(node_ptr, 0);

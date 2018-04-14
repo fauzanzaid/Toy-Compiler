@@ -328,7 +328,7 @@ void Parser_init_add_rules(ParserLL1 *psr_ptr){
 	ParserLL1_add_rule(psr_ptr, 59,	SYMBOL_V_LOG_OP_BIN,			(int[]) {SYMBOL_T_OR} , 1 );
 
 
-	ParserLL1_add_rule(psr_ptr, 60,	SYMBOL_V_EXPR_BOOL,				(int[]) {SYMBOL_V_NUM_VAL_WM  ,  SYMBOL_V_BOOL_OP  ,  SYMBOL_V_NUM_VAL_WM} , 3 );
+	ParserLL1_add_rule(psr_ptr, 60,	SYMBOL_V_EXPR_BOOL,				(int[]) {SYMBOL_V_NUM_VAL_WOM  ,  SYMBOL_V_BOOL_OP  ,  SYMBOL_V_NUM_VAL_WOM} , 3 );
 	ParserLL1_add_rule(psr_ptr, 61,	SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_LT} , 1 );
 	ParserLL1_add_rule(psr_ptr, 62,	SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_LE} , 1 );
 	ParserLL1_add_rule(psr_ptr, 63,	SYMBOL_V_BOOL_OP,				(int[]) {SYMBOL_T_GT} , 1 );

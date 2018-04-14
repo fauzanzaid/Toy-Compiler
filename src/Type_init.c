@@ -447,14 +447,19 @@ int Type_check_compatibility(Type *type_1_ptr, Type *type_2_ptr){
 				// switch type_ptr
 				Type *temp = type_1_ptr;
 				type_1_ptr = type_2_ptr;
-				type_2_ptr = type_1_ptr;
+				type_2_ptr = temp;
 			}
 
 			if(
-				( type_1_ptr->type_enum == TYPE_ENUM_FUNCTION_DEF && type_1_ptr->type_enum == TYPE_ENUM_FUNCTION_CALL )
+				type_1_ptr->type_enum == TYPE_ENUM_FUNCTION_DEF &&
+				type_2_ptr->type_enum == TYPE_ENUM_FUNCTION_CALL
 			){
-				if( Type_check_compatibility(type_1_ptr, type_2_ptr) == 0 )
+				if(
+					( Type_check_compatibility(type_1_ptr->type_param_in_lst_ptr, type_2_ptr->type_param_in_lst_ptr) == 0 ) &&
+					( Type_check_compatibility(type_1_ptr->type_param_out_lst_ptr, type_2_ptr->type_param_out_lst_ptr) == 0 )
+				){
 					return 0;
+				}
 			}
 
 			else if( type_1_ptr->type_enum == TYPE_ENUM_LIST ){
@@ -465,17 +470,35 @@ int Type_check_compatibility(Type *type_1_ptr, Type *type_2_ptr){
 					type_2_ptr->type_enum == TYPE_ENUM_STR ||
 					type_2_ptr->type_enum == TYPE_ENUM_MATRIX
 				){
-					if( LinkedList_get_size(type_1_ptr->lst_ptr) == 1 )
-						if( Type_check_compatibility( LinkedList_peek(type_1_ptr->lst_ptr), type_2_ptr) == 0 )
+					if( LinkedList_get_size(type_1_ptr->lst_ptr) == 1 ){
+						if( Type_check_compatibility( LinkedList_peek(type_1_ptr->lst_ptr), type_2_ptr) == 0 ){
 							return 0;
+						}
+					}
 
-					else
-						return -1;
+					// else{
+					// 	return -1;
+					// }
 				}
 
 				else if( type_2_ptr->type_enum == TYPE_ENUM_FUNCTION_DEF || type_2_ptr->type_enum == TYPE_ENUM_FUNCTION_CALL ){
-					if( Type_check_compatibility(type_1_ptr, type_2_ptr->type_param_out_lst_ptr) == 0 )
+					if( Type_check_compatibility(type_1_ptr, type_2_ptr->type_param_out_lst_ptr) == 0 ){
 						return 0;
+					}
+				}
+			}
+
+			else if(
+				type_1_ptr->type_enum == TYPE_ENUM_NUM ||
+				type_1_ptr->type_enum == TYPE_ENUM_RNUM ||
+				type_1_ptr->type_enum == TYPE_ENUM_CHAR ||
+				type_1_ptr->type_enum == TYPE_ENUM_STR ||
+				type_1_ptr->type_enum == TYPE_ENUM_MATRIX
+			){
+				if( type_2_ptr->type_enum == TYPE_ENUM_FUNCTION_DEF || type_2_ptr->type_enum == TYPE_ENUM_FUNCTION_CALL ){
+					if( Type_check_compatibility(type_1_ptr, type_2_ptr->type_param_out_lst_ptr) == 0 ){
+						return 0;
+					}
 				}
 			}
 		}

@@ -12,7 +12,9 @@ target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Token_Da
 target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Lexer_init )
 target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Dfa_init )
 target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Parser_init )
+target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Type_init )
 target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Ast_init )
+target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Semantic_init )
 
 set_target_properties(valangLexicalAnalyzer
 	PROPERTIES
@@ -50,3 +52,8 @@ if(NOT TARGET ParseTree)
 	add_subdirectory(${CMAKE_SOURCE_DIR}/ext/ParseTree ${CMAKE_SOURCE_DIR}/ext/ParseTree/build/bin)
 endif(NOT TARGET ParseTree)
 target_link_libraries(valangLexicalAnalyzer ParseTree)
+
+if(NOT TARGET SymbolEnv)
+	add_subdirectory(${CMAKE_SOURCE_DIR}/ext/SymbolEnv ${CMAKE_SOURCE_DIR}/ext/SymbolEnv/build/bin)
+endif(NOT TARGET SymbolEnv)
+target_link_libraries(valangLexicalAnalyzer SymbolEnv)

@@ -396,11 +396,17 @@ int Type_check_compatibility(Type *type_1_ptr, Type *type_2_ptr){
 				else if(
 					(type_element_1_ptr == NULL && type_element_2_ptr != NULL) ||
 					(type_element_1_ptr != NULL && type_element_2_ptr == NULL)
-				)
+				){
+					LinkedListIterator_destroy(itr_1_ptr);
+					LinkedListIterator_destroy(itr_2_ptr);
 					return -1;
+				}
 
-				else if( Type_check_compatibility(type_1_ptr, type_2_ptr) == -1 )
+				else if( Type_check_compatibility(type_element_1_ptr, type_element_2_ptr) == -1 ){
+					LinkedListIterator_destroy(itr_1_ptr);
+					LinkedListIterator_destroy(itr_2_ptr);
 					return -1;
+				}
 
 				LinkedListIterator_move_to_next(itr_1_ptr);
 				LinkedListIterator_move_to_next(itr_2_ptr);

@@ -79,11 +79,9 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			if(
 				type_0_ptr->type_enum != TYPE_ENUM_NUM &&
 				type_0_ptr->type_enum != TYPE_ENUM_RNUM &&
-				type_0_ptr->type_enum != TYPE_ENUM_STR &&
 				type_0_ptr->type_enum != TYPE_ENUM_MATRIX ||
 				type_1_ptr->type_enum != TYPE_ENUM_NUM &&
 				type_1_ptr->type_enum != TYPE_ENUM_RNUM &&
-				type_1_ptr->type_enum != TYPE_ENUM_STR &&
 				type_1_ptr->type_enum != TYPE_ENUM_MATRIX ||
 				Type_check_compatibility(type_0_ptr, type_1_ptr) == -1
 				){

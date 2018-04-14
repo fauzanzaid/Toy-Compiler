@@ -1250,12 +1250,11 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			child_0 = prune_parse_tree( child_0 );
 			child_1 = prune_parse_tree( child_1 );
 
-			ParseTree_Node_destroy(node_ptr);
-
-			node_ptr = child_0;
-
 			if(child_1 != NULL)
-				ParseTree_Node_attach_sibling(node_ptr, child_1);
+				ParseTree_Node_attach_child_left_end(node_ptr, child_1);
+			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
+
+			node_ptr->atr_ptr->op = OPERATOR_ID_LIST;
 
 			break;
 		}

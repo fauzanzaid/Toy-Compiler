@@ -96,6 +96,8 @@ void Type_set_matrix_len(Type *type_ptr, int num_rows, int num_columns);
 
 void Type_add_list_element(Type *type_ptr, Type *type_element_ptr);
 
+void Type_add_list_element_front(Type *type_ptr, Type *type_element_ptr);
+
 void Type_add_function_param_in_single(Type *type_ptr, Type* type_param_in_ptr);
 
 void Type_add_function_param_out_single(Type *type_ptr, Type* type_param_out_ptr);

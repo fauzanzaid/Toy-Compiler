@@ -150,6 +150,15 @@ void Type_add_list_element(Type *type_ptr, Type *type_element_ptr){
 	LinkedList_pushback(type_ptr->lst_ptr, type_element_ptr);
 }
 
+void Type_add_list_element_front(Type *type_ptr, Type *type_element_ptr){
+	if(type_ptr->type_enum != TYPE_ENUM_LIST){
+		fprintf(stderr, "Type_add_list_element : %p not LIST type\n", type_ptr);
+		return;
+	}
+
+	LinkedList_push(type_ptr->lst_ptr, type_element_ptr);
+}
+
 void Type_add_function_param_in_single(Type *type_ptr, Type* type_param_in_ptr){
 	if(type_ptr->type_enum != TYPE_ENUM_FUNCTION_CALL && type_ptr->type_enum != TYPE_ENUM_FUNCTION_DEF){
 		fprintf(stderr, "Type_add_function_param_in_single : %p not FUNCTION_CALL or FUNCTION_DEF type\n", type_ptr);

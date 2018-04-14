@@ -39,12 +39,12 @@ Type *Type_new(TypeEnum_type type_enum){
 	type_ptr->type_enum = type_enum;
 
 	if(type_enum == TYPE_ENUM_STR){
-		type_ptr->len_string = 0;
+		type_ptr->len_string = -1;
 	}
 
 	else if(type_enum == TYPE_ENUM_MATRIX){
-		type_ptr->num_rows = 0;
-		type_ptr->num_columns = 0;
+		type_ptr->num_rows = -1;
+		type_ptr->num_columns = -1;
 	}
 
 	else if(type_enum == TYPE_ENUM_LIST){
@@ -199,7 +199,7 @@ void Type_set_function_param_out_lst(Type *type_ptr, Type* type_param_out_lst_pt
 
 
 int Type_get_size(Type *type_ptr){
-	int size = 0;
+	int size = -1;
 
 	switch(type_ptr->type_enum){
 
@@ -223,8 +223,8 @@ int Type_get_size(Type *type_ptr){
 
 		case TYPE_ENUM_STR:
 		{
-			if(type_ptr->len_string == 0)
-				size = 0;
+			if(type_ptr->len_string < 0)
+				size = -1;
 			else{
 				// For storing index
 				size = SIZE_NUM;
@@ -237,8 +237,8 @@ int Type_get_size(Type *type_ptr){
 
 		case TYPE_ENUM_MATRIX:
 		{
-			if(type_ptr->num_rows == 0 && type_ptr->num_columns == 0)
-				size = 0;
+			if(type_ptr->num_rows < 0 && type_ptr->num_columns < 0)
+				size = -1;
 			else{
 				// For storing index
 				size = 2 * SIZE_NUM;
@@ -258,7 +258,13 @@ int Type_get_size(Type *type_ptr){
 				if(type_element_ptr == NULL)
 					break;
 
-				size += Type_get_size(type_element_ptr);
+				int size_element = Type_get_size(type_element_ptr);
+				if(size_element < 0){
+					size = -1;
+					break;
+				}
+
+				size += size_element;
 
 				LinkedListIterator_move_to_next(itr_ptr);
 			}
@@ -266,24 +272,32 @@ int Type_get_size(Type *type_ptr){
 			break;
 		}
 
+		case TYPE_ENUM_FUNCTION_CALL:
 		case TYPE_ENUM_FUNCTION_DEF:
 		{
-			size += Type_get_size(type_ptr->type_param_in_lst_ptr);
-			size += Type_get_size(type_ptr->type_param_out_lst_ptr);
+			int size_element;
 
-			break;
-		}
+			size_element = Type_get_size(type_ptr->type_param_in_lst_ptr);
+			if(size_element < 0){
+				size = -1;
+				break;
+			}
+			size += size_element;
 
-		case TYPE_ENUM_FUNCTION_CALL:
-		{
-			size += Type_get_size(type_ptr->type_param_in_lst_ptr);
-			size += Type_get_size(type_ptr->type_param_out_lst_ptr);
+			size_element = Type_get_size(type_ptr->type_param_out_lst_ptr);
+			if(size_element < 0){
+				size = -1;
+				break;
+			}
+			size += size_element;
 
 			break;
 		}
 
 		default:{
 			fprintf(stderr, "Type_get_size : Type object (%p) of unknown type %d\n", type_ptr, type_ptr->type_enum);
+			size = -1;
+
 			break;
 		}
 	}
@@ -302,7 +316,7 @@ int Type_check_completeness(Type *type_ptr){
 
 		case TYPE_ENUM_STR:
 		{
-			if(type_ptr->len_string == 0)
+			if(type_ptr->len_string < 0)
 				return -1;
 
 			break;
@@ -310,7 +324,7 @@ int Type_check_completeness(Type *type_ptr){
 
 		case TYPE_ENUM_MATRIX:
 		{
-			if(type_ptr->num_rows == 0 || type_ptr->num_columns == 0)
+			if(type_ptr->num_rows < 0 || type_ptr->num_columns < 0)
 				return -1;
 
 			break;

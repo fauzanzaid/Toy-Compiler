@@ -716,7 +716,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			node_ptr = child_0;
 
 			if(child_1 != NULL)
-				ParseTree_Node_attach_sibling(node_ptr, child_1);
+				ParseTree_Node_attach_child_left_end(node_ptr, child_1);
 
 			break;
 		}

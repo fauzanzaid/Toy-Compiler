@@ -11,7 +11,7 @@
 ///////////////
 
 
-int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr);
+int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, int *flag_error);
 
 
 #endif

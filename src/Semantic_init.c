@@ -28,6 +28,8 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
 
+			// printf("== + ==\n");
+
 			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error);
 			if(status == -1)
 				return status;
@@ -36,26 +38,51 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			if(status == -1)
 				return status;
 
+			// printf("   +    ");
+			// print_type(child_0->atr_ptr->type);
+			// printf("\n");
+			// printf("   +    ");
+			// print_type(child_1->atr_ptr->type);
+			// printf("\n");
+
 			Type *type_0_ptr = child_0->atr_ptr->type;
 			Type *type_1_ptr = child_1->atr_ptr->type;
 
-			if(
+
+			if(type_0_ptr->type_enum == TYPE_ENUM_STR && type_1_ptr->type_enum == TYPE_ENUM_STR){
+				// Not need to check compatibility for string concatenation
+			}
+			else if(
 				type_0_ptr->type_enum != TYPE_ENUM_NUM &&
 				type_0_ptr->type_enum != TYPE_ENUM_RNUM &&
-				type_0_ptr->type_enum != TYPE_ENUM_STR &&
 				type_0_ptr->type_enum != TYPE_ENUM_MATRIX ||
 				type_1_ptr->type_enum != TYPE_ENUM_NUM &&
 				type_1_ptr->type_enum != TYPE_ENUM_RNUM &&
-				type_1_ptr->type_enum != TYPE_ENUM_STR &&
 				type_1_ptr->type_enum != TYPE_ENUM_MATRIX ||
 				Type_check_compatibility(type_0_ptr, type_1_ptr) == -1
-				){
+			){
 				fprintf(stderr, "Incompatible operand types for +\n");
 				*flag_error = 1;
 				return -1;
 			}
 
-			node_ptr->atr_ptr->type = Type_clone(type_0_ptr);
+			if( Type_check_completeness(type_0_ptr) == -1 || Type_check_completeness(type_1_ptr) == -1 ){
+				fprintf(stderr, "Incomplete operand types for +\n");
+				*flag_error = 1;
+				return -1;
+			}
+
+			Type *type_ptr = Type_clone(type_0_ptr);
+
+			if(type_ptr->type_enum == TYPE_ENUM_STR){
+				type_ptr->len_string = type_0_ptr->len_string + type_1_ptr->len_string;
+			}
+
+			// printf("   +    ");
+			// print_type(type_ptr);
+			// printf("\n");
+
+			node_ptr->atr_ptr->type = type_ptr;
 
 			break;
 		}
@@ -86,6 +113,12 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 				Type_check_compatibility(type_0_ptr, type_1_ptr) == -1
 				){
 				fprintf(stderr, "Incompatible operand types for -\n");
+				*flag_error = 1;
+				return -1;
+			}
+
+			if( Type_check_completeness(type_0_ptr) == -1 || Type_check_completeness(type_1_ptr) == -1 ){
+				fprintf(stderr, "Incomplete operand types for -\n");
 				*flag_error = 1;
 				return -1;
 			}
@@ -123,6 +156,13 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 				return -1;
 			}
 
+			// Not required for multiplication
+			// if( Type_check_completeness(type_0_ptr) == -1 || Type_check_completeness(type_1_ptr) == -1 ){
+			// 	fprintf(stderr, "Incomplete operand types for *\n");
+			// 	*flag_error = 1;
+			// 	return -1;
+			// }
+
 			node_ptr->atr_ptr->type = Type_clone(type_0_ptr);
 
 			break;
@@ -151,10 +191,17 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 				type_1_ptr->type_enum != TYPE_ENUM_RNUM ||
 				Type_check_compatibility(type_0_ptr, type_1_ptr) == -1
 				){
-				fprintf(stderr, "Incompatible operand types for *\n");
+				fprintf(stderr, "Incompatible operand types for /\n");
 				*flag_error = 1;
 				return -1;
 			}
+
+			// Not required for division
+			// if( Type_check_completeness(type_0_ptr) == -1 || Type_check_completeness(type_1_ptr) == -1 ){
+			// 	fprintf(stderr, "Incomplete operand types for /\n");
+			// 	*flag_error = 1;
+			// 	return -1;
+			// }
 
 			node_ptr->atr_ptr->type = Type_new(TYPE_ENUM_RNUM);
 
@@ -211,7 +258,9 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 				return -1;
 			}
 
+			node_ptr->atr_ptr->entry = etr_ptr;
 			node_ptr->atr_ptr->type = Type_clone( SymbolEnv_Entry_get_type(etr_ptr) );
+
 			break;
 		}
 
@@ -292,8 +341,14 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 		case OPERATOR_STR:
 		{
+			// printf("== str ==\n");
+
 			Type *type_ptr = Type_new(TYPE_ENUM_STR);
 			type_ptr->len_string = node_ptr->tkn_ptr->data->len_string;
+
+			// printf("   str    ");
+			// print_type(type_ptr);
+			// printf("\n");
 
 			node_ptr->atr_ptr->type = type_ptr;
 			break;
@@ -314,15 +369,133 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			if(status == -1)
 				return status;
 
+			// printf("   assign    ");
 			// print_type(child_0->atr_ptr->type);
 			// printf("\n");
+			// printf("   assign    ");
 			// print_type(child_1->atr_ptr->type);
 			// printf("\n");
 
-			if( Type_check_compatibility(child_0->atr_ptr->type, child_1->atr_ptr->type) == -1 ){
+			Type *type_0_ptr = child_0->atr_ptr->type;
+			// child_0->atr_ptr->type = NULL;
+			Type *type_1_ptr = child_1->atr_ptr->type;
+			// child_1->atr_ptr->type = NULL;
+
+			if( Type_check_compatibility(type_0_ptr, type_1_ptr) == -1 ){
 				fprintf(stderr, "Incompatible operand types for =\n");
 				*flag_error = 1;
 				return -1;
+			}
+
+			if( Type_check_completeness(type_1_ptr) == -1 ){
+				fprintf(stderr, "Incomplete type of rval for =\n");
+				*flag_error = 1;
+				return -1;
+			}
+
+			if( Type_check_completeness(type_0_ptr) == -1 ){
+
+				if(type_0_ptr->type_enum != TYPE_ENUM_LIST){
+
+					Type *type_0_in_etr_ptr = SymbolEnv_Entry_get_type(child_0->atr_ptr->entry);
+					Type *type_1_element_ptr;
+
+					if(type_1_ptr->type_enum == TYPE_ENUM_LIST)
+						type_1_element_ptr = LinkedList_peek(type_1_ptr->lst_ptr);
+					else if(type_1_ptr->type_enum == TYPE_ENUM_FUNCTION_CALL)
+						type_1_element_ptr = LinkedList_peek(type_1_ptr->type_param_out_lst_ptr->lst_ptr);
+					else
+						type_1_element_ptr = type_1_ptr;
+
+
+					if(type_0_ptr->type_enum == TYPE_ENUM_STR){
+						type_0_ptr->len_string = type_1_element_ptr->len_string;
+						type_0_in_etr_ptr->len_string = type_1_element_ptr->len_string;
+					}
+
+					else if(type_0_ptr->type_enum == TYPE_ENUM_STR){
+						type_0_ptr->num_rows = type_1_element_ptr->num_rows;
+						type_0_in_etr_ptr->num_rows = type_1_element_ptr->num_rows;
+						type_0_ptr->num_columns = type_1_element_ptr->num_columns;
+						type_0_in_etr_ptr->num_columns = type_1_element_ptr->num_columns;
+					}
+				}
+
+				else if(type_0_ptr->type_enum == TYPE_ENUM_LIST){
+
+					LinkedListIterator *itr_0_ptr = LinkedListIterator_new(type_0_ptr->lst_ptr);
+					LinkedListIterator_move_to_first(itr_0_ptr);
+					// Type struct of OPERATOR_ID_LIST
+					Type *type_id_in_list_ptr = LinkedListIterator_get_item(itr_0_ptr);
+
+					ParseTree_Node *id_node_ptr = child_0->child;
+					// Type struct in tree node
+					Type *type_id_in_tree_ptr = id_node_ptr->atr_ptr->type;
+					// Type struct in symbol table
+					Type *type_id_in_entry_ptr = SymbolEnv_Entry_get_type(id_node_ptr->atr_ptr->entry);
+
+
+					if(type_1_ptr->type_enum == TYPE_ENUM_STR){
+						type_id_in_list_ptr->len_string = type_1_ptr->len_string;
+						type_id_in_tree_ptr->len_string = type_1_ptr->len_string;
+						type_id_in_entry_ptr->len_string = type_1_ptr->len_string;
+					}
+
+					else if(type_1_ptr->type_enum == TYPE_ENUM_MATRIX){
+						type_id_in_list_ptr->num_rows = type_1_ptr->num_rows;
+						type_id_in_tree_ptr->num_rows = type_1_ptr->num_rows;
+						type_id_in_entry_ptr->num_rows = type_1_ptr->num_rows;
+						type_id_in_list_ptr->num_columns = type_1_ptr->num_columns;
+						type_id_in_tree_ptr->num_columns = type_1_ptr->num_columns;
+						type_id_in_entry_ptr->num_columns = type_1_ptr->num_columns;
+					}
+
+					else{
+
+						LinkedListIterator *itr_1_ptr;
+
+						if(type_1_ptr->type_enum == TYPE_ENUM_LIST)
+							itr_1_ptr = LinkedListIterator_new(type_1_ptr->lst_ptr);
+						else if(type_1_ptr->type_enum == TYPE_ENUM_FUNCTION_CALL)
+							itr_1_ptr = LinkedListIterator_new(type_1_ptr->type_param_out_lst_ptr->lst_ptr);
+
+
+						Type *type_1_element_ptr = LinkedListIterator_get_item(itr_1_ptr);
+
+						while(type_1_element_ptr != NULL){
+							type_id_in_list_ptr = LinkedListIterator_get_item(itr_0_ptr);
+							type_id_in_tree_ptr = id_node_ptr->atr_ptr->type;
+							type_id_in_entry_ptr = SymbolEnv_Entry_get_type(id_node_ptr->atr_ptr->entry);
+							type_1_element_ptr = LinkedListIterator_get_item(itr_1_ptr);
+
+
+							if(type_1_element_ptr->type_enum == TYPE_ENUM_STR){
+								type_id_in_list_ptr->len_string = type_1_element_ptr->len_string;
+								type_id_in_tree_ptr->len_string = type_1_element_ptr->len_string;
+								type_id_in_entry_ptr->len_string = type_1_element_ptr->len_string;
+							}
+
+							else if(type_1_element_ptr->type_enum == TYPE_ENUM_MATRIX){
+								type_id_in_list_ptr->num_rows = type_1_element_ptr->num_rows;
+								type_id_in_tree_ptr->num_rows = type_1_element_ptr->num_rows;
+								type_id_in_entry_ptr->num_rows = type_1_element_ptr->num_rows;
+								type_id_in_list_ptr->num_columns = type_1_element_ptr->num_columns;
+								type_id_in_tree_ptr->num_columns = type_1_element_ptr->num_columns;
+								type_id_in_entry_ptr->num_columns = type_1_element_ptr->num_columns;
+							}
+
+
+							LinkedListIterator_move_to_next(itr_0_ptr);
+							id_node_ptr = id_node_ptr->sibling;
+							LinkedListIterator_move_to_next(itr_1_ptr);
+						}
+
+						LinkedListIterator_destroy(itr_1_ptr);
+					}
+
+					LinkedListIterator_destroy(itr_0_ptr);
+
+				}
 			}
 
 			break;
@@ -562,6 +735,9 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 				Type *type_id_ptr = SymbolEnv_Entry_get_type(id_etr_ptr);
 				Type_add_list_element(type_ptr, Type_clone(type_id_ptr));
+
+				id_node_ptr->atr_ptr->entry = id_etr_ptr;
+				id_node_ptr->atr_ptr->type = Type_clone(type_id_ptr);
 
 				id_node_ptr = id_node_ptr->sibling;
 			}

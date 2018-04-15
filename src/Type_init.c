@@ -91,7 +91,7 @@ Type *Type_clone(Type *type_ptr){
 
 	else if(type_ptr->type_enum == TYPE_ENUM_MATRIX){
 		clone_ptr->num_rows = type_ptr->num_rows;
-		clone_ptr->num_rows = type_ptr->num_rows;
+		clone_ptr->num_columns = type_ptr->num_columns;
 	}
 
 	else if(type_ptr->type_enum == TYPE_ENUM_LIST){

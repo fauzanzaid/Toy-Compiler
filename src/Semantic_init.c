@@ -414,7 +414,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 						type_0_in_etr_ptr->len_string = type_1_element_ptr->len_string;
 					}
 
-					else if(type_0_ptr->type_enum == TYPE_ENUM_STR){
+					else if(type_0_ptr->type_enum == TYPE_ENUM_MATRIX){
 						type_0_ptr->num_rows = type_1_element_ptr->num_rows;
 						type_0_in_etr_ptr->num_rows = type_1_element_ptr->num_rows;
 						type_0_ptr->num_columns = type_1_element_ptr->num_columns;

@@ -276,6 +276,7 @@ char *success_evaluate_function(Token *tkn_ptr, int state, char *string, int len
 
 	else if(state == STATE_F_STR){
 		int len_literal = len_string-2;	// Remove the two "
+		tkn_ptr->data->len_string = len_literal;
 
 		tkn_ptr->data->string = malloc( sizeof(char) * (1 + len_literal) );
 		memcpy(tkn_ptr->data->string, string+1, len_literal);

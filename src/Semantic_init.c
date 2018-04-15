@@ -900,7 +900,7 @@ int Semantic_initialized_check(SymbolEnv *env_ptr){
 	while(1){
 		SymbolEnv_scope_set_explicit(env_ptr, scp_ptr);
 		// printf("%s\n", SymbolEnv_Scope_get_name(scp_ptr));
-		
+
 		LinkedList *id_lst_ptr = SymbolEnv_Scope_get_id_lst(scp_ptr);
 
 		LinkedListIterator *itr_ptr = LinkedListIterator_new(id_lst_ptr);
@@ -925,4 +925,96 @@ int Semantic_initialized_check(SymbolEnv *env_ptr){
 	}
 
 	return flag_initialized;
+}
+
+void print_symbol_environment(SymbolEnv *env_ptr, FILE *file_ptr){
+	int col[] = {5,20,25,5,25,13,5,10};
+
+	fprintf(file_ptr, " --");	fprintf(file_ptr, "%-*.*s",	col[0],col[0],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[1],col[1],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[2],col[2],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[3],col[3],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[4],col[4],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[7],col[7],	"------------------------------");
+	fprintf(file_ptr, "--\n");
+
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[0],col[0],	"S No");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[1],col[1],	"id");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[2],col[2],	"Scope");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[3],col[3],	"Nesting level");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[4],col[4],	"Parent scope");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	"Type");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"Width");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[7],col[7],	"Offset");
+	fprintf(file_ptr, " |\n");
+
+	fprintf(file_ptr, " --");	fprintf(file_ptr, "%-*.*s",	col[0],col[0],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[1],col[1],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[2],col[2],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[3],col[3],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[4],col[4],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[7],col[7],	"------------------------------");
+	fprintf(file_ptr, "--\n");
+
+
+	SymbolEnv_Scope *scp_ptr = SymbolEnv_scope_reset(env_ptr);
+
+	while(1){
+		SymbolEnv_scope_set_explicit(env_ptr, scp_ptr);
+		// printf("%s\n", SymbolEnv_Scope_get_name(scp_ptr));
+
+		LinkedList *id_lst_ptr = SymbolEnv_Scope_get_id_lst(scp_ptr);
+
+		LinkedListIterator *itr_ptr = LinkedListIterator_new(id_lst_ptr);
+		LinkedListIterator_move_to_first(itr_ptr);
+		char *id = LinkedListIterator_get_item(itr_ptr);
+
+		int index = 0;
+
+		while(id){
+			SymbolEnv_Entry *etr_ptr = SymbolEnv_entry_get_by_id(env_ptr, id, strlen(id));
+			Type *type_ptr = SymbolEnv_Entry_get_type(etr_ptr);
+
+			fprintf(file_ptr, " | ");	fprintf(file_ptr, "%*d",	col[0], 		++index);
+			fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[1],col[1],	id);
+			fprintf(file_ptr, " | ");	fprintf(file_ptr, "scope%-*.*s",	col[2]-5,col[2]-5,	SymbolEnv_Scope_get_name(scp_ptr));
+			fprintf(file_ptr, " | ");	fprintf(file_ptr, "%*d",	col[3],			SymbolEnv_Scope_get_nesting_level(scp_ptr)+1);
+
+			if( SymbolEnv_Scope_get_parent(scp_ptr) != NULL ){
+				fprintf(file_ptr, " | ");	fprintf(file_ptr, "scope%-*.*s",	col[4]-5,col[4]-5,	SymbolEnv_Scope_get_name(SymbolEnv_Scope_get_parent(scp_ptr)) );
+			}
+			else{
+				fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[4],col[4],	"------------------------------");
+			}
+
+			fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	type_to_name(type_ptr->type_enum) );
+			fprintf(file_ptr, " | ");	fprintf(file_ptr, "%*d",	col[6],			Type_get_size(type_ptr) );
+			fprintf(file_ptr, " | ");	fprintf(file_ptr, "%*d",	col[7],			0 );
+			fprintf(file_ptr, " |\n");
+
+			LinkedListIterator_move_to_next(itr_ptr);
+			id = LinkedListIterator_get_item(itr_ptr);
+		}
+
+		LinkedListIterator_destroy(itr_ptr);
+
+		scp_ptr = SymbolEnv_Scope_get_inorder(scp_ptr);
+		if(scp_ptr == NULL)
+			break;
+	}
+
+
+	fprintf(file_ptr, " --");	fprintf(file_ptr, "%-*.*s",	col[0],col[0],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[1],col[1],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[2],col[2],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[3],col[3],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[4],col[4],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"------------------------------");
+	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[7],col[7],	"------------------------------");
+	fprintf(file_ptr, "--\n");
 }

@@ -1,6 +1,7 @@
 #include <stdio.h>
+#include <string.h>
 
-
+#include "LinkedList.h"
 #include "Token.h"
 #include "ParseTree.h"
 #include "SymbolEnv.h"
@@ -500,7 +501,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 
 			// Set initialized flag
-			if(type_1_ptr->type_enum != TYPE_ENUM_LIST){
+			if(type_0_ptr->type_enum != TYPE_ENUM_LIST){
 				SymbolEnv_Entry_set_flag_initialized(child_0->atr_ptr->entry);
 			}
 			else{
@@ -694,6 +695,8 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 				*flag_error = 1;
 				return -1;
 			}
+			SymbolEnv_Entry_set_flag_initialized(etr_ptr);
+			// printf("%s : %d\n", name, SymbolEnv_Entry_get_flag_initialized(etr_ptr));
 
 			SymbolEnv_scope_add(env_ptr, name, len_name);
 
@@ -704,6 +707,14 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			status = Semantic_symbol_and_type_check(child_2, env_ptr, flag_error);
 			if(status == -1)
 				return status;
+
+			// Set ids in param in list as initialized
+			ParseTree_Node *param_node_ptr = child_2;
+			while(param_node_ptr != NULL){
+				ParseTree_Node *id_node_ptr = ParseTree_Node_get_child_by_node_index(param_node_ptr, 1);
+				SymbolEnv_entry_set_flag_initialized_by_id(env_ptr, id_node_ptr->tkn_ptr->data->string, id_node_ptr->tkn_ptr->data->len_string);
+				param_node_ptr = ParseTree_Node_get_child_by_node_index(param_node_ptr, 2);
+			}
 
 			Type_set_function_param_out_lst(type_ptr, child_0->atr_ptr->type);
 			child_0->atr_ptr->type = NULL;
@@ -880,4 +891,38 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 	}
+}
+
+int Semantic_initialized_check(SymbolEnv *env_ptr){
+	int flag_initialized = 0;
+	SymbolEnv_Scope *scp_ptr = SymbolEnv_scope_reset(env_ptr);
+
+	while(1){
+		SymbolEnv_scope_set_explicit(env_ptr, scp_ptr);
+		// printf("%s\n", SymbolEnv_Scope_get_name(scp_ptr));
+		
+		LinkedList *id_lst_ptr = SymbolEnv_Scope_get_id_lst(scp_ptr);
+
+		LinkedListIterator *itr_ptr = LinkedListIterator_new(id_lst_ptr);
+		LinkedListIterator_move_to_first(itr_ptr);
+		char *id = LinkedListIterator_get_item(itr_ptr);
+
+		while(id){
+			if( SymbolEnv_entry_get_flag_initialized_by_id(env_ptr, id, strlen(id)) == 0 ){
+				fprintf(stderr, "Symbol %s in scope %s not initialized\n", id, SymbolEnv_Scope_get_name(scp_ptr));
+				flag_initialized = -1;
+			}
+
+			LinkedListIterator_move_to_next(itr_ptr);
+			id = LinkedListIterator_get_item(itr_ptr);
+		}
+
+		LinkedListIterator_destroy(itr_ptr);
+		
+		scp_ptr = SymbolEnv_Scope_get_inorder(scp_ptr);
+		if(scp_ptr == NULL)
+			break;
+	}
+
+	return flag_initialized;
 }

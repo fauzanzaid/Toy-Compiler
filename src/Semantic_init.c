@@ -377,9 +377,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			// printf("\n");
 
 			Type *type_0_ptr = child_0->atr_ptr->type;
-			// child_0->atr_ptr->type = NULL;
 			Type *type_1_ptr = child_1->atr_ptr->type;
-			// child_1->atr_ptr->type = NULL;
 
 			if( Type_check_compatibility(type_0_ptr, type_1_ptr) == -1 ){
 				fprintf(stderr, "Incompatible operand types for =\n");
@@ -393,6 +391,8 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 				return -1;
 			}
 
+
+			// Complete type of lval if incomplete
 			if( Type_check_completeness(type_0_ptr) == -1 ){
 
 				if(type_0_ptr->type_enum != TYPE_ENUM_LIST){
@@ -495,6 +495,19 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 					LinkedListIterator_destroy(itr_0_ptr);
 
+				}
+			}
+
+
+			// Set initialized flag
+			if(type_1_ptr->type_enum != TYPE_ENUM_LIST){
+				SymbolEnv_Entry_set_flag_initialized(child_0->atr_ptr->entry);
+			}
+			else{
+				ParseTree_Node *id_node_ptr = child_0->child;
+				while(id_node_ptr != NULL){
+					SymbolEnv_Entry_set_flag_initialized(id_node_ptr->atr_ptr->entry);
+					id_node_ptr = id_node_ptr->sibling;
 				}
 			}
 

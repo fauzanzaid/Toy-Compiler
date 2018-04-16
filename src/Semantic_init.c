@@ -836,7 +836,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 				Type *type_id_ptr = Type_clone(type_ptr);
 
-				SymbolEnv_Entry *etr_ptr = SymbolEnv_entry_add(env_ptr, id, len_id, 0, type_id_ptr);
+				SymbolEnv_Entry *etr_ptr = SymbolEnv_entry_add(env_ptr, id, len_id, type_id_ptr);
 				if(etr_ptr == NULL){
 
 					if(flag_print_errors == 1){
@@ -877,7 +877,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 			Type *type_ptr = Type_new(TYPE_ENUM_FUNCTION_DEF);
 
-			SymbolEnv_Entry *etr_ptr = SymbolEnv_entry_add(env_ptr, name, len_name, 0, type_ptr);
+			SymbolEnv_Entry *etr_ptr = SymbolEnv_entry_add(env_ptr, name, len_name, type_ptr);
 			// printf("   def: %p %p\n", type_ptr, etr_ptr);
 			if(etr_ptr == NULL){
 
@@ -1094,7 +1094,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 			Type *type_id_ptr = Type_clone(child_0->atr_ptr->type);
 
-			SymbolEnv_Entry *etr_ptr = SymbolEnv_entry_add(env_ptr, id, len_id, 0, type_id_ptr);
+			SymbolEnv_Entry *etr_ptr = SymbolEnv_entry_add(env_ptr, id, len_id, type_id_ptr);
 			if(etr_ptr == NULL){
 
 				if(flag_print_errors == 1){
@@ -1309,8 +1309,8 @@ void print_symbol_environment(SymbolEnv *env_ptr, FILE *file_ptr){
 			}
 
 			fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	type_to_name(type_ptr->type_enum) );
-			fprintf(file_ptr, " | ");	fprintf(file_ptr, "%*d",	col[6],			Type_get_size(type_ptr) );
-			fprintf(file_ptr, " | ");	fprintf(file_ptr, "%*d",	col[7],			0 );
+			fprintf(file_ptr, " | ");	fprintf(file_ptr, "%*d",	col[6],			SymbolEnv_Entry_get_size(etr_ptr) );
+			fprintf(file_ptr, " | ");	fprintf(file_ptr, "%*d",	col[7],			SymbolEnv_Entry_get_offset(etr_ptr) );
 			fprintf(file_ptr, " |\n");
 
 			LinkedListIterator_move_to_next(itr_ptr);

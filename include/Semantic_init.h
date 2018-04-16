@@ -11,9 +11,9 @@
 ///////////////
 
 
-int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, int *flag_error);
+int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, int *flag_error, int flag_print_errors);
 
-int Semantic_initialized_check(SymbolEnv *env_ptr);
+int Semantic_initialized_check(SymbolEnv *env_ptr, int flag_print_errors);
 
 void print_symbol_environment(SymbolEnv *env_ptr, FILE *file_ptr);
 

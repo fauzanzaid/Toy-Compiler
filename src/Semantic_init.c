@@ -14,11 +14,23 @@
 
 
 ///////////////
+// Constants //
+///////////////
+
+#define TEXT_RED	"\x1B[31m"
+#define TEXT_GRN	"\x1B[32m"
+#define TEXT_YLW	"\x1B[33m"
+#define TEXT_BLU	"\x1B[34m"
+#define TEXT_BLD	"\x1B[1m"
+#define TEXT_RST	"\x1B[0m"
+
+
+///////////////
 // Functions //
 ///////////////
 
 
-int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, int *flag_error){
+int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, int *flag_error, int flag_print_errors){
 
 	int status;
 
@@ -31,11 +43,11 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 			// printf("== + ==\n");
 
-			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
-			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
@@ -50,6 +62,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			Type *type_1_ptr = child_1->atr_ptr->type;
 
 
+
 			if(type_0_ptr->type_enum == TYPE_ENUM_STR && type_1_ptr->type_enum == TYPE_ENUM_STR){
 				// Not need to check compatibility for string concatenation
 			}
@@ -62,7 +75,16 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 				type_1_ptr->type_enum != TYPE_ENUM_MATRIX ||
 				Type_check_compatibility(type_0_ptr, type_1_ptr) == -1
 			){
-				fprintf(stderr, "Incompatible operand types for +\n");
+				if(flag_print_errors == 1){
+					int line_number = node_ptr->tkn_ptr->line;
+					int column_number = node_ptr->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Operator " TEXT_GRN TEXT_BLD "%s" TEXT_RST " does not support operands " TEXT_YLW "%s" TEXT_RST " and " TEXT_YLW "%s" TEXT_RST " of incompatible type\n", "+", type_to_name(type_0_ptr->type_enum), type_to_name(type_1_ptr->type_enum));
+				}
+
 				*flag_error = 1;
 				return -1;
 			}
@@ -93,11 +115,11 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
 
-			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
-			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
@@ -112,8 +134,17 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 				type_1_ptr->type_enum != TYPE_ENUM_RNUM &&
 				type_1_ptr->type_enum != TYPE_ENUM_MATRIX ||
 				Type_check_compatibility(type_0_ptr, type_1_ptr) == -1
-				){
-				fprintf(stderr, "Incompatible operand types for -\n");
+			){
+				if(flag_print_errors == 1){
+					int line_number = node_ptr->tkn_ptr->line;
+					int column_number = node_ptr->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Operator " TEXT_GRN TEXT_BLD "%s" TEXT_RST " does not support operands " TEXT_YLW "%s" TEXT_RST " and " TEXT_YLW "%s" TEXT_RST " of incompatible type\n", "-", type_to_name(type_0_ptr->type_enum), type_to_name(type_1_ptr->type_enum));
+				}
+
 				*flag_error = 1;
 				return -1;
 			}
@@ -134,11 +165,11 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
 
-			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
-			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
@@ -151,8 +182,17 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 				type_1_ptr->type_enum != TYPE_ENUM_NUM &&
 				type_1_ptr->type_enum != TYPE_ENUM_RNUM ||
 				Type_check_compatibility(type_0_ptr, type_1_ptr) == -1
-				){
-				fprintf(stderr, "Incompatible operand types for *\n");
+			){
+				if(flag_print_errors == 1){
+					int line_number = node_ptr->tkn_ptr->line;
+					int column_number = node_ptr->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Operator " TEXT_GRN TEXT_BLD "%s" TEXT_RST " does not support operands " TEXT_YLW "%s" TEXT_RST " and " TEXT_YLW "%s" TEXT_RST " of incompatible type\n", "*", type_to_name(type_0_ptr->type_enum), type_to_name(type_1_ptr->type_enum));
+				}
+
 				*flag_error = 1;
 				return -1;
 			}
@@ -174,11 +214,11 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
 
-			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
-			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
@@ -191,8 +231,17 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 				type_1_ptr->type_enum != TYPE_ENUM_NUM &&
 				type_1_ptr->type_enum != TYPE_ENUM_RNUM ||
 				Type_check_compatibility(type_0_ptr, type_1_ptr) == -1
-				){
-				fprintf(stderr, "Incompatible operand types for /\n");
+			){
+				if(flag_print_errors == 1){
+					int line_number = node_ptr->tkn_ptr->line;
+					int column_number = node_ptr->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Operator " TEXT_GRN TEXT_BLD "%s" TEXT_RST " does not support operands " TEXT_YLW "%s" TEXT_RST " and " TEXT_YLW "%s" TEXT_RST " of incompatible type\n", "/", type_to_name(type_0_ptr->type_enum), type_to_name(type_1_ptr->type_enum));
+				}
+
 				*flag_error = 1;
 				return -1;
 			}
@@ -213,7 +262,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 
-			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
@@ -235,7 +284,17 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			}
 
 			else{
-				fprintf(stderr, "Incompatible type for @\n");
+
+				if(flag_print_errors == 1){
+					int line_number = node_ptr->tkn_ptr->line;
+					int column_number = node_ptr->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Operator " TEXT_GRN TEXT_BLD "%s" TEXT_RST " does not support operand " TEXT_YLW "%s" TEXT_RST " of incompatible type\n", "@", type_to_name(type_ptr->type_enum));
+				}
+
 				Type_destroy(type_ptr);
 
 				*flag_error = 1;
@@ -254,7 +313,17 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 			SymbolEnv_Entry *etr_ptr = SymbolEnv_entry_get_by_id(env_ptr, id, len_id);
 			if(etr_ptr == NULL){
-				fprintf(stderr, "Symbol %*s not declared in this scope\n", len_id, id);
+
+				if(flag_print_errors == 1){
+					int line_number = node_ptr->tkn_ptr->line;
+					int column_number = node_ptr->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Variable " TEXT_YLW "%*s" TEXT_RST " undeclared in this scope \n", len_id, id);
+				}
+
 				*flag_error = 1;
 				return -1;
 			}
@@ -299,7 +368,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 
-			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
@@ -310,12 +379,23 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 				type_ptr->type_enum != TYPE_ENUM_NUM &&
 				type_ptr->type_enum != TYPE_ENUM_RNUM
 			){
-				fprintf(stderr, "Incompatible type for read()\n");
+				if(flag_print_errors == 1){
+					int line_number = node_ptr->tkn_ptr->line;
+					int column_number = node_ptr->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Function " TEXT_GRN TEXT_BLD "%s" TEXT_RST " does not support operand " TEXT_YLW "%s" TEXT_RST " of incompatible type\n", "read()", type_to_name(type_ptr->type_enum));
+				}
+
 				Type_destroy(type_ptr);
 
 				*flag_error = 1;
 				return -1;
 			}
+
+			SymbolEnv_Entry_set_flag_initialized(child_0->atr_ptr->entry);
 
 			Type_destroy(type_ptr);
 
@@ -362,13 +442,19 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 			// printf("== assign ==\n");
 
-			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error);
-			if(status == -1)
-				return status;
+			// Check both rval and lval
+			int flag_error_local = 0;
 
-			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
-				return status;
+				flag_error_local = 1;
+
+			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error, flag_print_errors);
+			if(status == -1)
+				flag_error_local = 1;
+
+			if(flag_error_local == 1)
+				return -1;
 
 			// printf("   assign    ");
 			// print_type(child_0->atr_ptr->type);
@@ -381,13 +467,33 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			Type *type_1_ptr = child_1->atr_ptr->type;
 
 			if( Type_check_compatibility(type_0_ptr, type_1_ptr) == -1 ){
-				fprintf(stderr, "Incompatible operand types for =\n");
+
+				if(flag_print_errors == 1){
+					int line_number = node_ptr->tkn_ptr->line;
+					int column_number = node_ptr->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Cannot assign value " TEXT_YLW "%s" TEXT_RST " to variable " TEXT_YLW "%s" TEXT_RST " of incompatible type\n", type_to_name(type_1_ptr->type_enum), type_to_name(type_0_ptr->type_enum));
+				}
+
 				*flag_error = 1;
 				return -1;
 			}
 
 			if( Type_check_completeness(type_1_ptr) == -1 ){
-				fprintf(stderr, "Incomplete type of rval for =\n");
+
+				if(flag_print_errors == 1){
+					int line_number = node_ptr->tkn_ptr->line;
+					int column_number = node_ptr->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Incomplete type " TEXT_YLW "%s" TEXT_RST "\n", type_to_name(type_1_ptr->type_enum));
+				}
+
 				*flag_error = 1;
 				return -1;
 			}
@@ -521,11 +627,11 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
 
-			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
-			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
@@ -536,7 +642,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 
-			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
@@ -553,11 +659,11 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
 
-			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
-			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
@@ -568,7 +674,20 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 				( type_0_ptr->type_enum != TYPE_ENUM_NUM && type_0_ptr->type_enum != TYPE_ENUM_RNUM ) ||
 				( type_1_ptr->type_enum != TYPE_ENUM_NUM && type_1_ptr->type_enum != TYPE_ENUM_RNUM )
 			){
-				fprintf(stderr, "Incompatible types for boolean operators\n");
+				if(flag_print_errors == 1){
+					int line_number = node_ptr->tkn_ptr->line;
+					int column_number = node_ptr->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Cannot compare value of incompatible type(s)");
+					if(type_0_ptr->type_enum != TYPE_ENUM_NUM && type_0_ptr->type_enum != TYPE_ENUM_RNUM)
+						printf( TEXT_YLW " %s" TEXT_RST, type_to_name(type_0_ptr->type_enum));
+					if(type_1_ptr->type_enum != TYPE_ENUM_NUM && type_1_ptr->type_enum != TYPE_ENUM_RNUM)
+						printf( TEXT_YLW " %s" TEXT_RST, type_to_name(type_1_ptr->type_enum));
+				}
+
 				*flag_error = 1;
 				return -1;
 			}
@@ -588,24 +707,47 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 			SymbolEnv_Entry *etr_def_ptr = SymbolEnv_entry_get_by_id(env_ptr, name, len_name);
 			if(etr_def_ptr == NULL){
-				fprintf(stderr, "Function %*s not declared in this scope\n", len_name, name);
+
+				if(flag_print_errors == 1){
+					int line_number = child_0->tkn_ptr->line;
+					int column_number = child_0->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Function " TEXT_YLW "%*s" TEXT_RST " undeclared in this scope \n", len_name, name);
+				}
+
 				*flag_error = 1;
 				return -1;
 			}
 
-			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
+
 			Type *type_def_ptr = SymbolEnv_Entry_get_type(etr_def_ptr);
 
+			// printf("   call: ");
 			// print_type(child_1->atr_ptr->type);
 			// printf("\n");
+			// printf("   call: ");
 			// print_type(type_def_ptr->type_param_in_lst_ptr);
 			// printf("\n");
 
 			if( Type_check_compatibility(child_1->atr_ptr->type, type_def_ptr->type_param_in_lst_ptr) == -1 ){
-				fprintf(stderr, "Function %*s called with incorrect arguments\n", len_name, name);
+
+				if(flag_print_errors == 1){
+					int line_number = child_0->tkn_ptr->line;
+					int column_number = child_0->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Function " TEXT_YLW "%*s" TEXT_RST " called with incorrect arguments\n", len_name, name);
+				}
+
 				*flag_error = 1;
 				return -1;
 			}
@@ -627,16 +769,16 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
 			ParseTree_Node *child_2 = ParseTree_Node_get_child_by_node_index(node_ptr, 2);
 
-			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
-			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
 			if(child_2 != NULL){
-				status = Semantic_symbol_and_type_check(child_2, env_ptr, flag_error);
+				status = Semantic_symbol_and_type_check(child_2, env_ptr, flag_error, flag_print_errors);
 				if(status == -1)
 					return status;
 			}
@@ -649,7 +791,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
 
-			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
@@ -664,7 +806,21 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 				SymbolEnv_Entry *etr_ptr = SymbolEnv_entry_add(env_ptr, id, len_id, 0, type_id_ptr);
 				if(etr_ptr == NULL){
-					fprintf(stderr, "Symbol %*s already declared\n", len_id, id);
+
+					if(flag_print_errors == 1){
+						int line_number = id_node_ptr->tkn_ptr->line;
+						int column_number = id_node_ptr->tkn_ptr->column;
+
+						printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+						printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+						printf("Redeclaration of variable " TEXT_YLW "%*s" TEXT_RST " in this scope\n", len_id, id);
+
+						// etr_ptr = SymbolEnv_entry_get_by_id(env_ptr, id, len_id);
+						// printf( TEXT_BLD TEXT_BLU "note: " TEXT_RST);
+						// printf("Variable " TEXT_YLW "%*s" TEXT_RST " was last declared at " TEXT_BLD "%d:%d" TEXT_RST "\n", len_id, id, line_number, column_number);
+					}
+
 					*flag_error = 1;
 				}
 				id_node_ptr->atr_ptr->entry = etr_ptr;
@@ -690,8 +846,23 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			Type *type_ptr = Type_new(TYPE_ENUM_FUNCTION_DEF);
 
 			SymbolEnv_Entry *etr_ptr = SymbolEnv_entry_add(env_ptr, name, len_name, 0, type_ptr);
+			// printf("   def: %p %p\n", type_ptr, etr_ptr);
 			if(etr_ptr == NULL){
-				fprintf(stderr, "Symbol %*s already declared\n", len_name, name);
+
+				if(flag_print_errors == 1){
+					int line_number = child_1->tkn_ptr->line;
+					int column_number = child_1->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Redeclaration of function " TEXT_YLW "%*s" TEXT_RST " in this scope\n", len_name, name);
+
+					// etr_ptr = SymbolEnv_entry_get_by_id(env_ptr, id, len_id);
+					// printf( TEXT_BLD TEXT_BLU "note: " TEXT_RST);
+					// printf("Variable " TEXT_YLW "%*s" TEXT_RST " was last declared at " TEXT_BLD "%d:%d" TEXT_RST "\n", len_id, id, line_number, column_number);
+				}
+
 				*flag_error = 1;
 				return -1;
 			}
@@ -700,11 +871,11 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 			SymbolEnv_scope_add(env_ptr, name, len_name);
 
-			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
-			status = Semantic_symbol_and_type_check(child_2, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_2, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
@@ -724,14 +895,14 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			// print_type(type_ptr);
 			// printf("\n");
 
-			status = Semantic_symbol_and_type_check(child_3, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_3, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
 			SymbolEnv_Scope *scp_ptr = SymbolEnv_scope_exit(env_ptr);
 			if(scp_ptr == NULL){
 				// fprintf(stderr, "Error exiting scope %s\n", SymbolEnv_Scope_get_name( SymbolEnv_scope_get_current(env_ptr) ) );
-				fprintf(stderr, "Error exiting scope\n");
+				fprintf(stderr, "Semantic_symbol_and_type_check : Error exiting scope\n");
 				*flag_error = 1;
 				return -1;
 			}
@@ -744,6 +915,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 
 			Type *type_ptr = Type_new(TYPE_ENUM_LIST);
+			node_ptr->atr_ptr->type = type_ptr;
 
 			ParseTree_Node *id_node_ptr = child_0;
 			while(id_node_ptr != NULL){
@@ -752,7 +924,17 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 				SymbolEnv_Entry *id_etr_ptr = SymbolEnv_entry_get_by_id(env_ptr, id, len_id);
 				if(id_etr_ptr == NULL){
-					fprintf(stderr, "Symbol %*s not declared in this scope\n", len_id, id);
+
+					if(flag_print_errors == 1){
+						int line_number = id_node_ptr->tkn_ptr->line;
+						int column_number = id_node_ptr->tkn_ptr->column;
+
+						printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+						printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+						printf("Variable " TEXT_YLW "%*s" TEXT_RST " undeclared in this scope \n", len_id, id);
+					}
+
 					*flag_error = 1;
 					return -1;
 				}
@@ -765,8 +947,6 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 				id_node_ptr = id_node_ptr->sibling;
 			}
-
-			node_ptr->atr_ptr->type = type_ptr;
 
 			break;
 		}
@@ -797,7 +977,17 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 				}
 
 				if(num_columns_cur != num_columns){
-					fprintf(stderr, "Inconsistent number of elements in matrix\n");
+
+					if(flag_print_errors == 1){
+						int line_number = column_node_ptr->tkn_ptr->line;
+						int column_number = column_node_ptr->tkn_ptr->column;
+
+						printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+						printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+						printf("Expected " TEXT_YLW "%d" TEXT_RST " numbers in each matrix row\n", num_columns);
+					}
+
 					*flag_error = 1;
 					return -1;
 				}
@@ -820,13 +1010,13 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_PARAM_LIST:
+		case OPERATOR_DEF_PARAM_LIST:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
 			ParseTree_Node *child_2 = ParseTree_Node_get_child_by_node_index(node_ptr, 2);
 
-			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error);
+			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;
 
@@ -838,7 +1028,21 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 			SymbolEnv_Entry *etr_ptr = SymbolEnv_entry_add(env_ptr, id, len_id, 0, type_id_ptr);
 			if(etr_ptr == NULL){
-				fprintf(stderr, "Symbol %*s already declared\n", len_id, id);
+
+				if(flag_print_errors == 1){
+					int line_number = child_1->tkn_ptr->line;
+					int column_number = child_1->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Redeclaration of variable " TEXT_YLW "%*s" TEXT_RST " in this scope\n", len_id, id);
+
+					// etr_ptr = SymbolEnv_entry_get_by_id(env_ptr, id, len_id);
+					// printf( TEXT_BLD TEXT_BLU "note: " TEXT_RST);
+					// printf("Variable " TEXT_YLW "%*s" TEXT_RST " was last declared at " TEXT_BLD "%d:%d" TEXT_RST "\n", len_id, id, line_number, column_number);
+				}
+
 				*flag_error = 1;
 				return -1;
 			}
@@ -852,7 +1056,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			}
 
 			else{
-				status = Semantic_symbol_and_type_check(child_2, env_ptr, flag_error);
+				status = Semantic_symbol_and_type_check(child_2, env_ptr, flag_error, flag_print_errors);
 				if(status == -1)
 					return status;
 
@@ -866,13 +1070,44 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
+		case OPERATOR_CALL_PARAM_LIST:
+		{
+			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
+
+			// printf("== call_param_list: ==\n");
+
+			Type *type_ptr = Type_new(TYPE_ENUM_LIST);
+			node_ptr->atr_ptr->type = type_ptr;
+
+			ParseTree_Node *val_node_ptr = child_0;
+			while(val_node_ptr != NULL){
+
+				status = Semantic_symbol_and_type_check(val_node_ptr, env_ptr, flag_error, flag_print_errors);
+				if(status == -1)
+					return status;
+
+				Type *type_val_ptr = val_node_ptr->atr_ptr->type;
+				Type_add_list_element(type_ptr, Type_clone(type_val_ptr));;
+
+				// printf("   call_param_list: ");
+				// print_type(val_node_ptr->atr_ptr->type);
+				// printf("\t");
+				// print_type(type_ptr);
+				// printf("\n");
+
+				val_node_ptr = val_node_ptr->sibling;
+			}
+
+			break;
+		}
+
 		case OPERATOR_STMT_LIST:
 		case OPERATOR_STMT_OR_DEF_LIST:
 		{
 			ParseTree_Node *child = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 
 			while(child){
-				status = Semantic_symbol_and_type_check(child, env_ptr, flag_error);
+				status = Semantic_symbol_and_type_check(child, env_ptr, flag_error, flag_print_errors);
 				if(status == -1){
 					// Continue to check for further errors
 				}
@@ -893,7 +1128,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 	}
 }
 
-int Semantic_initialized_check(SymbolEnv *env_ptr){
+int Semantic_initialized_check(SymbolEnv *env_ptr, int flag_print_errors){
 	int flag_initialized = 0;
 	SymbolEnv_Scope *scp_ptr = SymbolEnv_scope_reset(env_ptr);
 
@@ -909,7 +1144,21 @@ int Semantic_initialized_check(SymbolEnv *env_ptr){
 
 		while(id){
 			if( SymbolEnv_entry_get_flag_initialized_by_id(env_ptr, id, strlen(id)) == 0 ){
-				fprintf(stderr, "Symbol %s in scope %s not initialized\n", id, SymbolEnv_Scope_get_name(scp_ptr));
+
+				if(flag_print_errors == 1){
+					// int line_number = child_1->tkn_ptr->line;
+					// int column_number = child_1->tkn_ptr->column;
+
+					// printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_BLU "semantic warning: " TEXT_RST);
+
+					printf("Variable " TEXT_YLW "%s" TEXT_RST " in scope " TEXT_YLW "%s" TEXT_RST " never initialized\n", id, SymbolEnv_Scope_get_name(scp_ptr));
+
+					// etr_ptr = SymbolEnv_entry_get_by_id(env_ptr, id, len_id);
+					// printf( TEXT_BLD TEXT_BLU "note: " TEXT_RST);
+					// printf("Variable " TEXT_YLW "%*s" TEXT_RST " was last declared at " TEXT_BLD "%d:%d" TEXT_RST "\n", len_id, id, line_number, column_number);
+				}
+
 				flag_initialized = -1;
 			}
 
@@ -963,6 +1212,8 @@ void print_symbol_environment(SymbolEnv *env_ptr, FILE *file_ptr){
 
 	SymbolEnv_Scope *scp_ptr = SymbolEnv_scope_reset(env_ptr);
 
+	int index = 0;
+
 	while(1){
 		SymbolEnv_scope_set_explicit(env_ptr, scp_ptr);
 		// printf("%s\n", SymbolEnv_Scope_get_name(scp_ptr));
@@ -972,8 +1223,6 @@ void print_symbol_environment(SymbolEnv *env_ptr, FILE *file_ptr){
 		LinkedListIterator *itr_ptr = LinkedListIterator_new(id_lst_ptr);
 		LinkedListIterator_move_to_first(itr_ptr);
 		char *id = LinkedListIterator_get_item(itr_ptr);
-
-		int index = 0;
 
 		while(id){
 			SymbolEnv_Entry *etr_ptr = SymbolEnv_entry_get_by_id(env_ptr, id, strlen(id));

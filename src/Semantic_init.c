@@ -931,7 +931,43 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			if(status == -1)
 				return status;
 
-			SymbolEnv_Scope *scp_ptr = SymbolEnv_scope_exit(env_ptr);
+
+			// Check if all variables declared in this scope have been initialized
+			SymbolEnv_Scope *scp_ptr = SymbolEnv_scope_get_current(env_ptr);
+			LinkedList *id_lst_ptr = SymbolEnv_Scope_get_id_lst(scp_ptr);
+
+			LinkedListIterator *itr_ptr = LinkedListIterator_new(id_lst_ptr);
+			LinkedListIterator_move_to_first(itr_ptr);
+			char *id = LinkedListIterator_get_item(itr_ptr);
+
+			while(id){
+				if( SymbolEnv_entry_get_flag_initialized_by_id(env_ptr, id, strlen(id)) == 0 ){
+
+					if(flag_print_errors == 1){
+						// int line_number = child_1->tkn_ptr->line;
+						// int column_number = child_1->tkn_ptr->column;
+
+						// printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+						printf( TEXT_BLD TEXT_BLU "semantic warning: " TEXT_RST);
+
+						printf("Variable " TEXT_YLW "%s" TEXT_RST " in scope " TEXT_YLW "%s" TEXT_RST " never initialized\n", id, SymbolEnv_Scope_get_name(scp_ptr));
+
+						// etr_ptr = SymbolEnv_entry_get_by_id(env_ptr, id, len_id);
+						// printf( TEXT_BLD TEXT_BLU "note: " TEXT_RST);
+						// printf("Variable " TEXT_YLW "%*s" TEXT_RST " was last declared at " TEXT_BLD "%d:%d" TEXT_RST "\n", len_id, id, line_number, column_number);
+					}
+
+					*flag_error = -1;
+				}
+
+				LinkedListIterator_move_to_next(itr_ptr);
+				id = LinkedListIterator_get_item(itr_ptr);
+			}
+
+			LinkedListIterator_destroy(itr_ptr);
+
+
+			scp_ptr = SymbolEnv_scope_exit(env_ptr);
 			if(scp_ptr == NULL){
 				// fprintf(stderr, "Error exiting scope %s\n", SymbolEnv_Scope_get_name( SymbolEnv_scope_get_current(env_ptr) ) );
 				fprintf(stderr, "Semantic_symbol_and_type_check : Error exiting scope\n");

@@ -36,7 +36,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 	switch(node_ptr->atr_ptr->op)
 	{
-		case OPERATOR_PLUS:
+		case AST_OPERATOR_PLUS:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
@@ -110,7 +110,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_MINUS:
+		case AST_OPERATOR_MINUS:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
@@ -160,7 +160,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_MUL:
+		case AST_OPERATOR_MUL:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
@@ -209,7 +209,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_DIV:
+		case AST_OPERATOR_DIV:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
@@ -258,7 +258,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_SIZE:
+		case AST_OPERATOR_SIZE:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 
@@ -304,7 +304,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_ID:
+		case AST_OPERATOR_ID:
 		{
 			char *id = node_ptr->tkn_ptr->data->string;
 			int len_id = node_ptr->tkn_ptr->data->len_string;
@@ -334,37 +334,37 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_FUNID:
+		case AST_OPERATOR_FUNID:
 		{
 
 			break;
 		}
 
-		case OPERATOR_KW_INT:
+		case AST_OPERATOR_KW_INT:
 		{
 			node_ptr->atr_ptr->type = Type_new(TYPE_ENUM_NUM);
 			break;
 		}
 
-		case OPERATOR_KW_REAL:
+		case AST_OPERATOR_KW_REAL:
 		{
 			node_ptr->atr_ptr->type = Type_new(TYPE_ENUM_RNUM);
 			break;
 		}
 
-		case OPERATOR_KW_STRING:
+		case AST_OPERATOR_KW_STRING:
 		{
 			node_ptr->atr_ptr->type = Type_new(TYPE_ENUM_STR);
 			break;
 		}
 
-		case OPERATOR_KW_MATRIX:
+		case AST_OPERATOR_KW_MATRIX:
 		{
 			node_ptr->atr_ptr->type = Type_new(TYPE_ENUM_MATRIX);
 			break;
 		}
 
-		case OPERATOR_KW_READ:
+		case AST_OPERATOR_KW_READ:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 
@@ -402,25 +402,25 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_KW_PRINT:
+		case AST_OPERATOR_KW_PRINT:
 		{
 			// No check required
 			break;
 		}
 
-		case OPERATOR_NUM:
+		case AST_OPERATOR_NUM:
 		{
 			node_ptr->atr_ptr->type = Type_new(TYPE_ENUM_NUM);
 			break;
 		}
 
-		case OPERATOR_RNUM:
+		case AST_OPERATOR_RNUM:
 		{
 			node_ptr->atr_ptr->type = Type_new(TYPE_ENUM_RNUM);
 			break;
 		}
 
-		case OPERATOR_STR:
+		case AST_OPERATOR_STR:
 		{
 			// printf("== str ==\n");
 
@@ -435,7 +435,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_ASSIGN:
+		case AST_OPERATOR_ASSIGN:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
@@ -532,7 +532,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 					LinkedListIterator *itr_0_ptr = LinkedListIterator_new(type_0_ptr->lst_ptr);
 					LinkedListIterator_move_to_first(itr_0_ptr);
-					// Type struct of OPERATOR_ID_LIST
+					// Type struct of AST_OPERATOR_ID_LIST
 					Type *type_id_in_list_ptr = LinkedListIterator_get_item(itr_0_ptr);
 
 					ParseTree_Node *id_node_ptr = child_0->child;
@@ -621,8 +621,8 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_AND:
-		case OPERATOR_OR:
+		case AST_OPERATOR_AND:
+		case AST_OPERATOR_OR:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
@@ -638,7 +638,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_NOT:
+		case AST_OPERATOR_NOT:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 
@@ -649,12 +649,12 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_LT:
-		case OPERATOR_LE:
-		case OPERATOR_GT:
-		case OPERATOR_GE:
-		case OPERATOR_EQ:
-		case OPERATOR_NE:
+		case AST_OPERATOR_LT:
+		case AST_OPERATOR_LE:
+		case AST_OPERATOR_GT:
+		case AST_OPERATOR_GE:
+		case AST_OPERATOR_EQ:
+		case AST_OPERATOR_NE:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
@@ -695,7 +695,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_CALL:
+		case AST_OPERATOR_CALL:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
@@ -795,7 +795,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 		}
 
 
-		case OPERATOR_COND:
+		case AST_OPERATOR_COND:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
@@ -818,7 +818,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_DECL:
+		case AST_OPERATOR_DECL:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
@@ -863,7 +863,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_DEF:
+		case AST_OPERATOR_DEF:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
@@ -978,7 +978,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_ID_LIST:
+		case AST_OPERATOR_ID_LIST:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 
@@ -1019,7 +1019,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_MATRIX:
+		case AST_OPERATOR_MATRIX:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 
@@ -1072,13 +1072,13 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_MATRIX_ELEMENT:
+		case AST_OPERATOR_MATRIX_ELEMENT:
 		{
 			node_ptr->atr_ptr->type = Type_new(TYPE_ENUM_NUM);
 			break;
 		}
 
-		case OPERATOR_DEF_PARAM_LIST:
+		case AST_OPERATOR_DEF_PARAM_LIST:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
@@ -1138,7 +1138,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_CALL_PARAM_LIST:
+		case AST_OPERATOR_CALL_PARAM_LIST:
 		{
 			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 
@@ -1169,8 +1169,8 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 
-		case OPERATOR_STMT_LIST:
-		case OPERATOR_STMT_OR_DEF_LIST:
+		case AST_OPERATOR_STMT_LIST:
+		case AST_OPERATOR_STMT_OR_DEF_LIST:
 		{
 			ParseTree_Node *child = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
 

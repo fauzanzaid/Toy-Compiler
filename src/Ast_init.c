@@ -108,163 +108,163 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 
 				case SYMBOL_T_PLUS:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_PLUS;
+					node_ptr->atr_ptr->op = AST_OPERATOR_PLUS;
 					break;
 				}
 
 				case SYMBOL_T_MINUS:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_MINUS;
+					node_ptr->atr_ptr->op = AST_OPERATOR_MINUS;
 					break;
 				}
 
 				case SYMBOL_T_MUL:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_MUL;
+					node_ptr->atr_ptr->op = AST_OPERATOR_MUL;
 					break;
 				}
 
 				case SYMBOL_T_DIV:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_DIV;
+					node_ptr->atr_ptr->op = AST_OPERATOR_DIV;
 					break;
 				}
 
 				case SYMBOL_T_SIZE:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_SIZE;
+					node_ptr->atr_ptr->op = AST_OPERATOR_SIZE;
 					break;
 				}
 
 				case SYMBOL_T_ID:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_ID;
+					node_ptr->atr_ptr->op = AST_OPERATOR_ID;
 					break;
 				}
 
 				case SYMBOL_T_FUNID:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_FUNID;
+					node_ptr->atr_ptr->op = AST_OPERATOR_FUNID;
 					break;
 				}
 
 				case SYMBOL_T_KW_INT:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_KW_INT;
+					node_ptr->atr_ptr->op = AST_OPERATOR_KW_INT;
 					break;
 				}
 
 				case SYMBOL_T_KW_REAL:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_KW_REAL;
+					node_ptr->atr_ptr->op = AST_OPERATOR_KW_REAL;
 					break;
 				}
 
 				case SYMBOL_T_KW_STRING:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_KW_STRING;
+					node_ptr->atr_ptr->op = AST_OPERATOR_KW_STRING;
 					break;
 				}
 
 				case SYMBOL_T_KW_MATRIX:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_KW_MATRIX;
+					node_ptr->atr_ptr->op = AST_OPERATOR_KW_MATRIX;
 					break;
 				}
 
 				case SYMBOL_T_KW_READ:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_KW_READ;
+					node_ptr->atr_ptr->op = AST_OPERATOR_KW_READ;
 					break;
 				}
 
 				case SYMBOL_T_KW_PRINT:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_KW_PRINT;
+					node_ptr->atr_ptr->op = AST_OPERATOR_KW_PRINT;
 					break;
 				}
 
 				case SYMBOL_T_NUM:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_NUM;
+					node_ptr->atr_ptr->op = AST_OPERATOR_NUM;
 					break;
 				}
 
 				case SYMBOL_T_RNUM:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_RNUM;
+					node_ptr->atr_ptr->op = AST_OPERATOR_RNUM;
 					break;
 				}
 
 				case SYMBOL_T_STR:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_STR;
+					node_ptr->atr_ptr->op = AST_OPERATOR_STR;
 					break;
 				}
 
 				case SYMBOL_T_AND:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_AND;
+					node_ptr->atr_ptr->op = AST_OPERATOR_AND;
 					break;
 				}
 
 				case SYMBOL_T_OR:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_OR;
+					node_ptr->atr_ptr->op = AST_OPERATOR_OR;
 					break;
 				}
 
 				case SYMBOL_T_NOT:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_NOT;
+					node_ptr->atr_ptr->op = AST_OPERATOR_NOT;
 					break;
 				}
 
 				case SYMBOL_T_LT:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_LT;
+					node_ptr->atr_ptr->op = AST_OPERATOR_LT;
 					break;
 				}
 
 				case SYMBOL_T_LE:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_LE;
+					node_ptr->atr_ptr->op = AST_OPERATOR_LE;
 					break;
 				}
 
 				case SYMBOL_T_GT:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_GT;
+					node_ptr->atr_ptr->op = AST_OPERATOR_GT;
 					break;
 				}
 
 				case SYMBOL_T_GE:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_GE;
+					node_ptr->atr_ptr->op = AST_OPERATOR_GE;
 					break;
 				}
 
 				case SYMBOL_T_ASSIGNOP:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_ASSIGN;
+					node_ptr->atr_ptr->op = AST_OPERATOR_ASSIGN;
 					break;
 				}
 
 				case SYMBOL_T_EQ:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_EQ;
+					node_ptr->atr_ptr->op = AST_OPERATOR_EQ;
 					break;
 				}
 
 				case SYMBOL_T_NE:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_NE;
+					node_ptr->atr_ptr->op = AST_OPERATOR_NE;
 					break;
 				}
 
 				default:
 				{
-					node_ptr->atr_ptr->op = OPERATOR_UNKNOWN;
+					node_ptr->atr_ptr->op = AST_OPERATOR_UNKNOWN;
 					printf("=%d=\n", node_ptr->symbol);
 					break;
 				}
@@ -302,7 +302,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 				ParseTree_Node_attach_sibling(child_0, child_1);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
 
-			node_ptr->atr_ptr->op = OPERATOR_STMT_OR_DEF_LIST;
+			node_ptr->atr_ptr->op = AST_OPERATOR_STMT_OR_DEF_LIST;
 
 			break;
 		}
@@ -401,7 +401,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 
 
 			ParseTree_Node *child_new = ParseTree_Node_new(SYMBOL_UNKNOWN, NULL);
-			child_new->atr_ptr->op = OPERATOR_ID_LIST;
+			child_new->atr_ptr->op = AST_OPERATOR_ID_LIST;
 
 			if(child_2 != NULL)
 				ParseTree_Node_attach_sibling(child_1, child_2);
@@ -414,7 +414,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			// ParseTree_Node_attach_child_left_end(node_ptr, child_1);
 			// ParseTree_Node_attach_child_left_end(node_ptr, child_0);
 
-			node_ptr->atr_ptr->op = OPERATOR_DECL;
+			node_ptr->atr_ptr->op = AST_OPERATOR_DECL;
 
 			break;
 		}
@@ -432,7 +432,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 				ParseTree_Node_attach_sibling(child_0, child_1);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
 
-			node_ptr->atr_ptr->op = OPERATOR_ID_LIST;
+			node_ptr->atr_ptr->op = AST_OPERATOR_ID_LIST;
 
 			break;
 		}
@@ -553,7 +553,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 				ParseTree_Node_attach_sibling(child_1, child_2);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_1);
 
-			node_ptr->atr_ptr->op = OPERATOR_ID_LIST;
+			node_ptr->atr_ptr->op = AST_OPERATOR_ID_LIST;
 
 			break;
 		}
@@ -699,7 +699,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 
 			ParseTree_Node_attach_child_left_end(node_ptr, child_1);
 
-			node_ptr->atr_ptr->op = OPERATOR_MATRIX;
+			node_ptr->atr_ptr->op = AST_OPERATOR_MATRIX;
 
 			break;
 		}
@@ -810,7 +810,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			ParseTree_Node_attach_child_left_end(node_ptr, child_2);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
 
-			node_ptr->atr_ptr->op = OPERATOR_CALL;
+			node_ptr->atr_ptr->op = AST_OPERATOR_CALL;
 
 			break;
 		}
@@ -833,7 +833,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			ParseTree_Node_attach_child_left_end(node_ptr, child_4);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_2);
 
-			node_ptr->atr_ptr->op = OPERATOR_COND;
+			node_ptr->atr_ptr->op = AST_OPERATOR_COND;
 
 			break;
 		}
@@ -879,7 +879,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 				ParseTree_Node_attach_sibling(child_0, child_1);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
 
-			node_ptr->atr_ptr->op = OPERATOR_STMT_LIST;
+			node_ptr->atr_ptr->op = AST_OPERATOR_STMT_LIST;
 
 			break;
 		}
@@ -1088,7 +1088,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			ParseTree_Node_attach_child_left_end(node_ptr, child_5);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_2);
 
-			node_ptr->atr_ptr->op = OPERATOR_DEF;
+			node_ptr->atr_ptr->op = AST_OPERATOR_DEF;
 
 			break;
 		}
@@ -1109,7 +1109,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			ParseTree_Node_attach_child_left_end(node_ptr, child_1);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
 
-			node_ptr->atr_ptr->op = OPERATOR_DEF_PARAM_LIST;
+			node_ptr->atr_ptr->op = AST_OPERATOR_DEF_PARAM_LIST;
 
 			break;
 		}
@@ -1132,7 +1132,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			ParseTree_Node_attach_child_left_end(node_ptr, child_2);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_1);
 
-			node_ptr->atr_ptr->op = OPERATOR_DEF_PARAM_LIST;
+			node_ptr->atr_ptr->op = AST_OPERATOR_DEF_PARAM_LIST;
 
 			break;
 		}
@@ -1178,7 +1178,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			node_ptr = child_0;
 
 			if(child_1 != NULL){
-				node_ptr->atr_ptr->op = OPERATOR_MATRIX_ELEMENT;
+				node_ptr->atr_ptr->op = AST_OPERATOR_MATRIX_ELEMENT;
 				ParseTree_Node_attach_child_left_end(node_ptr, child_1);
 			}
 
@@ -1257,7 +1257,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 				ParseTree_Node_attach_child_left_end(node_ptr, child_1);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
 
-			node_ptr->atr_ptr->op = OPERATOR_CALL_PARAM_LIST;
+			node_ptr->atr_ptr->op = AST_OPERATOR_CALL_PARAM_LIST;
 
 			break;
 		}

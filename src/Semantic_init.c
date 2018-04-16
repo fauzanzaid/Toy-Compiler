@@ -722,6 +722,38 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 				return -1;
 			}
 
+
+			// Check recursion
+			SymbolEnv_Scope *scp_ptr = SymbolEnv_scope_get_current(env_ptr);
+			while(1){
+
+				if( SymbolEnv_Scope_entry_get_by_id(scp_ptr, name, len_name) != NULL ){
+					break;
+				}
+
+				if( strncmp( SymbolEnv_Scope_get_name(scp_ptr), name, len_name) == 0 ){
+
+					if(flag_print_errors == 1){
+						int line_number = child_0->tkn_ptr->line;
+						int column_number = child_0->tkn_ptr->column;
+
+						printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+						printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+						printf("Function " TEXT_YLW "%*s" TEXT_RST " called recursively \n", len_name, name);
+					}
+
+					*flag_error = 1;
+					return -1;
+				}
+
+				scp_ptr = SymbolEnv_Scope_get_parent(scp_ptr);
+				if(scp_ptr == NULL){
+					break;
+				}
+			}
+
+
 			status = Semantic_symbol_and_type_check(child_1, env_ptr, flag_error, flag_print_errors);
 			if(status == -1)
 				return status;

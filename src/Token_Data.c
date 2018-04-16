@@ -208,9 +208,6 @@ void pretty_print_token(Token *tkn_ptr){
 	printf(TEXT_BLD "%4d:%-3d" TEXT_RST, tkn_ptr->line, tkn_ptr->column);
 	printf(" ");
 
-	printf(TEXT_BLD TEXT_GRN "%-11.11s" TEXT_RST, token_to_name(tkn_ptr));
-	printf(" ");
-
 	// Get value of token if it exists
 	// Add characters for \0 and truncation check
 	int len_buffer = TOKEN_VALUE_MAX_CHAR + 2;
@@ -221,12 +218,15 @@ void pretty_print_token(Token *tkn_ptr){
 	if(buffer[len_buffer-2] != '\0'){
 		// value string truncate
 		buffer[len_buffer-2] = '\0';
-		printf("\"" TEXT_YLW "" "%s" TEXT_RST "...\"", buffer);
+		printf("" TEXT_YLW "" "%-*.*s" TEXT_RST "...", TOKEN_VALUE_MAX_CHAR-3, TOKEN_VALUE_MAX_CHAR-3, buffer);
 	}
 	else if(buffer[0] != '\0'){
 		// Print value string as is
-		printf("\"" TEXT_YLW "" "%s" TEXT_RST "\"", buffer);
+		printf("" TEXT_YLW "" "%-*.*s" TEXT_RST "", TOKEN_VALUE_MAX_CHAR, TOKEN_VALUE_MAX_CHAR, buffer);
 	}
+	printf(" ");
+
+	printf(TEXT_BLD TEXT_GRN "%-11.11s" TEXT_RST, token_to_name(tkn_ptr));
 
 	printf("\n");
 }

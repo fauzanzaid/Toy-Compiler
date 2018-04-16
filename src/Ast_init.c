@@ -1106,7 +1106,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			ParseTree_Node_attach_child_left_end(node_ptr, child_1);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
 
-			node_ptr->atr_ptr->op = OPERATOR_PARAM_LIST;
+			node_ptr->atr_ptr->op = OPERATOR_DEF_PARAM_LIST;
 
 			break;
 		}
@@ -1129,7 +1129,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 			ParseTree_Node_attach_child_left_end(node_ptr, child_2);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_1);
 
-			node_ptr->atr_ptr->op = OPERATOR_PARAM_LIST;
+			node_ptr->atr_ptr->op = OPERATOR_DEF_PARAM_LIST;
 
 			break;
 		}
@@ -1254,7 +1254,7 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 				ParseTree_Node_attach_child_left_end(node_ptr, child_1);
 			ParseTree_Node_attach_child_left_end(node_ptr, child_0);
 
-			node_ptr->atr_ptr->op = OPERATOR_ID_LIST;
+			node_ptr->atr_ptr->op = OPERATOR_CALL_PARAM_LIST;
 
 			break;
 		}

@@ -12,7 +12,7 @@
 // Constants //
 ///////////////
 
-char *operator_names[] = {
+char *ast_operator_names[] = {
 	"",
 	"plus",
 	"minus",
@@ -54,7 +54,7 @@ char *operator_names[] = {
 	"unknown",
 };
 
-int len_operator_names = 39;
+int len_ast_operator_names = 39;
 
 
 ////////////////////////
@@ -68,12 +68,12 @@ static int remove_children(ParseTree_Node *node_ptr, int *symbol_indices, int le
 // Functions //
 ///////////////
 
-char *operator_to_name(int op){
-	if(op>0 && op<len_operator_names)
-		return operator_names[op];
+char *ast_operator_to_name(int op){
+	if(op>0 && op<len_ast_operator_names)
+		return ast_operator_names[op];
 
 	else
-		return operator_names[len_operator_names-1];
+		return ast_operator_names[len_ast_operator_names-1];
 }
 
 ParseTree_Node_Attr *ParseTree_Node_Attr_new(){
@@ -1325,7 +1325,7 @@ static void print_node(ParseTree_Node *node_ptr, int *index, FILE* file_ptr){
 
 	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%*d",		col[0], 		(*index)++);
 
-	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[1],col[1], operator_to_name(node_ptr->atr_ptr->op));
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[1],col[1], ast_operator_to_name(node_ptr->atr_ptr->op));
 
 
 	if(tkn_ptr != NULL){
@@ -1361,7 +1361,7 @@ static void print_node(ParseTree_Node *node_ptr, int *index, FILE* file_ptr){
 
 
 	if(node_ptr->parent){
-		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[5],col[5], operator_to_name(node_ptr->parent->atr_ptr->op));
+		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[5],col[5], ast_operator_to_name(node_ptr->parent->atr_ptr->op));
 	}
 	else{
 		fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	"ROOT");

@@ -47,11 +47,14 @@ char *operator_names[] = {
 	"id_list",
 	"matrix",
 	"matrix_element",
-	"param_list",
+	"def_param_list",
+	"call_param_list",
 	"stmt_list",
 	"stmt_or_def_list",
 	"unknown",
 };
+
+int len_operator_names = 39;
 
 
 ////////////////////////
@@ -66,11 +69,11 @@ static int remove_children(ParseTree_Node *node_ptr, int *symbol_indices, int le
 ///////////////
 
 char *operator_to_name(int op){
-	if(op>0)
+	if(op>0 && op<len_operator_names)
 		return operator_names[op];
 
 	else
-		return operator_names[37];
+		return operator_names[len_operator_names-1];
 }
 
 ParseTree_Node_Attr *ParseTree_Node_Attr_new(){

@@ -275,21 +275,23 @@ int Type_get_size(Type *type_ptr){
 		case TYPE_ENUM_FUNCTION_CALL:
 		case TYPE_ENUM_FUNCTION_DEF:
 		{
-			int size_element;
+			// int size_element;
 
-			size_element = Type_get_size(type_ptr->type_param_in_lst_ptr);
-			if(size_element < 0){
-				size = -1;
-				break;
-			}
-			size += size_element;
+			// size_element = Type_get_size(type_ptr->type_param_in_lst_ptr);
+			// if(size_element < 0){
+			// 	size = -1;
+			// 	break;
+			// }
+			// size += size_element;
 
-			size_element = Type_get_size(type_ptr->type_param_out_lst_ptr);
-			if(size_element < 0){
-				size = -1;
-				break;
-			}
-			size += size_element;
+			// size_element = Type_get_size(type_ptr->type_param_out_lst_ptr);
+			// if(size_element < 0){
+			// 	size = -1;
+			// 	break;
+			// }
+			// size += size_element;
+
+			size = 0;
 
 			break;
 		}

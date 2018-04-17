@@ -96,16 +96,31 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			}
 
 			Type *type_ptr = Type_clone(type_0_ptr);
+			node_ptr->atr_ptr->type = type_ptr;
 
 			if(type_ptr->type_enum == TYPE_ENUM_STR){
 				type_ptr->len_string = type_0_ptr->len_string + type_1_ptr->len_string;
+
+				if(type_ptr->len_string > 18){
+
+					if(flag_print_errors == 1){
+						int line_number = node_ptr->tkn_ptr->line;
+						int column_number = node_ptr->tkn_ptr->column;
+
+						printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+						printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+						printf("String concatenation results in a string longer than 18 characters\n");
+					}
+
+					*flag_error = 1;
+					return -1;
+				}
 			}
 
 			// printf("   +    ");
 			// print_type(type_ptr);
 			// printf("\n");
-
-			node_ptr->atr_ptr->type = type_ptr;
 
 			break;
 		}

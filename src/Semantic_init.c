@@ -11,6 +11,8 @@
 #include "Token_Data.h"
 #include "Ast_init.h"
 #include "Type_init.h"
+
+
 #include "Semantic_init.h"
 
 
@@ -1318,6 +1320,8 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			break;
 		}
 	}
+
+	return 0;
 }
 
 int Semantic_initialized_check(SymbolEnv *env_ptr, int flag_print_errors){

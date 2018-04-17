@@ -1,6 +1,10 @@
 #ifndef INCLUDE_GUARD_DC95772F90A448D9A205820533F9CED5
 #define INCLUDE_GUARD_DC95772F90A448D9A205820533F9CED5
 
+
+#include <stdio.h>
+
+
 #include "ParseTree.h"
 
 
@@ -59,9 +63,13 @@ typedef enum {
 typedef struct ParseTree_Node_Attr
 {
 	int op;
+
 	void *inh;
 	void *type;
 	void *entry;
+
+	void *result_value;
+	void *result_entry;
 	void *code;
 } ParseTree_Node_Attr;
 

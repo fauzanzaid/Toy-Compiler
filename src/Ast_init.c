@@ -6,6 +6,7 @@
 #include "Ast_init.h"
 #include "Parser_init.h"
 #include "Type_init.h"
+#include "Icg_init.h"
 
 
 ///////////////
@@ -82,6 +83,9 @@ ParseTree_Node_Attr *ParseTree_Node_Attr_new(){
 	atr_ptr->inh = NULL;
 	atr_ptr->type = NULL;
 	atr_ptr->entry = NULL;
+
+	atr_ptr->result_value = NULL;
+	atr_ptr->result_entry = NULL;
 	atr_ptr->code = NULL;
 
 	return atr_ptr;
@@ -91,6 +95,14 @@ ParseTree_Node_Attr *ParseTree_Node_Attr_new(){
 void ParseTree_Node_Attr_destroy(ParseTree_Node_Attr *atr_ptr){
 	if(atr_ptr->type != NULL){
 		Type_destroy(atr_ptr->type);
+	}
+
+	if(atr_ptr->result_value != NULL){
+		free(atr_ptr->result_value);
+	}
+
+	if(atr_ptr->code != NULL){
+		quad_list_destroy(atr_ptr->code);
 	}
 
 	free(atr_ptr);

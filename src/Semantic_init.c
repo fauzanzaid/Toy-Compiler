@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "LinkedList.h"
 #include "Token.h"
@@ -1089,7 +1090,77 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 		case AST_OPERATOR_MATRIX_ELEMENT:
 		{
+			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
+			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
+
+			char *id = node_ptr->tkn_ptr->data->string;
+			int len_id = node_ptr->tkn_ptr->data->len_string;
+
+			SymbolEnv_Entry *etr_ptr = SymbolEnv_entry_get_by_id(env_ptr, id, len_id);
+			if(etr_ptr == NULL){
+
+				if(flag_print_errors == 1){
+					int line_number = node_ptr->tkn_ptr->line;
+					int column_number = node_ptr->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Variable " TEXT_YLW "%*s" TEXT_RST " undeclared in this scope \n", len_id, id);
+				}
+
+				*flag_error = 1;
+				return -1;
+			}
+
+
+			Type *type_ptr = SymbolEnv_Entry_get_type(etr_ptr);
+			if(type_ptr->type_enum != TYPE_ENUM_MATRIX){
+
+				if(flag_print_errors == 1){
+					int line_number = node_ptr->tkn_ptr->line;
+					int column_number = node_ptr->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Variable " TEXT_YLW "%*s" TEXT_RST " of type " TEXT_YLW "%s" TEXT_RST " not subscriptable\n", len_id, id, type_to_name(type_ptr->type_enum) );
+				}
+
+				*flag_error = 1;
+				return -1;
+			}
+
+
+			char* subscript_row_string = child_0->tkn_ptr->data->string;
+			char* subscript_column_string = child_1->tkn_ptr->data->string;
+
+			int subscript_row = strtol(subscript_row_string, NULL, 10);
+			int subscript_column = strtol(subscript_column_string, NULL, 10);
+
+			int num_rows = type_ptr->num_rows;
+			int num_columns = type_ptr->num_columns;
+
+			if(subscript_row >= num_rows || subscript_column >= num_columns){
+
+				if(flag_print_errors == 1){
+					int line_number = node_ptr->tkn_ptr->line;
+					int column_number = node_ptr->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Subscript " TEXT_YLW "[%d,%d]" TEXT_RST " out of bound for matrix " TEXT_YLW "%s" TEXT_RST " of size " TEXT_YLW "[%d,%d]" TEXT_RST " \n", subscript_row, subscript_column, id, num_rows, num_columns);
+				}
+
+				*flag_error = 1;
+				return -1;
+			}
+
+
+			node_ptr->atr_ptr->entry = etr_ptr;
 			node_ptr->atr_ptr->type = Type_new(TYPE_ENUM_NUM);
+
 			break;
 		}
 

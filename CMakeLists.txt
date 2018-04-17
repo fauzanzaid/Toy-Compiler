@@ -15,6 +15,7 @@ target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Parser_i
 target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Type_init )
 target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Ast_init )
 target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Semantic_init )
+target_sources( valangLexicalAnalyzer PRIVATE ${PROJECT_SOURCE_DIR}/src/Icg_init )
 
 set_target_properties(valangLexicalAnalyzer
 	PROPERTIES
@@ -57,3 +58,8 @@ if(NOT TARGET SymbolEnv)
 	add_subdirectory(${CMAKE_SOURCE_DIR}/ext/SymbolEnv ${CMAKE_SOURCE_DIR}/ext/SymbolEnv/build/bin)
 endif(NOT TARGET SymbolEnv)
 target_link_libraries(valangLexicalAnalyzer SymbolEnv)
+
+if(NOT TARGET Quad)
+	add_subdirectory(${CMAKE_SOURCE_DIR}/ext/Quad ${CMAKE_SOURCE_DIR}/ext/Quad/build/bin)
+endif(NOT TARGET Quad)
+target_link_libraries(valangLexicalAnalyzer Quad)

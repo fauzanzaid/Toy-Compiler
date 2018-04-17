@@ -285,6 +285,24 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			Type *type_ptr = child_0->atr_ptr->type;
 			child_0->atr_ptr->type = NULL;
 
+
+			if(Type_check_completeness(type_ptr) == -1){
+
+				if(flag_print_errors == 1){
+					int line_number = node_ptr->tkn_ptr->line;
+					int column_number = node_ptr->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Cannot get size of uninitialized variable " TEXT_YLW "%*s" TEXT_RST "\n", child_0->tkn_ptr->data->len_string, child_0->tkn_ptr->data->string);
+				}
+
+				*flag_error = 1;
+				return -1;
+			}
+
+
 			if(type_ptr->type_enum == TYPE_ENUM_STR){
 				node_ptr->atr_ptr->type = Type_new(TYPE_ENUM_NUM);
 
@@ -1132,6 +1150,23 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			}
 
 
+			if(Type_check_completeness(type_ptr) == -1){
+
+				if(flag_print_errors == 1){
+					int line_number = node_ptr->tkn_ptr->line;
+					int column_number = node_ptr->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Cannot subscript uninitialized matrix " TEXT_YLW "%s" TEXT_RST "\n", id);
+				}
+
+				*flag_error = 1;
+				return -1;
+			}
+
+
 			char* subscript_row_string = child_0->tkn_ptr->data->string;
 			char* subscript_column_string = child_1->tkn_ptr->data->string;
 
@@ -1140,6 +1175,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 			int num_rows = type_ptr->num_rows;
 			int num_columns = type_ptr->num_columns;
+
 
 			if(subscript_row >= num_rows || subscript_column >= num_columns){
 

@@ -285,7 +285,6 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 				return status;
 
 			Type *type_ptr = child_0->atr_ptr->type;
-			child_0->atr_ptr->type = NULL;
 
 
 			if(Type_check_completeness(type_ptr) == -1){
@@ -298,8 +297,6 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
 
 					printf("Cannot get size of uninitialized variable " TEXT_YLW "%*s" TEXT_RST "\n", child_0->tkn_ptr->data->len_string, child_0->tkn_ptr->data->string);
-
-					Type_destroy(type_ptr);
 				}
 
 				*flag_error = 1;
@@ -309,16 +306,12 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 			if(type_ptr->type_enum == TYPE_ENUM_STR){
 				node_ptr->atr_ptr->type = Type_new(TYPE_ENUM_NUM);
-
-				Type_destroy(type_ptr);
 			}
 
 			else if(type_ptr->type_enum == TYPE_ENUM_MATRIX){
 				node_ptr->atr_ptr->type = Type_new(TYPE_ENUM_LIST);
 				Type_add_list_element(node_ptr->atr_ptr->type, Type_new(TYPE_ENUM_NUM));
 				Type_add_list_element(node_ptr->atr_ptr->type, Type_new(TYPE_ENUM_NUM));
-
-				Type_destroy(type_ptr);
 			}
 
 			else{
@@ -332,8 +325,6 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 					printf("Operator " TEXT_GRN TEXT_BLD "%s" TEXT_RST " does not support operand " TEXT_YLW "%s" TEXT_RST " of incompatible type\n", "@", type_to_name(type_ptr->type_enum));
 				}
-
-				Type_destroy(type_ptr);
 
 				*flag_error = 1;
 				return -1;
@@ -1066,6 +1057,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 
 			ParseTree_Node *row_node_ptr = child_0;
 			ParseTree_Node *column_node_ptr = row_node_ptr;
+			ParseTree_Node *prev_column_node_ptr = NULL;
 
 			// Find number of columns in first row for reference
 			while(column_node_ptr != NULL){
@@ -1079,14 +1071,15 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 				int num_columns_cur = 0;
 				while(column_node_ptr != NULL){
 					num_columns_cur += 1;
+					prev_column_node_ptr = column_node_ptr;
 					column_node_ptr = column_node_ptr->sibling;
 				}
 
 				if(num_columns_cur != num_columns){
 
 					if(flag_print_errors == 1){
-						int line_number = column_node_ptr->tkn_ptr->line;
-						int column_number = column_node_ptr->tkn_ptr->column;
+						int line_number = prev_column_node_ptr->tkn_ptr->line;
+						int column_number = prev_column_node_ptr->tkn_ptr->column;
 
 						printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
 						printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);

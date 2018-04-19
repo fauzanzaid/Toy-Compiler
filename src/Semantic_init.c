@@ -402,7 +402,6 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 				return status;
 
 			Type *type_ptr = child_0->atr_ptr->type;
-			child_0->atr_ptr->type = NULL;
 
 			if(
 				type_ptr->type_enum != TYPE_ENUM_NUM &&
@@ -418,22 +417,23 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 					printf("Function " TEXT_GRN TEXT_BLD "%s" TEXT_RST " does not support operand " TEXT_YLW "%s" TEXT_RST " of incompatible type\n", "read()", type_to_name(type_ptr->type_enum));
 				}
 
-				Type_destroy(type_ptr);
-
 				*flag_error = 1;
 				return -1;
 			}
 
 			SymbolEnv_Entry_set_flag_initialized(child_0->atr_ptr->entry);
 
-			Type_destroy(type_ptr);
-
 			break;
 		}
 
 		case AST_OPERATOR_KW_PRINT:
 		{
-			// No check required
+			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
+
+			status = Semantic_symbol_and_type_check(child_0, env_ptr, flag_error, flag_print_errors);
+			if(status == -1)
+				return status;
+
 			break;
 		}
 

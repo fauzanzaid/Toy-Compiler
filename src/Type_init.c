@@ -26,8 +26,11 @@ char *type_names[] = {
 	"LIST",
 	"FUNCTION_DEF",
 	"FUNCTION_CALL",
+	"LABEL",
 	"UNKOWN",
 };
+
+int len_type_names = 11;
 
 
 //////////////////////////////////
@@ -296,6 +299,12 @@ int Type_get_size(Type *type_ptr){
 			break;
 		}
 
+		case TYPE_ENUM_LABEL:
+		{
+			size = 0;
+			break;
+		}
+
 		default:{
 			fprintf(stderr, "Type_get_size : Type object (%p) of unknown type %d\n", type_ptr, type_ptr->type_enum);
 			size = -1;
@@ -312,6 +321,7 @@ int Type_check_completeness(Type *type_ptr){
 		case TYPE_ENUM_NUM:
 		case TYPE_ENUM_RNUM:
 		case TYPE_ENUM_CHAR:
+		case TYPE_ENUM_LABEL:
 		{
 			break;
 		}
@@ -376,7 +386,7 @@ int Type_check_completeness(Type *type_ptr){
 int Type_check_compatibility(Type *type_1_ptr, Type *type_2_ptr){
 	if( type_1_ptr->type_enum == type_2_ptr->type_enum ){
 
-		if( type_1_ptr->type_enum == TYPE_ENUM_NUM || type_1_ptr->type_enum == TYPE_ENUM_RNUM || type_1_ptr->type_enum == TYPE_ENUM_CHAR )
+		if( type_1_ptr->type_enum == TYPE_ENUM_NUM || type_1_ptr->type_enum == TYPE_ENUM_RNUM || type_1_ptr->type_enum == TYPE_ENUM_CHAR || type_1_ptr->type_enum == TYPE_ENUM_LABEL )
 			return 0;
 
 		else if( type_1_ptr->type_enum == TYPE_ENUM_STR ){
@@ -526,10 +536,10 @@ int Type_check_compatibility(Type *type_1_ptr, Type *type_2_ptr){
 }
 
 char *type_to_name(int op){
-	if(op>0)
+	if(op>0 && op<len_type_names)
 		return type_names[op];
 	else
-		return type_names[9];
+		return type_names[len_type_names-1];
 }
 
 
@@ -545,6 +555,7 @@ void print_type(Type *type_ptr){
 		case TYPE_ENUM_NUM:
 		case TYPE_ENUM_RNUM:
 		case TYPE_ENUM_CHAR:
+		case TYPE_ENUM_LABEL:
 		{
 			break;
 		}

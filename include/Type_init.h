@@ -25,6 +25,9 @@ typedef enum {
 	TYPE_ENUM_FUNCTION_DEF,
 	TYPE_ENUM_FUNCTION_CALL,
 
+	// Label
+	TYPE_ENUM_LABEL,
+
 	TYPE_UNKOWN = -1,
 } TypeEnum_type;
 

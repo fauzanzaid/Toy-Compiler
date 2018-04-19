@@ -23,7 +23,7 @@
 
 const int MAX_LABEL_LEN = 20;
 const int MAX_TEMP_LEN = 20;
-const char LABEL_PREFIX[] = "label_";
+const char LABEL_PREFIX[] = "__label_";
 const char TEMP_PREFIX[] = "__";
 
 const int REG_0 = 0;
@@ -46,19 +46,23 @@ char *quad_operator_names[] ={
 	"copy_address_r",
 	"copy_derefed_r",
 	"copy_derefed_l",
-	"jump",
-	"jump_true",
-	"jump_false",
-	"jump_lt",
-	"jump_le",
-	"jump_gt",
-	"jump_ge",
-	"jump_eq",
-	"jump_ne",
+	"label",
+	"goto",
+	"goto_lt",
+	"goto_le",
+	"goto_gt",
+	"goto_ge",
+	"goto_eq",
+	"goto_ne",
+	"call",
+	"read_int",
+	"read_char",
+	"write_int",
+	"write_char",
 	"unknown",
 };
 
-int len_quad_operator_names = 26;
+int len_quad_operator_names = 28;
 
 
 ////////////////////
@@ -72,6 +76,8 @@ static char *label_num_to_string(long long num);
 static char *tmp_num_to_string(long long num);
 
 static char *quad_operator_to_name(int op);
+
+static SymbolEnv_Entry *get_label(SymbolEnv *env_ptr, int *num_label);
 
 
 ///////////////
@@ -693,42 +699,223 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 
 		case AST_OPERATOR_AND:
 		{
+			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
+			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
+
+			LinkedList *quad_lst_ptr = LinkedList_new();
+			node_ptr->atr_ptr->code = quad_lst_ptr;
+
+			LinkedList *quad_0_lst_ptr = NULL;
+			LinkedList *quad_1_lst_ptr = NULL;
+
+
+			// Labels
+			SymbolEnv_Entry *etr_label_true_ptr = node_ptr->atr_ptr->label_true;
+			SymbolEnv_Entry *etr_label_false_ptr = node_ptr->atr_ptr->label_false;
+			SymbolEnv_Entry *etr_label_middle_ptr = get_label(env_ptr, num_label);
+
+
+			// Pass labels
+			child_0->atr_ptr->label_true = etr_label_middle_ptr;
+			child_0->atr_ptr->label_false = etr_label_false_ptr;
+			child_1->atr_ptr->label_true = etr_label_true_ptr;
+			child_1->atr_ptr->label_false = etr_label_false_ptr;
+
+
+			status = Icg_generate_quads_recursive(child_0, env_ptr, num_temp, num_label);
+			if(status == -1)
+				return status;
+
+			status = Icg_generate_quads_recursive(child_1, env_ptr, num_temp, num_label);
+			if(status == -1)
+				return status;
+
+			quad_0_lst_ptr = child_0->atr_ptr->code;
+			quad_1_lst_ptr = child_1->atr_ptr->code;
+
+			child_0->atr_ptr->code = NULL;
+			child_1->atr_ptr->code = NULL;
+
+
+			// Quads
+			Quad_Node *quad_label_middle_ptr = NULL;
+			quad_label_middle_ptr = Quad_Node_new();
+			quad_label_middle_ptr->op = QUAD_OP_LABEL;
+			quad_label_middle_ptr->result_type = QUAD_ADDR_TYPE_NAME;
+			quad_label_middle_ptr->result.name = etr_label_middle_ptr;
+
+
+			// Quad List
+			LinkedList_append(quad_lst_ptr, quad_0_lst_ptr);
+			LinkedList_destroy(quad_0_lst_ptr);
+
+			LinkedList_pushback(quad_lst_ptr, quad_label_middle_ptr);
+
+			LinkedList_append(quad_lst_ptr, quad_1_lst_ptr);
+			LinkedList_destroy(quad_1_lst_ptr);
 
 			break;
 		}
 
 		case AST_OPERATOR_OR:
 		{
+			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
+			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
+
+			LinkedList *quad_lst_ptr = LinkedList_new();
+			node_ptr->atr_ptr->code = quad_lst_ptr;
+
+			LinkedList *quad_0_lst_ptr = NULL;
+			LinkedList *quad_1_lst_ptr = NULL;
+
+
+			// Labels
+			SymbolEnv_Entry *etr_label_true_ptr = node_ptr->atr_ptr->label_true;
+			SymbolEnv_Entry *etr_label_false_ptr = node_ptr->atr_ptr->label_false;
+			SymbolEnv_Entry *etr_label_middle_ptr = get_label(env_ptr, num_label);
+
+
+			// Pass labels
+			child_0->atr_ptr->label_true = etr_label_true_ptr;
+			child_0->atr_ptr->label_false = etr_label_middle_ptr;
+			child_1->atr_ptr->label_true = etr_label_true_ptr;
+			child_1->atr_ptr->label_false = etr_label_false_ptr;
+
+
+			status = Icg_generate_quads_recursive(child_0, env_ptr, num_temp, num_label);
+			if(status == -1)
+				return status;
+
+			status = Icg_generate_quads_recursive(child_1, env_ptr, num_temp, num_label);
+			if(status == -1)
+				return status;
+
+			quad_0_lst_ptr = child_0->atr_ptr->code;
+			quad_1_lst_ptr = child_1->atr_ptr->code;
+
+			child_0->atr_ptr->code = NULL;
+			child_1->atr_ptr->code = NULL;
+
+
+			// Quads
+			Quad_Node *quad_label_middle_ptr = NULL;
+			quad_label_middle_ptr = Quad_Node_new();
+			quad_label_middle_ptr->op = QUAD_OP_LABEL;
+			quad_label_middle_ptr->result_type = QUAD_ADDR_TYPE_NAME;
+			quad_label_middle_ptr->result.name = etr_label_middle_ptr;
+
+
+			// Quad List
+			LinkedList_append(quad_lst_ptr, quad_0_lst_ptr);
+			LinkedList_destroy(quad_0_lst_ptr);
+
+			LinkedList_pushback(quad_lst_ptr, quad_label_middle_ptr);
+
+			LinkedList_append(quad_lst_ptr, quad_1_lst_ptr);
+			LinkedList_destroy(quad_1_lst_ptr);
 
 			break;
 		}
 
 		case AST_OPERATOR_NOT:
 		{
+			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
+
+			LinkedList *quad_lst_ptr = LinkedList_new();
+			node_ptr->atr_ptr->code = quad_lst_ptr;
+
+			LinkedList *quad_0_lst_ptr = NULL;
+
+			// Labels
+			SymbolEnv_Entry *etr_label_true_ptr = node_ptr->atr_ptr->label_true;
+			SymbolEnv_Entry *etr_label_false_ptr = node_ptr->atr_ptr->label_false;
+
+			// Pass labels
+			child_0->atr_ptr->label_true = etr_label_false_ptr;
+			child_0->atr_ptr->label_false = etr_label_true_ptr;
+
+			status = Icg_generate_quads_recursive(child_0, env_ptr, num_temp, num_label);
+			if(status == -1)
+				return status;
+
+			quad_0_lst_ptr = child_0->atr_ptr->code;
+			child_0->atr_ptr->code = NULL;
+
+			// Quad List
+			LinkedList_append(quad_lst_ptr, quad_0_lst_ptr);
+			LinkedList_destroy(quad_0_lst_ptr);
 
 			break;
 		}
 
 		case AST_OPERATOR_LT:
-		{
-
-			break;
-		}
-
 		case AST_OPERATOR_LE:
-		{
-
-			break;
-		}
-
 		case AST_OPERATOR_GT:
-		{
-
-			break;
-		}
-
 		case AST_OPERATOR_GE:
+		case AST_OPERATOR_EQ:
+		case AST_OPERATOR_NE:
 		{
+			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
+			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
+
+			status = Icg_generate_quads_recursive(child_0, env_ptr, num_temp, num_label);
+			if(status == -1)
+				return status;
+
+			status = Icg_generate_quads_recursive(child_1, env_ptr, num_temp, num_label);
+			if(status == -1)
+				return status;
+
+			// Labels
+			SymbolEnv_Entry *etr_label_true_ptr = node_ptr->atr_ptr->label_true;
+			SymbolEnv_Entry *etr_label_false_ptr = node_ptr->atr_ptr->label_false;
+
+
+			// Quads
+			Quad_Node *quad_goto_true_ptr = Quad_Node_new();
+
+			switch(node_ptr->atr_ptr->op){
+				case AST_OPERATOR_LT:	quad_goto_true_ptr->op = QUAD_OP_GOTO_LT;	break;
+				case AST_OPERATOR_LE:	quad_goto_true_ptr->op = QUAD_OP_GOTO_LE;	break;
+				case AST_OPERATOR_GT:	quad_goto_true_ptr->op = QUAD_OP_GOTO_GT;	break;
+				case AST_OPERATOR_GE:	quad_goto_true_ptr->op = QUAD_OP_GOTO_GE;	break;
+				case AST_OPERATOR_EQ:	quad_goto_true_ptr->op = QUAD_OP_GOTO_EQ;	break;
+				case AST_OPERATOR_NE:	quad_goto_true_ptr->op = QUAD_OP_GOTO_NE;	break;
+			}
+
+			quad_goto_true_ptr->result_type = QUAD_ADDR_TYPE_NAME;
+			quad_goto_true_ptr->result.name = etr_label_true_ptr;
+
+			if(child_0->atr_ptr->result_value != NULL){
+				quad_goto_true_ptr->arg_1_type = QUAD_ADDR_TYPE_CONSTANT;
+				quad_goto_true_ptr->arg_1.constant = *(int *)(child_0->atr_ptr->result_value);
+			}
+			else{
+				quad_goto_true_ptr->arg_1_type = QUAD_ADDR_TYPE_NAME;
+				quad_goto_true_ptr->arg_1.name = child_0->atr_ptr->result_entry;
+			}
+
+			if(child_1->atr_ptr->result_value != NULL){
+				quad_goto_true_ptr->arg_2_type = QUAD_ADDR_TYPE_CONSTANT;
+				quad_goto_true_ptr->arg_2.constant = *(int *)(child_1->atr_ptr->result_value);
+			}
+			else{
+				quad_goto_true_ptr->arg_2_type = QUAD_ADDR_TYPE_NAME;
+				quad_goto_true_ptr->arg_2.name = child_1->atr_ptr->result_entry;
+			}
+
+			Quad_Node *quad_goto_false_ptr = Quad_Node_new();
+			quad_goto_false_ptr->op = QUAD_OP_GOTO;
+			quad_goto_false_ptr->result_type = QUAD_ADDR_TYPE_NAME;
+			quad_goto_false_ptr->result.name = etr_label_false_ptr;
+
+
+			// Quad list
+			LinkedList *quad_lst_ptr = LinkedList_new();
+			node_ptr->atr_ptr->code = quad_lst_ptr;
+
+			LinkedList_pushback(quad_lst_ptr, quad_goto_true_ptr);
+			LinkedList_pushback(quad_lst_ptr, quad_goto_false_ptr);
 
 			break;
 		}
@@ -935,18 +1122,6 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 			break;
 		}
 
-		case AST_OPERATOR_EQ:
-		{
-
-			break;
-		}
-
-		case AST_OPERATOR_NE:
-		{
-
-			break;
-		}
-
 		case AST_OPERATOR_CALL:
 		{
 
@@ -955,6 +1130,114 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 
 		case AST_OPERATOR_COND:
 		{
+			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
+			ParseTree_Node *child_1 = ParseTree_Node_get_child_by_node_index(node_ptr, 1);
+			ParseTree_Node *child_2 = ParseTree_Node_get_child_by_node_index(node_ptr, 2);
+
+
+			LinkedList *quad_lst_ptr = LinkedList_new();
+			node_ptr->atr_ptr->code = quad_lst_ptr;
+
+			LinkedList *quad_0_lst_ptr = NULL;
+			LinkedList *quad_1_lst_ptr = NULL;
+			LinkedList *quad_2_lst_ptr = NULL;
+
+
+			// Generate labels
+			SymbolEnv_Entry *etr_label_true_ptr = get_label(env_ptr, num_label);
+			SymbolEnv_Entry *etr_label_false_ptr = get_label(env_ptr, num_label);
+			SymbolEnv_Entry *etr_label_next_ptr = NULL;
+
+			if(child_2 != NULL){
+				etr_label_next_ptr = get_label(env_ptr, num_label);
+			}
+
+
+			// Pass label to first child
+			child_0->atr_ptr->label_true = etr_label_true_ptr;
+			child_0->atr_ptr->label_false = etr_label_false_ptr;
+
+			status = Icg_generate_quads_recursive(child_0, env_ptr, num_temp, num_label);
+			if(status == -1)
+				return status;
+
+			status = Icg_generate_quads_recursive(child_1, env_ptr, num_temp, num_label);
+			if(status == -1)
+				return status;
+
+			quad_0_lst_ptr = child_0->atr_ptr->code;
+			quad_1_lst_ptr = child_1->atr_ptr->code;
+
+			child_0->atr_ptr->code = NULL;
+			child_1->atr_ptr->code = NULL;
+
+			if(child_2 != NULL){
+				status = Icg_generate_quads_recursive(child_2, env_ptr, num_temp, num_label);
+				if(status == -1)
+					return status;
+
+				quad_2_lst_ptr = child_2->atr_ptr->code;
+				child_2->atr_ptr->code = NULL;
+			}
+
+
+			// Create quads for labels
+			Quad_Node *quad_label_true_ptr = NULL;
+			Quad_Node *quad_label_false_ptr = NULL;
+			Quad_Node *quad_label_next_ptr = NULL;
+			Quad_Node *quad_goto_next_ptr = NULL;
+
+			quad_label_true_ptr = Quad_Node_new();
+			quad_label_true_ptr->op = QUAD_OP_LABEL;
+			quad_label_true_ptr->result_type = QUAD_ADDR_TYPE_NAME;
+			quad_label_true_ptr->result.name = etr_label_true_ptr;
+
+			quad_label_false_ptr = Quad_Node_new();
+			quad_label_false_ptr->op = QUAD_OP_LABEL;
+			quad_label_false_ptr->result_type = QUAD_ADDR_TYPE_NAME;
+			quad_label_false_ptr->result.name = etr_label_false_ptr;
+
+			if(child_2 != NULL){
+				quad_label_next_ptr = Quad_Node_new();
+				quad_label_next_ptr->op = QUAD_OP_LABEL;
+				quad_label_next_ptr->result_type = QUAD_ADDR_TYPE_NAME;
+				quad_label_next_ptr->result.name = etr_label_next_ptr;
+
+				quad_goto_next_ptr = Quad_Node_new();
+				quad_goto_next_ptr->op = QUAD_OP_GOTO;
+				quad_goto_next_ptr->result_type = QUAD_ADDR_TYPE_NAME;
+				quad_goto_next_ptr->result.name = etr_label_next_ptr;
+			}
+
+
+			// Build up quad list
+
+			LinkedList_append(quad_lst_ptr, quad_0_lst_ptr);
+			LinkedList_destroy(quad_0_lst_ptr);
+
+			LinkedList_pushback(quad_lst_ptr, quad_label_true_ptr);
+
+			LinkedList_append(quad_lst_ptr, quad_1_lst_ptr);
+			LinkedList_destroy(quad_1_lst_ptr);
+
+			if(child_2 != NULL){
+				LinkedList_pushback(quad_lst_ptr, quad_goto_next_ptr);
+			}
+
+			LinkedList_pushback(quad_lst_ptr, quad_label_false_ptr);
+
+			if(child_2 != NULL){
+				LinkedList_append(quad_lst_ptr, quad_2_lst_ptr);
+				LinkedList_destroy(quad_2_lst_ptr);
+
+				LinkedList_pushback(quad_lst_ptr, quad_label_next_ptr);
+			}
+
+
+			// if(quad_0_lst_ptr)	quad_list_destroy(quad_0_lst_ptr);
+			// if(quad_1_lst_ptr)	quad_list_destroy(quad_1_lst_ptr);
+			// if(quad_2_lst_ptr)	quad_list_destroy(quad_2_lst_ptr);
+
 
 			break;
 		}
@@ -1150,6 +1433,8 @@ void print_quad_list(LinkedList *quad_lst_ptr){
 
 		printf("\n");
 
+		printf("---------------------------------------------------------------------------\n");
+
 		LinkedListIterator_move_to_next(itr_ptr);
 		quad_ptr = LinkedListIterator_get_item(itr_ptr);
 	}
@@ -1190,4 +1475,13 @@ static char *tmp_num_to_string(long long num){
 	}
 
 	return buf;
+}
+
+static SymbolEnv_Entry *get_label(SymbolEnv *env_ptr, int *num_label){
+	char *label_id = label_num_to_string((*num_label)++);
+	int len_label_id = strlen(label_id);
+	SymbolEnv_Entry *etr_label_ptr = SymbolEnv_entry_add(env_ptr, label_id, len_label_id, Type_new(TYPE_ENUM_LABEL));
+	free(label_id);
+
+	return etr_label_ptr;
 }

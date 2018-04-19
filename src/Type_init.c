@@ -229,10 +229,8 @@ int Type_get_size(Type *type_ptr){
 			if(type_ptr->len_string < 0)
 				size = -1;
 			else{
-				// For storing index
-				size = SIZE_NUM;
 				// For storing elements
-				size += type_ptr->len_string * SIZE_CHAR;
+				size = type_ptr->len_string * SIZE_CHAR;
 			}
 
 			break;
@@ -243,10 +241,8 @@ int Type_get_size(Type *type_ptr){
 			if(type_ptr->num_rows < 0 && type_ptr->num_columns < 0)
 				size = -1;
 			else{
-				// For storing index
-				size = 2 * SIZE_NUM;
 				// For storing elements
-				size += type_ptr->num_rows * type_ptr->num_columns * SIZE_NUM;
+				size = type_ptr->num_rows * type_ptr->num_columns * SIZE_NUM;
 			}
 
 			break;

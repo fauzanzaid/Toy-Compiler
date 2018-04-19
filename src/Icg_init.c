@@ -628,25 +628,25 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 
 		case AST_OPERATOR_FUNID:
 		{
-
+			// No code
 			break;
 		}
 
 		case AST_OPERATOR_KW_INT:
 		{
-
+			// No code
 			break;
 		}
 
 		case AST_OPERATOR_KW_REAL:
 		{
-
+			// No code
 			break;
 		}
 
 		case AST_OPERATOR_KW_STRING:
 		{
-
+			// No code
 			break;
 		}
 
@@ -824,6 +824,8 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 
 		case AST_OPERATOR_RNUM:
 		{
+			fprintf(stderr, "Icg_generate_quads_recursive : Unhandled case: RNUM\n");
+			return -1;
 
 			break;
 		}
@@ -1268,7 +1270,7 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 
 		case AST_OPERATOR_CALL:
 		{
-
+			// No code
 			break;
 		}
 
@@ -1388,7 +1390,7 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 
 		case AST_OPERATOR_DECL:
 		{
-
+			// No code
 			break;
 		}
 
@@ -1402,7 +1404,7 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 
 		case AST_OPERATOR_ID_LIST:
 		{
-
+			// No code
 			break;
 		}
 
@@ -1482,13 +1484,13 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 
 		case AST_OPERATOR_DEF_PARAM_LIST:
 		{
-
+			// No code
 			break;
 		}
 
 		case AST_OPERATOR_CALL_PARAM_LIST:
 		{
-
+			// No code
 			break;
 		}
 
@@ -1517,7 +1519,7 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 			}
 
 			break;
-		}
+		}// No code
 
 		default:
 		{

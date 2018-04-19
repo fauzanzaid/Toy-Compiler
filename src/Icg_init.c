@@ -583,6 +583,33 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 
 		case AST_OPERATOR_SIZE:
 		{
+			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
+
+			status = Icg_generate_quads_recursive(child_0, env_ptr, num_temp, num_label);
+			if(status == -1)
+				return status;
+
+			Type *type_0_ptr = child_0->atr_ptr->type;
+
+			if(type_0_ptr->type_enum == TYPE_ENUM_STR){
+
+				int *value_ptr = malloc(sizeof(int));
+				*value_ptr = type_0_ptr->len_string;
+
+				node_ptr->atr_ptr->result_value = value_ptr;
+			}
+
+			else if(type_0_ptr->type_enum == TYPE_ENUM_MATRIX){
+
+				int *value_1_ptr = malloc(sizeof(int));
+				int *value_2_ptr = malloc(sizeof(int));
+				*value_1_ptr = type_0_ptr->num_rows;
+				*value_2_ptr = type_0_ptr->num_columns;
+
+				node_ptr->atr_ptr->result_value = value_1_ptr;
+				node_ptr->atr_ptr->result_2_value = value_2_ptr;
+			}
+
 			break;
 		}
 
@@ -844,6 +871,64 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 			}
 
 			else{
+				// List
+
+				SymbolEnv_Entry *etr_0_ptr = child_0->child->atr_ptr->entry;
+				Type *type_0_ptr = child_0->child->atr_ptr->type;
+
+				if(type_0_ptr->type_enum != TYPE_ENUM_NUM){
+					fprintf(stderr, "Icg_generate_quads_recursive : Unhandled case: Not a NUM is list\n");
+					return -1;
+				}
+
+				Quad_Node *quad_ptr = Quad_Node_new();
+				LinkedList_pushback(quad_lst_ptr, quad_ptr);
+
+				quad_ptr->op = QUAD_OP_COPY;
+				quad_ptr->result_type = QUAD_ADDR_TYPE_NAME;
+				quad_ptr->result.name = etr_0_ptr;
+
+				if(child_1->atr_ptr->result_value != NULL){
+					quad_ptr->arg_1_type = QUAD_ADDR_TYPE_CONSTANT;
+					quad_ptr->arg_1.constant =  *(int *)(child_1->atr_ptr->result_value);
+				}
+				else{
+					fprintf(stderr, "Icg_generate_quads_recursive : Unhandled case: Name in list\n");
+					return -1;
+				}
+
+
+				if(child_0->child->sibling != NULL){
+					SymbolEnv_Entry *etr_1_ptr = child_0->child->sibling->atr_ptr->entry;
+					Type *type_1_ptr = child_0->child->sibling->atr_ptr->type;
+
+					if(type_1_ptr->type_enum != TYPE_ENUM_NUM){
+						fprintf(stderr, "Icg_generate_quads_recursive : Unhandled case: Not a NUM is list\n");
+						return -1;
+					}
+
+					Quad_Node *quad_ptr = Quad_Node_new();
+					LinkedList_pushback(quad_lst_ptr, quad_ptr);
+
+					quad_ptr->op = QUAD_OP_COPY;
+					quad_ptr->result_type = QUAD_ADDR_TYPE_NAME;
+					quad_ptr->result.name = etr_1_ptr;
+
+					if(child_1->atr_ptr->result_value != NULL){
+						quad_ptr->arg_1_type = QUAD_ADDR_TYPE_CONSTANT;
+						quad_ptr->arg_1.constant =  *(int *)(child_1->atr_ptr->result_2_value);
+					}
+					else{
+						fprintf(stderr, "Icg_generate_quads_recursive : Unhandled case: Name in list\n");
+						return -1;
+					}
+
+
+					if(child_0->child->sibling->sibling != NULL){
+						fprintf(stderr, "Icg_generate_quads_recursive : Unhandled case: List too long\n");
+						return -1;
+					}
+				}
 
 			}
 
@@ -1026,7 +1111,6 @@ void quad_list_destroy(LinkedList *quad_lst_ptr){
 	}
 	LinkedList_destroy(quad_lst_ptr);
 }
-
 
 void print_quad_list(LinkedList *quad_lst_ptr){
 	LinkedListIterator *itr_ptr = LinkedListIterator_new(quad_lst_ptr);

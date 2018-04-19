@@ -62,7 +62,7 @@ char *quad_operator_names[] ={
 	"unknown",
 };
 
-int len_quad_operator_names = 28;
+int len_quad_operator_names = 30;
 
 
 ////////////////////
@@ -658,12 +658,156 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 
 		case AST_OPERATOR_KW_READ:
 		{
+			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
+
+			status = Icg_generate_quads_recursive(child_0, env_ptr, num_temp, num_label);
+			if(status == -1)
+				return status;
+
+			Type *type_ptr = child_0->atr_ptr->type;
+
+			if(type_ptr->type_enum != TYPE_ENUM_NUM){
+				fprintf(stderr, "Icg_generate_quads_recursive : Unhandled case: Cannot read non NUM\n");
+				return -1;
+			}
+
+
+			Quad_Node *quad_ptr = Quad_Node_new();
+
+			quad_ptr->op = QUAD_OP_READ_INT;
+			quad_ptr->result_type = QUAD_ADDR_TYPE_NAME;
+			quad_ptr->result.name = child_0->atr_ptr->entry;
+
+
+			LinkedList *quad_lst_ptr = LinkedList_new();
+			node_ptr->atr_ptr->code = quad_lst_ptr;
+
+			LinkedList_pushback(quad_lst_ptr, quad_ptr);
 
 			break;
 		}
 
 		case AST_OPERATOR_KW_PRINT:
 		{
+			ParseTree_Node *child_0 = ParseTree_Node_get_child_by_node_index(node_ptr, 0);
+
+			status = Icg_generate_quads_recursive(child_0, env_ptr, num_temp, num_label);
+			if(status == -1)
+				return status;
+
+			Type *type_ptr = child_0->atr_ptr->type;
+			SymbolEnv_Entry *etr_ptr = child_0->atr_ptr->entry;
+
+
+			LinkedList *quad_lst_ptr = LinkedList_new();
+			node_ptr->atr_ptr->code = quad_lst_ptr;
+
+
+			if(type_ptr->type_enum == TYPE_ENUM_NUM){
+				Quad_Node *quad_1_ptr = Quad_Node_new();	// copy num to reg
+				quad_1_ptr->op = QUAD_OP_COPY;
+				quad_1_ptr->result_type = QUAD_ADDR_TYPE_REG;
+				quad_1_ptr->result.reg = REG_0;
+				quad_1_ptr->arg_1_type = QUAD_ADDR_TYPE_NAME;
+				quad_1_ptr->arg_1.name = etr_ptr;
+
+				Quad_Node *quad_2_ptr = Quad_Node_new();	// write reg value as int
+				quad_2_ptr->op = QUAD_OP_WRITE_INT;
+				quad_2_ptr->result_type = QUAD_ADDR_TYPE_REG;
+				quad_2_ptr->result.reg = REG_0;
+
+				Quad_Node *quad_3_ptr = Quad_Node_new();	// copy \n to reg
+				quad_3_ptr->op = QUAD_OP_COPY;
+				quad_3_ptr->result_type = QUAD_ADDR_TYPE_REG;
+				quad_3_ptr->result.reg = REG_0;
+				quad_3_ptr->arg_1_type = QUAD_ADDR_TYPE_CONSTANT;
+				quad_3_ptr->arg_1.constant = '\n';
+
+				Quad_Node *quad_4_ptr = Quad_Node_new();	// write reg value as char
+				quad_4_ptr->op = QUAD_OP_WRITE_CHAR;
+				quad_4_ptr->result_type = QUAD_ADDR_TYPE_REG;
+				quad_4_ptr->result.reg = REG_0;
+
+				LinkedList_pushback(quad_lst_ptr, quad_1_ptr);
+				LinkedList_pushback(quad_lst_ptr, quad_2_ptr);
+				LinkedList_pushback(quad_lst_ptr, quad_3_ptr);
+				LinkedList_pushback(quad_lst_ptr, quad_4_ptr);
+			}
+
+			else if(type_ptr->type_enum == TYPE_ENUM_STR){
+				for (int i = 0; i < type_ptr->len_string; ++i){
+					
+					Quad_Node *quad_1_ptr = Quad_Node_new();	// copy char to reg
+					quad_1_ptr->op = QUAD_OP_COPY_INDEXED_R;
+					quad_1_ptr->result_type = QUAD_ADDR_TYPE_REG;
+					quad_1_ptr->result.reg = REG_0;
+					quad_1_ptr->arg_1_type = QUAD_ADDR_TYPE_NAME;
+					quad_1_ptr->arg_1.name = etr_ptr;
+					quad_1_ptr->arg_2_type = QUAD_ADDR_TYPE_CONSTANT;
+					quad_1_ptr->arg_2.constant = i;
+
+					Quad_Node *quad_2_ptr = Quad_Node_new();	// write reg value as char
+					quad_2_ptr->op = QUAD_OP_WRITE_CHAR;
+					quad_2_ptr->result_type = QUAD_ADDR_TYPE_REG;
+					quad_2_ptr->result.reg = REG_0;
+
+					LinkedList_pushback(quad_lst_ptr, quad_1_ptr);
+					LinkedList_pushback(quad_lst_ptr, quad_2_ptr);
+				}
+
+				Quad_Node *quad_3_ptr = Quad_Node_new();	// copy \n to reg
+				quad_3_ptr->op = QUAD_OP_COPY;
+				quad_3_ptr->result_type = QUAD_ADDR_TYPE_REG;
+				quad_3_ptr->result.reg = REG_0;
+				quad_3_ptr->arg_1_type = QUAD_ADDR_TYPE_CONSTANT;
+				quad_3_ptr->arg_1.constant = '\n';
+
+				Quad_Node *quad_4_ptr = Quad_Node_new();	// write reg value as char
+				quad_4_ptr->op = QUAD_OP_WRITE_CHAR;
+				quad_4_ptr->result_type = QUAD_ADDR_TYPE_REG;
+				quad_4_ptr->result.reg = REG_0;
+
+				LinkedList_pushback(quad_lst_ptr, quad_3_ptr);
+				LinkedList_pushback(quad_lst_ptr, quad_4_ptr);
+			}
+
+			else if(type_ptr->type_enum == TYPE_ENUM_MATRIX){
+				for (int i = 0; i < type_ptr->num_rows; ++i){
+					for (int j = 0; j < type_ptr->num_columns; ++j){
+						
+						Quad_Node *quad_1_ptr = Quad_Node_new();	// copy num to reg
+						quad_1_ptr->op = QUAD_OP_COPY_INDEXED_R;
+						quad_1_ptr->result_type = QUAD_ADDR_TYPE_REG;
+						quad_1_ptr->result.reg = REG_0;
+						quad_1_ptr->arg_1_type = QUAD_ADDR_TYPE_NAME;
+						quad_1_ptr->arg_1.name = etr_ptr;
+						quad_1_ptr->arg_2_type = QUAD_ADDR_TYPE_CONSTANT;
+						quad_1_ptr->arg_2.constant = i*type_ptr->num_columns + j;
+
+						Quad_Node *quad_2_ptr = Quad_Node_new();	// write reg value as int
+						quad_2_ptr->op = QUAD_OP_WRITE_INT;
+						quad_2_ptr->result_type = QUAD_ADDR_TYPE_REG;
+						quad_2_ptr->result.reg = REG_0;
+
+						Quad_Node *quad_3_ptr = Quad_Node_new();	// copy \n to reg
+						quad_3_ptr->op = QUAD_OP_COPY;
+						quad_3_ptr->result_type = QUAD_ADDR_TYPE_REG;
+						quad_3_ptr->result.reg = REG_0;
+						quad_3_ptr->arg_1_type = QUAD_ADDR_TYPE_CONSTANT;
+						quad_3_ptr->arg_1.constant = '\n';
+
+						Quad_Node *quad_4_ptr = Quad_Node_new();	// write reg value as char
+						quad_4_ptr->op = QUAD_OP_WRITE_CHAR;
+						quad_4_ptr->result_type = QUAD_ADDR_TYPE_REG;
+						quad_4_ptr->result.reg = REG_0;
+
+						LinkedList_pushback(quad_lst_ptr, quad_1_ptr);
+						LinkedList_pushback(quad_lst_ptr, quad_2_ptr);
+						LinkedList_pushback(quad_lst_ptr, quad_3_ptr);
+						LinkedList_pushback(quad_lst_ptr, quad_4_ptr);
+					}
+				}
+			}
 
 			break;
 		}

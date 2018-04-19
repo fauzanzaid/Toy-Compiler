@@ -26,6 +26,9 @@ const int MAX_TEMP_LEN = 20;
 const char LABEL_PREFIX[] = "label_";
 const char TEMP_PREFIX[] = "__";
 
+const int REG_0 = 0;
+const int REG_1 = 1;
+
 char *quad_operator_names[] ={
 	"",
 	"identity",
@@ -182,8 +185,8 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 					LinkedList_pushback(quad_lst_ptr, quad_a_ptr);
 					LinkedList_pushback(quad_lst_ptr, quad_b_ptr);
 
-					quad_a_ptr->result_type = QUAD_ADDR_TYPE_TEMP;
-					quad_a_ptr->result.temp = 0;
+					quad_a_ptr->result_type = QUAD_ADDR_TYPE_REG;
+					quad_a_ptr->result.reg = REG_0;
 
 					if(child_0->atr_ptr->result_value != NULL){
 						quad_a_ptr->op = QUAD_OP_COPY;
@@ -204,8 +207,8 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 					quad_b_ptr->op = QUAD_OP_COPY_INDEXED_L;
 					quad_b_ptr->result_type = QUAD_ADDR_TYPE_NAME;
 					quad_b_ptr->result.name = etr_tmp_ptr;
-					quad_b_ptr->arg_1_type = QUAD_ADDR_TYPE_TEMP;
-					quad_b_ptr->arg_1.temp = 0;
+					quad_b_ptr->arg_1_type = QUAD_ADDR_TYPE_REG;
+					quad_b_ptr->arg_1.reg = REG_0;
 					quad_b_ptr->arg_2_type = QUAD_ADDR_TYPE_CONSTANT;
 					quad_b_ptr->arg_2.constant = idx;
 				}
@@ -217,8 +220,8 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 					LinkedList_pushback(quad_lst_ptr, quad_a_ptr);
 					LinkedList_pushback(quad_lst_ptr, quad_b_ptr);
 
-					quad_a_ptr->result_type = QUAD_ADDR_TYPE_TEMP;
-					quad_a_ptr->result.temp = 0;
+					quad_a_ptr->result_type = QUAD_ADDR_TYPE_REG;
+					quad_a_ptr->result.reg = REG_0;
 
 					if(child_1->atr_ptr->result_value != NULL){
 						quad_a_ptr->op = QUAD_OP_COPY;
@@ -239,8 +242,8 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 					quad_b_ptr->op = QUAD_OP_COPY_INDEXED_L;
 					quad_b_ptr->result_type = QUAD_ADDR_TYPE_NAME;
 					quad_b_ptr->result.name = etr_tmp_ptr;
-					quad_b_ptr->arg_1_type = QUAD_ADDR_TYPE_TEMP;
-					quad_b_ptr->arg_1.temp = 0;
+					quad_b_ptr->arg_1_type = QUAD_ADDR_TYPE_REG;
+					quad_b_ptr->arg_1.reg = REG_0;
 					quad_b_ptr->arg_2_type = QUAD_ADDR_TYPE_CONSTANT;
 					quad_b_ptr->arg_2.constant = idx;
 				}
@@ -265,8 +268,8 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 						LinkedList_pushback(quad_lst_ptr, quad_d_ptr);
 
 
-						quad_a_ptr->result_type = QUAD_ADDR_TYPE_TEMP;
-						quad_a_ptr->result.temp = 0;
+						quad_a_ptr->result_type = QUAD_ADDR_TYPE_REG;
+						quad_a_ptr->result.reg = REG_0;
 
 						if(child_0->atr_ptr->result_value != NULL){
 							quad_a_ptr->op = QUAD_OP_COPY;
@@ -285,8 +288,8 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 						}
 
 
-						quad_b_ptr->result_type = QUAD_ADDR_TYPE_TEMP;
-						quad_b_ptr->result.temp = 1;
+						quad_b_ptr->result_type = QUAD_ADDR_TYPE_REG;
+						quad_b_ptr->result.reg = REG_1;
 
 						if(child_1->atr_ptr->result_value != NULL){
 							quad_b_ptr->op = QUAD_OP_COPY;
@@ -306,21 +309,21 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 
 
 						quad_c_ptr->op = QUAD_OP_ADD;
-						quad_c_ptr->result_type = QUAD_ADDR_TYPE_TEMP;
-						quad_c_ptr->result.temp = 0;
-						quad_c_ptr->arg_1_type = QUAD_ADDR_TYPE_TEMP;
-						quad_c_ptr->arg_1.temp = 0;
-						quad_c_ptr->arg_2_type = QUAD_ADDR_TYPE_TEMP;
-						quad_c_ptr->arg_2.temp = 1;
+						quad_c_ptr->result_type = QUAD_ADDR_TYPE_REG;
+						quad_c_ptr->result.reg = REG_0;
+						quad_c_ptr->arg_1_type = QUAD_ADDR_TYPE_REG;
+						quad_c_ptr->arg_1.reg = REG_0;
+						quad_c_ptr->arg_2_type = QUAD_ADDR_TYPE_REG;
+						quad_c_ptr->arg_2.reg = REG_1;
 
 
 						quad_d_ptr->op = QUAD_OP_COPY_INDEXED_L;
 						quad_d_ptr->result_type = QUAD_ADDR_TYPE_NAME;
 						quad_d_ptr->result.name = etr_tmp_ptr;
-						quad_d_ptr->arg_1_type = QUAD_ADDR_TYPE_TEMP;
-						quad_d_ptr->arg_1.temp = 0;
+						quad_d_ptr->arg_1_type = QUAD_ADDR_TYPE_REG;
+						quad_d_ptr->arg_1.reg = REG_0;
 						quad_d_ptr->arg_2_type = QUAD_ADDR_TYPE_CONSTANT;
-						quad_d_ptr->arg_2.temp = idx;
+						quad_d_ptr->arg_2.constant = idx;
 					}
 				}
 			}
@@ -423,8 +426,8 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 						LinkedList_pushback(quad_lst_ptr, quad_d_ptr);
 
 
-						quad_a_ptr->result_type = QUAD_ADDR_TYPE_TEMP;
-						quad_a_ptr->result.temp = 0;
+						quad_a_ptr->result_type = QUAD_ADDR_TYPE_REG;
+						quad_a_ptr->result.reg = REG_0;
 
 						if(child_0->atr_ptr->result_value != NULL){
 							quad_a_ptr->op = QUAD_OP_COPY;
@@ -443,8 +446,8 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 						}
 
 
-						quad_b_ptr->result_type = QUAD_ADDR_TYPE_TEMP;
-						quad_b_ptr->result.temp = 1;
+						quad_b_ptr->result_type = QUAD_ADDR_TYPE_REG;
+						quad_b_ptr->result.reg = REG_1;
 
 						if(child_1->atr_ptr->result_value != NULL){
 							quad_b_ptr->op = QUAD_OP_COPY;
@@ -464,21 +467,21 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 
 
 						quad_c_ptr->op = QUAD_OP_SUBTRACT;
-						quad_c_ptr->result_type = QUAD_ADDR_TYPE_TEMP;
-						quad_c_ptr->result.temp = 0;
-						quad_c_ptr->arg_1_type = QUAD_ADDR_TYPE_TEMP;
-						quad_c_ptr->arg_1.temp = 0;
-						quad_c_ptr->arg_2_type = QUAD_ADDR_TYPE_TEMP;
-						quad_c_ptr->arg_2.temp = 1;
+						quad_c_ptr->result_type = QUAD_ADDR_TYPE_REG;
+						quad_c_ptr->result.reg = REG_0;
+						quad_c_ptr->arg_1_type = QUAD_ADDR_TYPE_REG;
+						quad_c_ptr->arg_1.reg = REG_0;
+						quad_c_ptr->arg_2_type = QUAD_ADDR_TYPE_REG;
+						quad_c_ptr->arg_2.reg = REG_1;
 
 
 						quad_d_ptr->op = QUAD_OP_COPY_INDEXED_L;
 						quad_d_ptr->result_type = QUAD_ADDR_TYPE_NAME;
 						quad_d_ptr->result.name = etr_tmp_ptr;
-						quad_d_ptr->arg_1_type = QUAD_ADDR_TYPE_TEMP;
-						quad_d_ptr->arg_1.temp = 0;
+						quad_d_ptr->arg_1_type = QUAD_ADDR_TYPE_REG;
+						quad_d_ptr->arg_1.reg = REG_0;
 						quad_d_ptr->arg_2_type = QUAD_ADDR_TYPE_CONSTANT;
-						quad_d_ptr->arg_2.temp = idx;
+						quad_d_ptr->arg_2.constant = idx;
 					}
 				}
 			}
@@ -764,8 +767,8 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 						LinkedList_pushback(quad_lst_ptr, quad_a_ptr);
 						LinkedList_pushback(quad_lst_ptr, quad_b_ptr);
 
-						quad_a_ptr->result_type = QUAD_ADDR_TYPE_TEMP;
-						quad_a_ptr->result.temp = 0;
+						quad_a_ptr->result_type = QUAD_ADDR_TYPE_REG;
+						quad_a_ptr->result.reg = REG_0;
 
 						if(child_1->atr_ptr->result_value != NULL){
 							quad_a_ptr->op = QUAD_OP_COPY;
@@ -786,8 +789,8 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 						quad_b_ptr->op = QUAD_OP_COPY_INDEXED_L;
 						quad_b_ptr->result_type = QUAD_ADDR_TYPE_NAME;
 						quad_b_ptr->result.name = etr_ptr;
-						quad_b_ptr->arg_1_type = QUAD_ADDR_TYPE_TEMP;
-						quad_b_ptr->arg_1.temp = 0;
+						quad_b_ptr->arg_1_type = QUAD_ADDR_TYPE_REG;
+						quad_b_ptr->arg_1.reg = REG_0;
 						quad_b_ptr->arg_2_type = QUAD_ADDR_TYPE_CONSTANT;
 						quad_b_ptr->arg_2.constant = idx;
 					}
@@ -808,8 +811,8 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 							LinkedList_pushback(quad_lst_ptr, quad_b_ptr);
 
 
-							quad_a_ptr->result_type = QUAD_ADDR_TYPE_TEMP;
-							quad_a_ptr->result.temp = 0;
+							quad_a_ptr->result_type = QUAD_ADDR_TYPE_REG;
+							quad_a_ptr->result.reg = REG_0;
 
 							if(child_1->atr_ptr->result_value != NULL){
 								quad_a_ptr->op = QUAD_OP_COPY;
@@ -831,10 +834,10 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 							quad_b_ptr->op = QUAD_OP_COPY_INDEXED_R;
 							quad_b_ptr->result_type = QUAD_ADDR_TYPE_NAME;
 							quad_b_ptr->result.name = etr_ptr;
-							quad_b_ptr->arg_1_type = QUAD_ADDR_TYPE_TEMP;
-							quad_b_ptr->arg_1.temp = 0;
+							quad_b_ptr->arg_1_type = QUAD_ADDR_TYPE_REG;
+							quad_b_ptr->arg_1.reg = REG_0;
 							quad_b_ptr->arg_2_type = QUAD_ADDR_TYPE_CONSTANT;
-							quad_b_ptr->arg_2.temp = idx;
+							quad_b_ptr->arg_2.constant = idx;
 						}
 					}
 				}
@@ -1038,8 +1041,8 @@ void print_quad_list(LinkedList *quad_lst_ptr){
 			printf("%*s   ", 15, "");
 		else if(quad_ptr->result_type == QUAD_ADDR_TYPE_NAME)
 			printf("%*s (mem)   ", 10, SymbolEnv_Entry_get_id(quad_ptr->result.name));
-		else if(quad_ptr->result_type == QUAD_ADDR_TYPE_TEMP)
-			printf("%*d (reg)   ", 10, quad_ptr->result.temp);
+		else if(quad_ptr->result_type == QUAD_ADDR_TYPE_REG)
+			printf("%*d (reg)   ", 10, quad_ptr->result.reg);
 
 		printf("%*s   ", 15, quad_operator_to_name(quad_ptr->op) );
 
@@ -1049,8 +1052,8 @@ void print_quad_list(LinkedList *quad_lst_ptr){
 			printf("%*s (mem)   ", 10, SymbolEnv_Entry_get_id(quad_ptr->arg_1.name));
 		else if(quad_ptr->arg_1_type == QUAD_ADDR_TYPE_CONSTANT)
 			printf("%*lld (cns)   ", 10, quad_ptr->arg_1.constant);
-		else if(quad_ptr->arg_1_type == QUAD_ADDR_TYPE_TEMP)
-			printf("%*d (reg)   ", 10, quad_ptr->arg_1.temp);
+		else if(quad_ptr->arg_1_type == QUAD_ADDR_TYPE_REG)
+			printf("%*d (reg)   ", 10, quad_ptr->arg_1.reg);
 
 		if(quad_ptr->arg_2_type == QUAD_ADDR_TYPE_EMPTY)
 			printf("%*s   ", 15, "");
@@ -1058,8 +1061,8 @@ void print_quad_list(LinkedList *quad_lst_ptr){
 			printf("%*s (mem)   ", 10, SymbolEnv_Entry_get_id(quad_ptr->arg_2.name));
 		else if(quad_ptr->arg_2_type == QUAD_ADDR_TYPE_CONSTANT)
 			printf("%*lld (cns)   ", 10, quad_ptr->arg_2.constant);
-		else if(quad_ptr->arg_2_type == QUAD_ADDR_TYPE_TEMP)
-			printf("%*d (reg)   ", 10, quad_ptr->arg_2.temp);
+		else if(quad_ptr->arg_2_type == QUAD_ADDR_TYPE_REG)
+			printf("%*d (reg)   ", 10, quad_ptr->arg_2.reg);
 
 		printf("\n");
 

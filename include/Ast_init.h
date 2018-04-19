@@ -70,6 +70,12 @@ typedef struct ParseTree_Node_Attr
 
 	void *result_value;
 	void *result_entry;
+	void *result_2_value;	// For size op
+
+	// For conditionals
+	void *label_true;
+	void *label_false;
+
 	void *code;
 } ParseTree_Node_Attr;
 

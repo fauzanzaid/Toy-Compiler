@@ -85,7 +85,9 @@ ParseTree_Node_Attr *ParseTree_Node_Attr_new(){
 	atr_ptr->entry = NULL;
 
 	atr_ptr->result_value = NULL;
+	atr_ptr->result_2_value = NULL;
 	atr_ptr->result_entry = NULL;
+
 	atr_ptr->code = NULL;
 
 	return atr_ptr;
@@ -99,6 +101,10 @@ void ParseTree_Node_Attr_destroy(ParseTree_Node_Attr *atr_ptr){
 
 	if(atr_ptr->result_value != NULL){
 		free(atr_ptr->result_value);
+	}
+
+	if(atr_ptr->result_2_value != NULL){
+		free(atr_ptr->result_2_value);
 	}
 
 	if(atr_ptr->code != NULL){

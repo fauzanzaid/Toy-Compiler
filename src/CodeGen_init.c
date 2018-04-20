@@ -177,25 +177,172 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 
 			case QUAD_OP_ADD:
 			{
+				switch(quad_arg_1_addr_type){
+					case QUAD_ADDR_TYPE_NAME:{
+						fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", [%s+%d]"	"\t;" "\n", SIZE_DIR, REG_A, VAR_LABEL, quad_arg_1_offset);
+						break;
+					}
+					case QUAD_ADDR_TYPE_REG:{
+						if(quad_arg_1_reg == 0)
+							fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_A, REG_U0);
+						else if(quad_arg_1_reg == 1)
+							fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_A, REG_U1);
+						break;
+					}
+					case QUAD_ADDR_TYPE_CONSTANT:{
+						fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %d"	"\t;" "\n", SIZE_DIR, REG_A, quad_arg_1_constant);
+						break;
+					}
+				}
+
+				switch(quad_arg_2_addr_type){
+					case QUAD_ADDR_TYPE_NAME:{
+						fprintf(output_file_ptr, "\tadd" "\t%s"		"\t%s"			", [%s+%d]"	"\t;" "\n", SIZE_DIR, REG_A, VAR_LABEL, quad_arg_2_offset);
+						break;
+					}
+					case QUAD_ADDR_TYPE_REG:{
+						if(quad_arg_2_reg == 0)
+							fprintf(output_file_ptr, "\tadd" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_A, REG_U0);
+						else if(quad_arg_2_reg == 1)
+							fprintf(output_file_ptr, "\tadd" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_A, REG_U1);
+						break;
+					}
+					case QUAD_ADDR_TYPE_CONSTANT:{
+						fprintf(output_file_ptr, "\tadd" "\t%s"		"\t%s"			", %d"	"\t;" "\n", SIZE_DIR, REG_A, quad_arg_2_constant);
+						break;
+					}
+				}
+
+				switch(quad_result_addr_type){
+					case QUAD_ADDR_TYPE_NAME:{
+						fprintf(output_file_ptr, "\tmov" "\t%s"		"\t[%s+%d]"			", %s"	"\t;" "\n", SIZE_DIR, VAR_LABEL, quad_result_offset, REG_A);
+						break;
+					}
+					case QUAD_ADDR_TYPE_REG:{
+						if(quad_arg_1_reg == 0)
+							fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_U0, REG_A);
+						else if(quad_arg_1_reg == 1)
+							fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_U1, REG_A);
+						break;
+					}
+				}
 
 				break;
 			}
 
 			case QUAD_OP_SUBTRACT:
 			{
+				switch(quad_arg_1_addr_type){
+					case QUAD_ADDR_TYPE_NAME:{
+						fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", [%s+%d]"	"\t;" "\n", SIZE_DIR, REG_A, VAR_LABEL, quad_arg_1_offset);
+						break;
+					}
+					case QUAD_ADDR_TYPE_REG:{
+						if(quad_arg_1_reg == 0)
+							fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_A, REG_U0);
+						else if(quad_arg_1_reg == 1)
+							fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_A, REG_U1);
+						break;
+					}
+					case QUAD_ADDR_TYPE_CONSTANT:{
+						fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %d"	"\t;" "\n", SIZE_DIR, REG_A, quad_arg_1_constant);
+						break;
+					}
+				}
+
+				switch(quad_arg_2_addr_type){
+					case QUAD_ADDR_TYPE_NAME:{
+						fprintf(output_file_ptr, "\tsub" "\t%s"		"\t%s"			", [%s+%d]"	"\t;" "\n", SIZE_DIR, REG_A, VAR_LABEL, quad_arg_2_offset);
+						break;
+					}
+					case QUAD_ADDR_TYPE_REG:{
+						if(quad_arg_2_reg == 0)
+							fprintf(output_file_ptr, "\tsub" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_A, REG_U0);
+						else if(quad_arg_2_reg == 1)
+							fprintf(output_file_ptr, "\tsub" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_A, REG_U1);
+						break;
+					}
+					case QUAD_ADDR_TYPE_CONSTANT:{
+						fprintf(output_file_ptr, "\tsub" "\t%s"		"\t%s"			", %d"	"\t;" "\n", SIZE_DIR, REG_A, quad_arg_2_constant);
+						break;
+					}
+				}
+
+				switch(quad_result_addr_type){
+					case QUAD_ADDR_TYPE_NAME:{
+						fprintf(output_file_ptr, "\tmov" "\t%s"		"\t[%s+%d]"			", %s"	"\t;" "\n", SIZE_DIR, VAR_LABEL, quad_result_offset, REG_A);
+						break;
+					}
+					case QUAD_ADDR_TYPE_REG:{
+						if(quad_arg_1_reg == 0)
+							fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_U0, REG_A);
+						else if(quad_arg_1_reg == 1)
+							fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_U1, REG_A);
+						break;
+					}
+				}
 
 				break;
 			}
 
 			case QUAD_OP_MULTIPLY:
 			{
+				switch(quad_arg_1_addr_type){
+					case QUAD_ADDR_TYPE_NAME:{
+						fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", [%s+%d]"	"\t;" "\n", SIZE_DIR, REG_A, VAR_LABEL, quad_arg_1_offset);
+						break;
+					}
+					case QUAD_ADDR_TYPE_REG:{
+						if(quad_arg_1_reg == 0)
+							fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_A, REG_U0);
+						else if(quad_arg_1_reg == 1)
+							fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_A, REG_U1);
+						break;
+					}
+					case QUAD_ADDR_TYPE_CONSTANT:{
+						fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %d"	"\t;" "\n", SIZE_DIR, REG_A, quad_arg_1_constant);
+						break;
+					}
+				}
+
+				switch(quad_arg_2_addr_type){
+					case QUAD_ADDR_TYPE_NAME:{
+						fprintf(output_file_ptr, "\timul" "\t%s"		"\t%s"			", [%s+%d]"	"\t;" "\n", SIZE_DIR, REG_A, VAR_LABEL, quad_arg_2_offset);
+						break;
+					}
+					case QUAD_ADDR_TYPE_REG:{
+						if(quad_arg_2_reg == 0)
+							fprintf(output_file_ptr, "\timul" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_A, REG_U0);
+						else if(quad_arg_2_reg == 1)
+							fprintf(output_file_ptr, "\timul" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_A, REG_U1);
+						break;
+					}
+					case QUAD_ADDR_TYPE_CONSTANT:{
+						fprintf(output_file_ptr, "\timul" "\t%s"		"\t%s"			", %d"	"\t;" "\n", SIZE_DIR, REG_A, quad_arg_2_constant);
+						break;
+					}
+				}
+
+				switch(quad_result_addr_type){
+					case QUAD_ADDR_TYPE_NAME:{
+						fprintf(output_file_ptr, "\tmov" "\t%s"		"\t[%s+%d]"			", %s"	"\t;" "\n", SIZE_DIR, VAR_LABEL, quad_result_offset, REG_A);
+						break;
+					}
+					case QUAD_ADDR_TYPE_REG:{
+						if(quad_arg_1_reg == 0)
+							fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_U0, REG_A);
+						else if(quad_arg_1_reg == 1)
+							fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_U1, REG_A);
+						break;
+					}
+				}
 
 				break;
 			}
 
 			case QUAD_OP_DIVIDE:
 			{
-
+				// Not implemented
 				break;
 			}
 
@@ -207,7 +354,7 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 
 			case QUAD_OP_OR:
 			{
-
+				// Not implemented
 				break;
 			}
 

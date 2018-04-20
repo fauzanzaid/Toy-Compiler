@@ -513,48 +513,91 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 
 			case QUAD_OP_LABEL:
 			{
-
+				fprintf(output_file_ptr, "%s:\n", quad_result_id);
 				break;
 			}
 
 			case QUAD_OP_GOTO:
 			{
-
+				fprintf(output_file_ptr, "\tjmp" "\t%s" "\t\t;" "\n", quad_result_id);
 				break;
 			}
 
 			case QUAD_OP_GOTO_LT:
-			{
-
-				break;
-			}
-
 			case QUAD_OP_GOTO_LE:
-			{
-
-				break;
-			}
-
 			case QUAD_OP_GOTO_GT:
-			{
-
-				break;
-			}
-
 			case QUAD_OP_GOTO_GE:
-			{
-
-				break;
-			}
-
 			case QUAD_OP_GOTO_EQ:
-			{
-
-				break;
-			}
-
 			case QUAD_OP_GOTO_NE:
 			{
+				switch(quad_arg_1_addr_type){
+					case QUAD_ADDR_TYPE_NAME:{
+						fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", [%s+%d]"	"\t;" "\n", SIZE_DIR, REG_A, VAR_LABEL, quad_arg_1_offset);
+						break;
+					}
+					case QUAD_ADDR_TYPE_REG:{
+						if(quad_arg_1_reg == 0)
+							fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_A, REG_U0);
+						else if(quad_arg_1_reg == 1)
+							fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_A, REG_U1);
+						break;
+					}
+					case QUAD_ADDR_TYPE_CONSTANT:{
+						fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %d"	"\t;" "\n", SIZE_DIR, REG_A, quad_arg_1_constant);
+						break;
+					}
+				}
+
+				switch(quad_arg_2_addr_type){
+					case QUAD_ADDR_TYPE_NAME:{
+						fprintf(output_file_ptr, "\tcmp" "\t%s"		"\t%s"			", [%s+%d]"	"\t;" "\n", SIZE_DIR, REG_A, VAR_LABEL, quad_arg_2_offset);
+						break;
+					}
+					case QUAD_ADDR_TYPE_REG:{
+						if(quad_arg_2_reg == 0)
+							fprintf(output_file_ptr, "\tcmp" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_A, REG_U0);
+						else if(quad_arg_2_reg == 1)
+							fprintf(output_file_ptr, "\tcmp" "\t%s"		"\t%s"			", %s"	"\t;" "\n", SIZE_DIR, REG_A, REG_U1);
+						break;
+					}
+					case QUAD_ADDR_TYPE_CONSTANT:{
+						fprintf(output_file_ptr, "\tcmp" "\t%s"		"\t%s"			", %d"	"\t;" "\n", SIZE_DIR, REG_A, quad_arg_2_constant);
+						break;
+					}
+				}
+
+				switch(quad_ptr->op){
+					case QUAD_OP_GOTO_LT:{
+						fprintf(output_file_ptr, "\tjl" "\t%s" "\t\t;" "\n", quad_result_id);
+						break;
+					}
+
+					case QUAD_OP_GOTO_LE:{
+						fprintf(output_file_ptr, "\tjle" "\t%s" "\t\t;" "\n", quad_result_id);
+						break;
+					}
+
+					case QUAD_OP_GOTO_GT:{
+						fprintf(output_file_ptr, "\tjg" "\t%s" "\t\t;" "\n", quad_result_id);
+						break;
+					}
+
+					case QUAD_OP_GOTO_GE:{
+						fprintf(output_file_ptr, "\tjge" "\t%s" "\t\t;" "\n", quad_result_id);
+						break;
+					}
+
+					case QUAD_OP_GOTO_EQ:{
+						fprintf(output_file_ptr, "\tje" "\t%s" "\t\t;" "\n", quad_result_id);
+						break;
+					}
+
+					case QUAD_OP_GOTO_NE:{
+						fprintf(output_file_ptr, "\tjne" "\t%s" "\t\t;" "\n", quad_result_id);
+						break;
+					}
+
+				}
 
 				break;
 			}

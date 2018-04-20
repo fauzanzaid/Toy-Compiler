@@ -442,7 +442,7 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 							quad_a_ptr->arg_1.constant = ((int *)(child_0->atr_ptr->result_value))[idx];
 						}
 						else{
-							quad_a_ptr->op = QUAD_OP_COPY_INDEXED_L;
+							quad_a_ptr->op = QUAD_OP_COPY_INDEXED_R;
 
 							quad_a_ptr->arg_1_type = QUAD_ADDR_TYPE_NAME;
 							quad_a_ptr->arg_1.name = child_0->atr_ptr->result_entry;
@@ -462,7 +462,7 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 							quad_b_ptr->arg_1.constant = ((int *)(child_1->atr_ptr->result_value))[idx];
 						}
 						else{
-							quad_b_ptr->op = QUAD_OP_COPY_INDEXED_L;
+							quad_b_ptr->op = QUAD_OP_COPY_INDEXED_R;
 
 							quad_b_ptr->arg_1_type = QUAD_ADDR_TYPE_NAME;
 							quad_b_ptr->arg_1.name = child_1->atr_ptr->result_entry;

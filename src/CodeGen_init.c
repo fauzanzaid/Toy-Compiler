@@ -41,7 +41,6 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 
 static void CodeGen_generate_bss(SymbolEnv *env_ptr, FILE *output_file_ptr);
 
-// static void CodeGen_generate_instr_mov()
 
 ///////////////
 // Functions //
@@ -647,6 +646,13 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 	}
 
 	LinkedListIterator_destroy(itr_ptr);
+
+
+	// Exit sys call
+	fprintf(output_file_ptr, "\tmov" "\t%s" ", %d"	"\t;" "\n", "rax", 60);
+	fprintf(output_file_ptr, "\txor" "\t%s" ", %s"	"\t;" "\n", "rdi", "rdi");
+	fprintf(output_file_ptr, "\tsyscall" "\t;" "\n");
+
 }
 
 static void CodeGen_generate_bss(SymbolEnv *env_ptr, FILE *output_file_ptr){

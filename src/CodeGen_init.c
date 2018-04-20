@@ -670,7 +670,8 @@ static void CodeGen_generate_bss(SymbolEnv *env_ptr, FILE *output_file_ptr){
 			int width = SymbolEnv_Entry_get_size(etr_ptr);
 			int offset = SymbolEnv_Entry_get_offset(etr_ptr);
 
-			fprintf(output_file_ptr, "\tresb\t%d\t; %d\t%s\n", width, offset, id);
+			if(width != 0)
+				fprintf(output_file_ptr, "\tresb\t%d\t; %d\t%s\n", width, offset, id);
 
 			LinkedListIterator_move_to_next(itr_ptr);
 			id = LinkedListIterator_get_item(itr_ptr);

@@ -95,7 +95,10 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 
 	while(quad_ptr){
 
-		int				quad_result_addr_type = 0,		quad_arg_1_addr_type = 0,		quad_arg_2_addr_type = 0;
+		int				quad_result_addr_type = QUAD_ADDR_TYPE_EMPTY;
+		int				quad_arg_1_addr_type = QUAD_ADDR_TYPE_EMPTY;
+		int				quad_arg_2_addr_type = QUAD_ADDR_TYPE_EMPTY;
+
 		SymbolEnv_Entry	*quad_result_etr_ptr = NULL,	*quad_arg_1_etr_ptr = NULL,		*quad_arg_2_etr_ptr = NULL;
 		Type			*quad_result_type_ptr = NULL,	*quad_arg_1_type_ptr = NULL,	*quad_arg_2_type_ptr = NULL;
 		char			*quad_result_id = NULL,			*quad_arg_1_id = NULL,			*quad_arg_2_id = NULL;
@@ -199,7 +202,9 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 			case QUAD_OP_NEGATE:
 			case QUAD_OP_NOT:
 			{
-				// Not implemented
+				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
+				return;
+
 				break;
 			}
 
@@ -370,19 +375,25 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 
 			case QUAD_OP_DIVIDE:
 			{
-				// Not implemented
+				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
+				return;
+
 				break;
 			}
 
 			case QUAD_OP_AND:
 			{
-				// Not implemented
+				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
+				return;
+
 				break;
 			}
 
 			case QUAD_OP_OR:
 			{
-				// Not implemented
+				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
+				return;
+
 				break;
 			}
 
@@ -523,19 +534,25 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 
 			case QUAD_OP_COPY_ADDRESS_R:
 			{
-				// Not implemented
+				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
+				return;
+
 				break;
 			}
 
 			case QUAD_OP_COPY_DEREFED_R:
 			{
-				// Not implemented
+				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
+				return;
+
 				break;
 			}
 
 			case QUAD_OP_COPY_DEREFED_L:
 			{
-				// Not implemented
+				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
+				return;
+
 				break;
 			}
 
@@ -632,7 +649,9 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 
 			case QUAD_OP_CALL:
 			{
-				// Not implemented
+				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
+				return;
+
 				break;
 			}
 
@@ -668,6 +687,8 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 
 			case QUAD_OP_READ_CHAR:
 			{
+				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
+				return;
 
 				break;
 			}

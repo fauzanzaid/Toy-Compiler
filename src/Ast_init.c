@@ -614,17 +614,18 @@ ParseTree_Node *prune_parse_tree(ParseTree_Node *node_ptr){
 
 			ParseTree_Node *inh = node_ptr->atr_ptr->inh;
 
-			child_1 = prune_parse_tree( child_1 );
-			child_2->atr_ptr->inh = child_1;
-			child_2 = prune_parse_tree( child_2 );
 			child_0 = prune_parse_tree( child_0 );
+			child_1 = prune_parse_tree( child_1 );
+
+			ParseTree_Node_attach_child_left_end(child_0, child_1);
+			ParseTree_Node_attach_child_left_end(child_0, inh);
+
+			child_2->atr_ptr->inh = child_0;
+			child_2 = prune_parse_tree( child_2 );
 
 			ParseTree_Node_destroy(node_ptr);
 
-			node_ptr = child_0;
-
-			ParseTree_Node_attach_child_left_end(node_ptr, child_2);
-			ParseTree_Node_attach_child_left_end(node_ptr, inh);
+			node_ptr = child_2;
 
 			break;
 		}

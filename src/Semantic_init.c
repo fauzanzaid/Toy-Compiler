@@ -93,7 +93,16 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			}
 
 			if( Type_check_completeness(type_0_ptr) == -1 || Type_check_completeness(type_1_ptr) == -1 ){
-				fprintf(stderr, "Incomplete operand types for +\n");
+				if(flag_print_errors == 1){
+					int line_number = node_ptr->tkn_ptr->line;
+					int column_number = node_ptr->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Operator " TEXT_GRN TEXT_BLD "%s" TEXT_RST " does not support unknown sized operands of incomplete type\n", "+");
+				}
+
 				*flag_error = 1;
 				return -1;
 			}
@@ -168,7 +177,16 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			}
 
 			if( Type_check_completeness(type_0_ptr) == -1 || Type_check_completeness(type_1_ptr) == -1 ){
-				fprintf(stderr, "Incomplete operand types for -\n");
+				if(flag_print_errors == 1){
+					int line_number = node_ptr->tkn_ptr->line;
+					int column_number = node_ptr->tkn_ptr->column;
+
+					printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
+					printf( TEXT_BLD TEXT_RED "semantic error: " TEXT_RST);
+
+					printf("Operator " TEXT_GRN TEXT_BLD "%s" TEXT_RST " does not support unknown sized operands of incomplete type\n", "-");
+				}
+
 				*flag_error = 1;
 				return -1;
 			}
@@ -979,7 +997,7 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 						// printf( TEXT_BLD "%d:%d: " TEXT_RST, line_number, column_number);
 						printf( TEXT_BLD TEXT_BLU "semantic warning: " TEXT_RST);
 
-						printf("Variable " TEXT_YLW "%s" TEXT_RST " in scope " TEXT_YLW "%s" TEXT_RST " never initialized\n", id, SymbolEnv_Scope_get_name(scp_ptr));
+						printf("Variable " TEXT_YLW "%s" TEXT_RST " in scope " TEXT_YLW "%s" TEXT_RST " is not initialized\n", id, SymbolEnv_Scope_get_name(scp_ptr));
 
 						// etr_ptr = SymbolEnv_entry_get_by_id(env_ptr, id, len_id);
 						// printf( TEXT_BLD TEXT_BLU "note: " TEXT_RST);

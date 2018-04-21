@@ -428,8 +428,8 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 						}
 					}
 
-					printf("\t;");
-					printf("\n");
+					fprintf(output_file_ptr, "\t;");
+					fprintf(output_file_ptr, "\n");
 				}
 
 				break;
@@ -469,8 +469,8 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 						}
 					}
 
-					printf("\t;");
-					printf("\n");
+					fprintf(output_file_ptr, "\t;");
+					fprintf(output_file_ptr, "\n");
 				}
 
 				break;
@@ -514,8 +514,8 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 						}
 					}
 
-					printf("\t;");
-					printf("\n");
+					fprintf(output_file_ptr, "\t;");
+					fprintf(output_file_ptr, "\n");
 				}
 
 				break;

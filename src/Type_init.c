@@ -348,8 +348,10 @@ int Type_check_completeness(Type *type_ptr){
 				if(type_element_ptr == NULL)
 					break;
 
-				if( Type_check_completeness(type_element_ptr) == -1 )
+				if( Type_check_completeness(type_element_ptr) == -1 ){
+					LinkedListIterator_destroy(itr_ptr);
 					return -1;
+				}
 
 				LinkedListIterator_move_to_next(itr_ptr);
 			}

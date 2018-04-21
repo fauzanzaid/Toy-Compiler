@@ -1170,6 +1170,10 @@ int Semantic_symbol_and_type_check(ParseTree_Node *node_ptr, SymbolEnv *env_ptr,
 			int subscript_row = strtol(subscript_row_string, NULL, 10);
 			int subscript_column = strtol(subscript_column_string, NULL, 10);
 
+			// Cvt 1 indexed to 0 indexed
+			subscript_row--;
+			subscript_column--;
+
 			int num_rows = type_ptr->num_rows;
 			int num_columns = type_ptr->num_columns;
 

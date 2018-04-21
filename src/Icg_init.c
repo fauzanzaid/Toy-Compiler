@@ -1449,6 +1449,9 @@ int Icg_generate_quads_recursive(ParseTree_Node *node_ptr, SymbolEnv *env_ptr, i
 
 			int idx_row = strtol(child_0->tkn_ptr->data->string, NULL, 10);
 			int idx_column = strtol(child_1->tkn_ptr->data->string, NULL, 10);
+			// CVt 1 indexed to 0 indexed
+			idx_row--;
+			idx_column--;
 			int idx = idx_row*num_columns + idx_column;
 
 

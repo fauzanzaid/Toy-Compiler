@@ -755,9 +755,9 @@ void print_parse_tree_preorder(ParseTree *tree, FILE *file_ptr){
 	fprintf(file_ptr, "--\n");
 
 	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[0],col[0],	"S No");
-	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[1],col[1],	"Lexeme");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[1],col[1],	"Token");
 	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[2],col[2],	"Line");
-	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[3],col[3],	"Token");
+	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[3],col[3],	"Lexeme");
 	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[4],col[4],	"Value");
 	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[5],col[5],	"Parent");
 	fprintf(file_ptr, " | ");	fprintf(file_ptr, "%-*.*s",	col[6],col[6],	"Leaf");

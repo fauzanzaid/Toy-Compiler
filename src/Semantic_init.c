@@ -1427,7 +1427,7 @@ int Semantic_root_scope_initialized_check(SymbolEnv *env_ptr, int flag_print_err
 }
 
 void print_symbol_environment(SymbolEnv *env_ptr, FILE *file_ptr){
-	int col[] = {5,20,25,5,25,13,5,10};
+	int col[] = {5,20,25,15,25,13,5,10};
 
 	fprintf(file_ptr, " --");	fprintf(file_ptr, "%-*.*s",	col[0],col[0],	"------------------------------");
 	fprintf(file_ptr, "---");	fprintf(file_ptr, "%-*.*s",	col[1],col[1],	"------------------------------");

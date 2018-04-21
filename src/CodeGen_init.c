@@ -15,21 +15,27 @@
 // Constants //
 ///////////////
 
-static char START_LABEL[] = "_start";
+static char START_LABEL[] = "main";
 static char VAR_LABEL[] = "vars";
 
 static char BYTE_DIR[] = "byte";
 static char WORD_DIR[] = "word";
 
 static char REG_AL[] = "al";
-static char REG_BL[] = "bl";
-static char REG_CL[] = "cl";
 static char REG_AX[] = "ax";
+static char REG_RAX[] = "rax";
+static char REG_BL[] = "bl";
 static char REG_BX[] = "bx";
+static char REG_CL[] = "cl";
 static char REG_CX[] = "cx";
+static char REG_SI[] = "si";
+static char REG_RBP[] = "rbp";
+static char REG_RSI[] = "rsi";
+static char REG_DIL[] = "dil";
+static char REG_RDI[] = "rdi";
 static char REG_R8B[] = "r8b";
-static char REG_R9B[] = "r9b";
 static char REG_R8W[] = "r8w";
+static char REG_R9B[] = "r9b";
 static char REG_R9W[] = "r9w";
 
 
@@ -41,6 +47,8 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 
 static void CodeGen_generate_bss(SymbolEnv *env_ptr, FILE *output_file_ptr);
 
+static void CodeGen_generate_data(FILE *output_file_ptr);
+
 
 ///////////////
 // Functions //
@@ -48,16 +56,37 @@ static void CodeGen_generate_bss(SymbolEnv *env_ptr, FILE *output_file_ptr);
 
 
 void CodeGen_generate_asm(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, FILE *output_file_ptr){
+	CodeGen_generate_data(output_file_ptr);
+	fprintf(output_file_ptr, "\n");
 	CodeGen_generate_text(env_ptr, quad_lst_ptr, output_file_ptr);
 	fprintf(output_file_ptr, "\n");
 	CodeGen_generate_bss(env_ptr, output_file_ptr);
 }
 
+static void CodeGen_generate_data(FILE *output_file_ptr){
+	fprintf(output_file_ptr, "\tsection .data\n");
+	fprintf(output_file_ptr, "fmt_pi:\tdb" "\t" "\"%%ld\", 0" "\n");
+	fprintf(output_file_ptr, "fmt_si:\tdb" "\t" "\" %%ld\\n\", 0" "\n");
+	fprintf(output_file_ptr, "res_si:\tdq" "\t" "0" "\n");
+}
+
 static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, FILE *output_file_ptr){
 
+	char *REG_U0L = REG_R8B;
+	char *REG_U0X = REG_R8W;
+	char *REG_U1L = REG_R9B;
+	char *REG_U1X = REG_R9W;
+
 	fprintf(output_file_ptr, "global %s\n", START_LABEL);
+	fprintf(output_file_ptr, "extern putchar\n");
+	fprintf(output_file_ptr, "extern printf\n");
+	fprintf(output_file_ptr, "extern scanf\n");
 	fprintf(output_file_ptr, "\tsection .text\n");
 	fprintf(output_file_ptr, "%s:\n", START_LABEL);
+
+	// Push stack frame
+	fprintf(output_file_ptr, "\tpush" "\t%s" ";\n", REG_RBP);
+
 
 	LinkedListIterator *itr_ptr = LinkedListIterator_new(quad_lst_ptr);
 	LinkedListIterator_move_to_first(itr_ptr);
@@ -153,15 +182,15 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 			REG_A = REG_AL;
 			REG_B = REG_BL;
 			REG_C = REG_CL;
-			REG_U0 = REG_R8B;
-			REG_U1 = REG_R9B;
+			REG_U0 = REG_U0L;
+			REG_U1 = REG_U1L;
 		}
 		else{
 			REG_A = REG_AX;
 			REG_B = REG_BX;
 			REG_C = REG_CX;
-			REG_U0 = REG_R8W;
-			REG_U1 = REG_R9W;
+			REG_U0 = REG_U0X;
+			REG_U1 = REG_U1X;
 		}
 
 
@@ -609,6 +638,30 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 
 			case QUAD_OP_READ_INT:
 			{
+				// scanf format
+				fprintf(output_file_ptr, "\tmov" "\t" "\t%s" ", %s;" "\n", REG_RDI, "fmt_si");
+
+				// scanf result arg
+				if(quad_result_addr_type == QUAD_ADDR_TYPE_NAME)
+					fprintf(output_file_ptr, "\tlea" "\t" "\t%s" ", [%s+%d];" "\n", REG_RSI, VAR_LABEL, quad_result_offset);
+				else
+					fprintf(output_file_ptr, "\tmov" "\t" "\t%s" ", %s;" "\n", REG_RSI, "res_si");
+
+				// No xmm
+				fprintf(output_file_ptr, "\txor" "\t" "\t%s" ", %s;" "\n", REG_RAX, REG_RAX);
+
+				// Call
+				fprintf(output_file_ptr, "\tcall" "\t" "\tscanf" "\t;" "\n");
+
+				// Zero out rsi
+				fprintf(output_file_ptr, "\txor" "\t" "\t%s" ", %s" "\t;" "\n", REG_RSI, REG_RSI);
+
+				if(quad_result_addr_type == QUAD_ADDR_TYPE_REG){
+					if(quad_result_reg == 0)
+						fprintf(output_file_ptr, "\tmov" "\t" "\t%s" ", [%s]" "\t;" "\n", REG_U0X, "res_si");
+					else if(quad_result_reg == 1)
+						fprintf(output_file_ptr, "\tmov" "\t" "\t%s" ", [%s]" "\t;" "\n", REG_U1X, "res_si");
+				}
 
 				break;
 			}
@@ -621,12 +674,62 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 
 			case QUAD_OP_WRITE_INT:
 			{
+				// printf format
+				fprintf(output_file_ptr, "\tmov" "\t" "\t%s" ", %s;" "\n", REG_RDI, "fmt_pi");
+				// Zero out rsi
+				fprintf(output_file_ptr, "\txor" "\t" "\t%s" ", %s" "\t;" "\n", REG_RSI, REG_RSI);
+
+				switch(quad_result_addr_type){
+					case QUAD_ADDR_TYPE_NAME:{
+						fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", [%s+%d]"	"\t;" "\n", SIZE_DIR, REG_SI, VAR_LABEL, quad_result_offset);
+						break;
+					}
+					case QUAD_ADDR_TYPE_REG:{
+						if(quad_result_reg == 0)
+							fprintf(output_file_ptr, "\tmov" "\t"		"\t%s"			", %s"	"\t;" "\n", REG_SI, REG_U0X);
+						else if(quad_result_reg == 1)
+							fprintf(output_file_ptr, "\tmov" "\t"		"\t%s"			", %s"	"\t;" "\n", REG_SI, REG_U1X);
+						break;
+					}
+					case QUAD_ADDR_TYPE_CONSTANT:{
+						fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %d"	"\t;" "\n", SIZE_DIR, REG_SI, quad_result_constant);
+						break;
+					}
+				}
+
+				// No xmm
+				fprintf(output_file_ptr, "\txor" "\t" "\t%s" ", %s;" "\n", REG_RAX, REG_RAX);
+
+				// Call
+				fprintf(output_file_ptr, "\tcall" "\t" "\tprintf" "\t;" "\n");
 
 				break;
 			}
 
 			case QUAD_OP_WRITE_CHAR:
 			{
+				// Zero out rdi
+				fprintf(output_file_ptr, "\txor" "\t" "\t%s" ", %s" "\t;" "\n", REG_RDI, REG_RDI);
+
+				switch(quad_result_addr_type){
+					case QUAD_ADDR_TYPE_NAME:{
+						fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", [%s+%d]"	"\t;" "\n", SIZE_DIR, REG_DIL, VAR_LABEL, quad_result_offset);
+						break;
+					}
+					case QUAD_ADDR_TYPE_REG:{
+						if(quad_result_reg == 0)
+							fprintf(output_file_ptr, "\tmov" "\t"		"\t%s"			", %s"	"\t;" "\n", REG_DIL, REG_U0L);
+						else if(quad_result_reg == 1)
+							fprintf(output_file_ptr, "\tmov" "\t"		"\t%s"			", %s"	"\t;" "\n", REG_DIL, REG_U1L);
+						break;
+					}
+					case QUAD_ADDR_TYPE_CONSTANT:{
+						fprintf(output_file_ptr, "\tmov" "\t%s"		"\t%s"			", %d"	"\t;" "\n", SIZE_DIR, REG_DIL, quad_result_constant);
+						break;
+					}
+				}
+
+				fprintf(output_file_ptr, "\tcall" "\tputchar" "\t;" "\n");
 
 				break;
 			}
@@ -647,11 +750,12 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 
 	LinkedListIterator_destroy(itr_ptr);
 
+	// Restore stack frame
+	fprintf(output_file_ptr, "\tpop" "\t%s" ";\n", REG_RBP);
 
 	// Exit sys call
-	fprintf(output_file_ptr, "\tmov" "\t%s" ", %d"	"\t;" "\n", "rax", 60);
-	fprintf(output_file_ptr, "\txor" "\t%s" ", %s"	"\t;" "\n", "rdi", "rdi");
-	fprintf(output_file_ptr, "\tsyscall" "\t;" "\n");
+	fprintf(output_file_ptr, "\tmov" "\t%s" ", %d"	";\n", "rax", 0);
+	fprintf(output_file_ptr, "\tret" ";\n");
 
 }
 

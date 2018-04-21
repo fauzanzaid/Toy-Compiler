@@ -43,11 +43,11 @@ static char REG_R9W[] = "r9w";
 // Pvt Prototypes //
 ////////////////////
 
-static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, FILE *output_file_ptr);
+static int CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, FILE *output_file_ptr);
 
-static void CodeGen_generate_bss(SymbolEnv *env_ptr, FILE *output_file_ptr);
+static int CodeGen_generate_bss(SymbolEnv *env_ptr, FILE *output_file_ptr);
 
-static void CodeGen_generate_data(FILE *output_file_ptr);
+static int CodeGen_generate_data(FILE *output_file_ptr);
 
 
 ///////////////
@@ -55,22 +55,28 @@ static void CodeGen_generate_data(FILE *output_file_ptr);
 ///////////////
 
 
-void CodeGen_generate_asm(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, FILE *output_file_ptr){
-	CodeGen_generate_data(output_file_ptr);
+int CodeGen_generate_asm(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, FILE *output_file_ptr){
+	int r1 = CodeGen_generate_data(output_file_ptr);
 	fprintf(output_file_ptr, "\n");
-	CodeGen_generate_text(env_ptr, quad_lst_ptr, output_file_ptr);
+	int r2 = CodeGen_generate_text(env_ptr, quad_lst_ptr, output_file_ptr);
 	fprintf(output_file_ptr, "\n");
-	CodeGen_generate_bss(env_ptr, output_file_ptr);
+	int r3 = CodeGen_generate_bss(env_ptr, output_file_ptr);
+
+	if(r1 == 0 && r2 == 0 && r3 == 0)
+		return 0;
+	return -1;
 }
 
-static void CodeGen_generate_data(FILE *output_file_ptr){
+static int CodeGen_generate_data(FILE *output_file_ptr){
 	fprintf(output_file_ptr, "\tsection .data\n");
 	fprintf(output_file_ptr, "fmt_pi:\tdb" "\t" "\"%%ld\", 0" "\n");
 	fprintf(output_file_ptr, "fmt_si:\tdb" "\t" "\" %%ld\\n\", 0" "\n");
 	fprintf(output_file_ptr, "res_si:\tdq" "\t" "0" "\n");
+
+	return 0;
 }
 
-static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, FILE *output_file_ptr){
+static int CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, FILE *output_file_ptr){
 
 	char *REG_U0L = REG_R8B;
 	char *REG_U0X = REG_R8W;
@@ -203,7 +209,7 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 			case QUAD_OP_NOT:
 			{
 				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
-				return;
+				return -1;
 
 				break;
 			}
@@ -376,7 +382,7 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 			case QUAD_OP_DIVIDE:
 			{
 				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
-				return;
+				return -1;
 
 				break;
 			}
@@ -384,7 +390,7 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 			case QUAD_OP_AND:
 			{
 				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
-				return;
+				return -1;
 
 				break;
 			}
@@ -392,7 +398,7 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 			case QUAD_OP_OR:
 			{
 				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
-				return;
+				return -1;
 
 				break;
 			}
@@ -535,7 +541,7 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 			case QUAD_OP_COPY_ADDRESS_R:
 			{
 				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
-				return;
+				return -1;
 
 				break;
 			}
@@ -543,7 +549,7 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 			case QUAD_OP_COPY_DEREFED_R:
 			{
 				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
-				return;
+				return -1;
 
 				break;
 			}
@@ -551,7 +557,7 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 			case QUAD_OP_COPY_DEREFED_L:
 			{
 				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
-				return;
+				return -1;
 
 				break;
 			}
@@ -650,7 +656,7 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 			case QUAD_OP_CALL:
 			{
 				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
-				return;
+				return -1;
 
 				break;
 			}
@@ -688,7 +694,7 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 			case QUAD_OP_READ_CHAR:
 			{
 				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
-				return;
+				return -1;
 
 				break;
 			}
@@ -758,7 +764,7 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 			default:
 			{
 				fprintf(stderr, "CodeGen_generate_text : Unhandle op\n");
-				return;
+				return -1;
 
 				break;
 			}
@@ -778,9 +784,10 @@ static void CodeGen_generate_text(SymbolEnv *env_ptr, LinkedList *quad_lst_ptr, 
 	fprintf(output_file_ptr, "\tmov" "\t%s" ", %d"	";\n", "rax", 0);
 	fprintf(output_file_ptr, "\tret" ";\n");
 
+	return 0;
 }
 
-static void CodeGen_generate_bss(SymbolEnv *env_ptr, FILE *output_file_ptr){
+static int CodeGen_generate_bss(SymbolEnv *env_ptr, FILE *output_file_ptr){
 	
 	fprintf(output_file_ptr, "\tsection .bss\n");
 	fprintf(output_file_ptr, "%s:\n", VAR_LABEL);
@@ -815,4 +822,6 @@ static void CodeGen_generate_bss(SymbolEnv *env_ptr, FILE *output_file_ptr){
 			break;
 
 	}
+
+	return 0;
 }
